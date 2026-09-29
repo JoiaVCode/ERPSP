@@ -188,11 +188,68 @@ button,input,select{font:inherit}button{cursor:pointer}
 @media(max-width:700px){.calc-shell{max-width:none}.calc-form{padding:13px}.calc-dates{grid-template-columns:1fr;gap:12px}.calc-date-row{grid-template-columns:minmax(0,1fr) 44px}.calc-date-row input[type=text]{height:44px;font-size:16px}.calc-calendar{width:44px;height:44px}.calc-extract textarea{min-height:105px;font-size:16px}.calc-extract-actions{flex-direction:column;align-items:stretch}.calc-secondary{width:100%;min-height:42px}.calc-controls{display:flex;flex-direction:column}.calc-tolerance{width:100%;min-width:0;min-height:48px}.calc-main-actions{display:grid;grid-template-columns:1fr 1fr}.calc-main-actions button{width:100%;min-width:0;min-height:46px}.calc-result-number{font-size:62px}.calc-time-modal{align-items:flex-end;padding:0}.calc-time-dialog{width:100%;max-width:none;border-radius:14px 14px 0 0}.calc-time-body{padding-bottom:calc(16px + env(safe-area-inset-bottom))}}
 @media(max-width:420px){.calc-main-actions,.calc-time-actions{grid-template-columns:1fr}.calc-result-number{font-size:56px}}
 
+
+/* ===== B22.0 · Autenticação e sincronização Supabase ===== */
+.auth-gate{position:fixed;inset:0;z-index:500;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:22px}
+.auth-gate.hidden{display:none}
+.auth-card{width:min(430px,100%);background:#fff;border:1px solid var(--border);border-radius:12px;box-shadow:0 18px 55px rgba(0,0,0,.12);overflow:hidden}
+.auth-accent{height:6px;background:var(--primary)}
+.auth-body{padding:26px}
+.auth-brand{margin-bottom:20px}.auth-brand h1{font-size:23px;margin:0 0 6px}.auth-brand p{margin:0;color:var(--muted);line-height:1.45}
+.auth-form{display:grid;gap:13px}
+.auth-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px}
+.auth-message{min-height:18px;margin-top:11px;font-size:12px;color:var(--danger);line-height:1.4}
+.auth-note{margin-top:14px;padding-top:13px;border-top:1px solid var(--border);font-size:11px;color:var(--muted);line-height:1.45}
+.app.auth-locked{visibility:hidden}
+.user-area{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.user-chip{display:flex;flex-direction:column;align-items:flex-end;line-height:1.15}
+.user-chip strong{font-size:12px;color:#fff;max-width:210px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.user-chip span{font-size:10px;color:#cfcfcf;margin-top:3px}
+.sync-status{display:inline-flex;align-items:center;gap:6px;padding:7px 9px;border:1px solid rgba(255,255,255,.18);border-radius:7px;background:rgba(255,255,255,.08);font-size:10px;font-weight:700;color:#eee;white-space:nowrap}
+.sync-dot{width:7px;height:7px;border-radius:50%;background:#bcbcbc}
+.sync-status[data-state="synced"] .sync-dot{background:#7ebc58}
+.sync-status[data-state="syncing"] .sync-dot{background:var(--primary)}
+.sync-status[data-state="offline"] .sync-dot,.sync-status[data-state="error"] .sync-dot{background:#d86b67}
+.sync-status[data-state="local"] .sync-dot{background:#bcbcbc}
+@media(max-width:700px){
+ .auth-gate{align-items:flex-end;padding:0}
+ .auth-card{border-radius:14px 14px 0 0;border-bottom:0}
+ .auth-body{padding:22px 16px calc(20px + env(safe-area-inset-bottom))}
+ .auth-actions{grid-template-columns:1fr}
+ .user-area{width:100%;display:grid;grid-template-columns:1fr auto;gap:7px}
+ .user-chip{align-items:flex-start;grid-column:1/-1}
+ .sync-status{justify-content:center}
+}
+
 </style>
 </head>
 <body>
-<div class="app">
-<header class="header"><div class="header-inner"><div class="brand"><h1>Controle de Kits</h1><p>Organização e controle de equipamentos de estoque</p></div><div class="header-actions"><button class="btn" onclick="exportData()">EXPORTAR</button><button class="btn" onclick="document.getElementById('importFile').click()">IMPORTAR</button><input id="importFile" type="file" accept="application/json" hidden onchange="importData(event)"></div></div></header>
+
+<div id="authGate" class="auth-gate">
+  <div class="auth-card">
+    <div class="auth-accent"></div>
+    <div class="auth-body">
+      <div class="auth-brand">
+        <h1>ERPSP</h1>
+        <p>Entre para acessar o controle de equipamentos e kits.</p>
+      </div>
+      <form class="auth-form" onsubmit="loginWithEmail(event)">
+        <div class="field"><label>E-mail</label><input id="authEmail" type="email" autocomplete="username" required placeholder="nome@empresa.com"></div>
+        <div class="field"><label>Senha</label><input id="authPassword" type="password" autocomplete="current-password" minlength="6" required placeholder="Sua senha"></div>
+        <div class="field"><label>Nome de exibição <span style="font-weight:400">(somente para criar acesso)</span></label><input id="authDisplayName" autocomplete="name" placeholder="Ex.: Eduardo"></div>
+        <div class="auth-actions">
+          <button class="btn btn-primary" type="submit">ENTRAR</button>
+          <button class="btn" type="button" onclick="signupWithEmail()">CRIAR ACESSO</button>
+        </div>
+      </form>
+      <div id="authMessage" class="auth-message"></div>
+      <div class="auth-note">O primeiro acesso criado neste projeto recebe perfil de administrador. Acessos seguintes ficam pendentes até liberação.</div>
+    </div>
+  </div>
+</div>
+
+<div id="mainApp" class="app auth-locked">
+<header class="header"><div class="header-inner"><div class="brand"><h1>Controle de Kits</h1><p>Organização e controle de equipamentos de estoque</p></div><div class="header-actions"><button class="btn" onclick="exportData()">EXPORTAR</button><button class="btn" onclick="document.getElementById('importFile').click()">IMPORTAR</button><input id="importFile" type="file" accept="application/json" hidden onchange="importData(event)"><div class="user-area"><div class="user-chip"><strong id="currentUserName">Usuário</strong><span id="currentUserRole">-</span></div><div id="syncStatus" class="sync-status" data-state="local"><span class="sync-dot"></span><span id="syncStatusText">Local</span></div><button class="btn" onclick="logoutUser()">SAIR</button></div></div></div></header>
 <main class="container">
 <nav class="nav"><button class="active" data-page="equipamentos">Equipamentos</button><button data-page="produtos">Produtos</button><button data-page="montar">Montar Kit</button><button data-page="kits">Kits Ativos</button><button data-page="calculadora">Calculadora de Diárias</button><button data-page="dados">Dados</button></nav>
 <section id="equipamentos" class="page active">
@@ -1528,7 +1585,40 @@ module.exports = QRCode;
  window.StockQRErrorCorrectLevel=require("./QRErrorCorrectLevel");
 })();
 </script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2/dist/umd/supabase.min.js"></script>
 <script>
+
+const SUPABASE_CONFIG={
+  URL:'https://dqmntzvnmfnlyjqbhffz.supabase.co',
+  PUBLISHABLE_KEY:'sb_publishable_yr3mZzzXlitwFuTCmcP2Pg__kUZIP1h',
+  STATE_ID:'main'
+};
+const supabaseClient=window.supabase.createClient(SUPABASE_CONFIG.URL,SUPABASE_CONFIG.PUBLISHABLE_KEY,{
+  auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}
+});
+let currentSession=null;
+let currentAccess=null;
+let cloudRevision=0;
+let cloudReady=false;
+let syncTimer=null;
+let syncInFlight=false;
+let pendingCloudSave=false;
+
+function setAuthMessage(message='',ok=false){
+  const el=$('authMessage');if(!el)return;
+  el.textContent=message;el.style.color=ok?'var(--success)':'var(--danger)';
+}
+function setSyncStatus(stateName,textValue){
+  const box=$('syncStatus'),txt=$('syncStatusText');
+  if(box)box.dataset.state=stateName;
+  if(txt)txt.textContent=textValue;
+}
+function stateHasOperationalData(data){
+  return !!(data&&(data.products?.length||data.equipments?.length||data.kits?.length||Number(data.nextKitNumber)>1));
+}
+function cloneStateForCloud(){
+  return JSON.parse(JSON.stringify({...state,dataVersion:CURRENT_DATA_VERSION}));
+}
 const CONFIG={STORAGE_KEY:'controle_kits_v2'};
 const CURRENT_DATA_VERSION=3;
 function emptyState(){return {dataVersion:CURRENT_DATA_VERSION,products:[],codes:[],equipments:[],kits:[],nextKitNumber:1}}
@@ -1561,7 +1651,52 @@ function ensureCodeRecord(code){
 }
 function getEquipment(id){return state.equipments.find(e=>e.id===id)}
 function isInKit(id){return state.kits.some(k=>k.equipmentIds.includes(id))}
-function save(){localStorage.setItem(CONFIG.STORAGE_KEY,JSON.stringify(state));updateDashboard();updateCharts()}
+function save(){
+  localStorage.setItem(CONFIG.STORAGE_KEY,JSON.stringify(state));
+  updateDashboard();updateCharts();
+  scheduleCloudSave();
+}
+function scheduleCloudSave(){
+  if(!currentSession||!cloudReady||!currentAccess?.active||currentAccess.role==='viewer')return;
+  pendingCloudSave=true;
+  setSyncStatus(navigator.onLine?'syncing':'offline',navigator.onLine?'Sincronizando':'Offline');
+  clearTimeout(syncTimer);
+  syncTimer=setTimeout(flushCloudSave,650);
+}
+async function flushCloudSave(){
+  if(syncInFlight||!pendingCloudSave||!currentSession||!cloudReady)return;
+  if(!navigator.onLine){setSyncStatus('offline','Offline');return}
+  syncInFlight=true;pendingCloudSave=false;
+  try{
+    const payload=cloneStateForCloud();
+    const {data,error}=await supabaseClient.from('app_state')
+      .update({
+        data:payload,
+        data_version:CURRENT_DATA_VERSION,
+        revision:cloudRevision+1,
+        updated_at:new Date().toISOString(),
+        updated_by:currentSession.user.id
+      })
+      .eq('id',SUPABASE_CONFIG.STATE_ID)
+      .eq('revision',cloudRevision)
+      .select('revision,updated_at');
+    if(error)throw error;
+    if(!data||data.length!==1){
+      pendingCloudSave=true;
+      setSyncStatus('error','Conflito de dados');
+      toast('Os dados foram alterados em outro acesso. Recarregue antes de continuar.');
+      return;
+    }
+    cloudRevision=Number(data[0].revision)||cloudRevision+1;
+    setSyncStatus('synced','Sincronizado');
+  }catch(err){
+    console.error('Falha de sincronização:',err);
+    pendingCloudSave=true;
+    setSyncStatus(navigator.onLine?'error':'offline',navigator.onLine?'Erro de sincronização':'Offline');
+  }finally{
+    syncInFlight=false;
+  }
+}
 function toast(msg){$('toast').textContent=msg;$('toast').classList.add('show');setTimeout(()=>$('toast').classList.remove('show'),2400)}
 function openModal(id){closeProductDropdown();$(id).classList.add('open')}function closeModal(id){$(id).classList.remove('open');if(id==='equipmentModal')closeProductDropdown()}
 document.addEventListener('mousedown',ev=>{
@@ -1691,6 +1826,121 @@ function load(){
         toast('Os dados salvos não puderam ser carregados. O armazenamento original não foi sobrescrito.');
     }
 }
+
+async function getOwnAccess(){
+  const {data,error}=await supabaseClient.from('app_users').select('user_id,display_name,role,active').eq('user_id',currentSession.user.id).maybeSingle();
+  if(error)throw error;
+  return data;
+}
+async function loadCloudState(){
+  const access=await getOwnAccess();
+  currentAccess=access;
+  if(!access||!access.active){
+    cloudReady=false;
+    $('mainApp').classList.add('auth-locked');
+    $('authGate').classList.remove('hidden');
+    setAuthMessage('Acesso criado, mas ainda não liberado pelo administrador.');
+    return false;
+  }
+  $('currentUserName').textContent=access.display_name||currentSession.user.email||'Usuário';
+  $('currentUserRole').textContent=access.role==='admin'?'Administrador':access.role==='operator'?'Operador':'Consulta';
+
+  const localSnapshot=cloneStateForCloud();
+  const {data:row,error}=await supabaseClient.from('app_state').select('data,data_version,revision,updated_at').eq('id',SUPABASE_CONFIG.STATE_ID).single();
+  if(error)throw error;
+  cloudRevision=Number(row.revision)||1;
+
+  let cloudState=row.data;
+  if(cloudState&&typeof cloudState==='object'){
+    try{prepareState(cloudState);cloudState=cloneStateForCloud()}catch(err){throw new Error('Estado remoto inválido: '+err.message)}
+  }
+
+  const cloudEmpty=!stateHasOperationalData(cloudState);
+  const localUseful=stateHasOperationalData(localSnapshot);
+
+  if(cloudEmpty&&localUseful&&access.role!=='viewer'){
+    state=localSnapshot;
+    prepareState(state);
+    cloudReady=true;
+    pendingCloudSave=true;
+    await flushCloudSave();
+  }else{
+    state=cloudState;
+    localStorage.setItem(CONFIG.STORAGE_KEY,JSON.stringify(state));
+  }
+
+  cloudReady=true;
+  renderAll();
+  setSyncStatus('synced','Sincronizado');
+  $('authGate').classList.add('hidden');
+  $('mainApp').classList.remove('auth-locked');
+  return true;
+}
+async function activateAuthenticatedSession(session){
+  currentSession=session;
+  if(!session){
+    cloudReady=false;currentAccess=null;
+    $('mainApp').classList.add('auth-locked');
+    $('authGate').classList.remove('hidden');
+    setSyncStatus('local','Local');
+    return;
+  }
+  try{
+    setAuthMessage('Carregando dados...',true);
+    load();
+    renderAll();
+    await loadCloudState();
+    setAuthMessage('');
+  }catch(err){
+    console.error('Falha ao iniciar sessão:',err);
+    $('mainApp').classList.add('auth-locked');
+    $('authGate').classList.remove('hidden');
+    setAuthMessage('Não foi possível carregar seu acesso: '+(err.message||'erro desconhecido'));
+  }
+}
+async function loginWithEmail(ev){
+  ev?.preventDefault();
+  const email=$('authEmail').value.trim();
+  const password=$('authPassword').value;
+  setAuthMessage('Entrando...',true);
+  const {data,error}=await supabaseClient.auth.signInWithPassword({email,password});
+  if(error){setAuthMessage(error.message);return}
+  await activateAuthenticatedSession(data.session);
+}
+async function signupWithEmail(){
+  const email=$('authEmail').value.trim();
+  const password=$('authPassword').value;
+  const display_name=$('authDisplayName').value.trim();
+  if(!email||password.length<6){setAuthMessage('Informe um e-mail válido e uma senha com pelo menos 6 caracteres.');return}
+  setAuthMessage('Criando acesso...',true);
+  const {data,error}=await supabaseClient.auth.signUp({email,password,options:{data:{display_name}}});
+  if(error){setAuthMessage(error.message);return}
+  if(data.session){
+    await activateAuthenticatedSession(data.session);
+  }else{
+    setAuthMessage('Acesso criado. Confirme o e-mail enviado pelo Supabase e depois entre.',true);
+  }
+}
+async function logoutUser(){
+  await flushCloudSave();
+  await supabaseClient.auth.signOut();
+  currentSession=null;currentAccess=null;cloudReady=false;
+  $('mainApp').classList.add('auth-locked');
+  $('authGate').classList.remove('hidden');
+  $('authPassword').value='';
+  setAuthMessage('Sessão encerrada.',true);
+  setSyncStatus('local','Local');
+}
+async function bootApp(){
+  load();renderAll();
+  const {data:{session}}=await supabaseClient.auth.getSession();
+  await activateAuthenticatedSession(session);
+  supabaseClient.auth.onAuthStateChange((event,session)=>{
+    if(event==='SIGNED_OUT')activateAuthenticatedSession(null);
+  });
+}
+window.addEventListener('online',()=>{if(pendingCloudSave)flushCloudSave();else if(currentSession)setSyncStatus('synced','Sincronizado')});
+window.addEventListener('offline',()=>setSyncStatus('offline','Offline'));
 
 function calcNtrip(ids){
     const serial=ids.map(getEquipment).filter(Boolean).filter(e=>{const p=getProduct(e.productId);return p?.variables.includes('Receptor')||p?.variables.includes('Ecobatímetro')});
@@ -2429,7 +2679,7 @@ function applyResponsiveTableLabels(){
 function renderAll(){updateDashboard();renderEquipmentTable();renderProductPage();renderBuilderProductFilter();renderBuilder();renderKits();updateCharts();renderProductManager();renderCodeManager()}
 
 document.querySelectorAll('.nav button').forEach(btn=>btn.addEventListener('click',()=>{document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));btn.classList.add('active');$(btn.dataset.page).classList.add('active');if(btn.dataset.page==='dados')updateCharts();if(btn.dataset.page==='produtos')renderProductPage()}));
-load();renderAll();
+bootApp();
 
 const responsiveTableObserver=new MutationObserver(()=>applyResponsiveTableLabels());
 document.querySelectorAll('.table-wrap').forEach(el=>responsiveTableObserver.observe(el,{childList:true,subtree:true}));
