@@ -157,13 +157,44 @@ button,input,select{font:inherit}button{cursor:pointer}
 @media(max-width:340px){
  .table-actions,.product-row>.actions{grid-template-columns:1fr}
 }
+
+/* ===== Calculadora de Diárias integrada ===== */
+.calc-shell{max-width:1180px;margin:0 auto}
+.calc-workspace{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(280px,.75fr);gap:16px;align-items:start}
+.calc-form{padding:20px}.calc-result-card{padding:0;overflow:hidden;position:sticky;top:18px}
+.calc-card-head{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-bottom:15px;margin-bottom:18px;border-bottom:1px solid var(--border)}
+.calc-card-title{margin:0;font-size:15px;font-weight:700}.calc-card-desc{margin:4px 0 0;font-size:12px;color:var(--muted)}
+.calc-dates{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:17px}
+.calc-group label,.calc-extract>label{display:block;margin-bottom:6px;font-size:12px;font-weight:700;color:var(--muted)}
+.calc-date-row{display:grid;grid-template-columns:minmax(0,1fr) 42px;gap:7px;align-items:center}
+.calc-date-row input[type=text],.calc-extract textarea,#horaManual{width:100%;border:1px solid var(--border);border-radius:7px;background:#fff;color:var(--text);outline:none}
+.calc-date-row input[type=text]{height:42px;padding:0 11px}.calc-date-row input:focus,.calc-extract textarea:focus,#horaManual:focus{border-color:var(--primary);box-shadow:0 0 0 2px rgba(242,195,0,.18)}
+.calc-calendar{width:42px;height:42px;display:flex;align-items:center;justify-content:center;border:1px solid var(--border);border-radius:7px;background:var(--surface-2);font-size:17px;cursor:pointer}.calc-calendar:hover{border-color:#b9b9b9;background:#eee}
+.calc-datepicker{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+.calc-extract{padding-top:17px;border-top:1px solid #ededed}.calc-extract textarea{min-height:90px;padding:10px 11px;resize:vertical;font:inherit;line-height:1.45}
+.calc-extract-actions{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:8px}.calc-help{font-size:11px;color:var(--muted)}
+.calc-secondary{min-height:38px;padding:8px 12px;border:1px solid var(--border);border-radius:7px;background:#fff;color:var(--text);font-weight:700;cursor:pointer}.calc-secondary:hover{background:var(--surface-2)}
+.calc-controls{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:stretch;margin-top:18px;padding-top:17px;border-top:1px solid #ededed}
+.calc-tolerance{display:flex;align-items:center;justify-content:space-between;min-width:230px;padding:9px 11px;border:1px solid var(--border);border-radius:7px;background:var(--surface-2)}
+.calc-tolerance-info{display:flex;flex-direction:column;gap:2px}.calc-tolerance-title{font-size:12px;font-weight:700}.calc-tolerance-sub{font-size:10px;color:var(--muted)}
+.calc-switch{position:relative;display:inline-block;width:42px;height:22px;flex:0 0 auto;margin-left:12px}.calc-switch input{opacity:0;width:0;height:0}.calc-slider{position:absolute;cursor:pointer;inset:0;border:1px solid #bdbdbd;background:#d4d4d4;transition:.18s;border-radius:22px}.calc-slider:before{position:absolute;content:"";width:16px;height:16px;left:2px;top:2px;background:#fff;border-radius:50%;box-shadow:0 1px 3px rgba(0,0,0,.2);transition:.18s}.calc-switch input:checked+.calc-slider{background:var(--primary);border-color:var(--primary-dark)}.calc-switch input:checked+.calc-slider:before{transform:translateX(20px)}
+.calc-main-actions{display:flex;gap:7px}.calc-main-actions button{min-height:48px;padding:0 18px;border-radius:7px;font-size:12px;font-weight:800;cursor:pointer}.calc-calculate{min-width:130px;border:1px solid var(--primary);background:var(--primary);color:#302a00}.calc-clear{min-width:82px;border:1px solid var(--border);background:#fff;color:var(--text)}
+.calc-message{min-height:17px;margin-top:11px;font-size:11px;font-weight:600;color:var(--danger)}
+.calc-result-top{padding:17px 18px 14px;border-bottom:1px solid var(--border);background:var(--surface-2)}.calc-result{padding:38px 20px 32px;text-align:center;background:#fff;position:relative}.calc-result:before{content:"";position:absolute;left:50%;top:20px;width:34px;height:3px;border-radius:3px;background:var(--primary);transform:translateX(-50%)}
+.calc-result-number{display:block;font-size:68px;line-height:.95;font-weight:700;color:var(--text)}.calc-result-text{display:block;margin-top:9px;font-size:14px;font-weight:600;color:var(--muted)}.calc-result-actions{padding:14px 17px 16px;border-top:1px solid var(--border);background:var(--surface-2)}.calc-copy{width:100%;min-height:40px;border:1px solid var(--border);border-radius:7px;background:#fff;color:var(--text);font-size:11px;font-weight:800;cursor:pointer}.calc-copy-message{min-height:14px;margin-top:6px;text-align:center;font-size:10px;font-weight:600;color:var(--success)}
+.calc-version{display:inline-flex;margin-top:9px;padding:4px 7px;border-radius:999px;background:var(--primary-soft);color:#8a7000;font-size:10px;font-weight:700}
+.calc-time-modal{display:none;position:fixed;inset:0;background:rgba(40,40,40,.48);align-items:center;justify-content:center;padding:20px;z-index:220}.calc-time-dialog{width:min(360px,100%);overflow:hidden;border-radius:10px;background:#fff;box-shadow:0 18px 60px rgba(0,0,0,.2)}.calc-time-dialog h3{margin:0;padding:16px 18px;border-bottom:1px solid var(--border);font-size:16px}.calc-time-body{padding:18px}.calc-time-body #horaManual{height:45px;padding:0 12px;font-size:18px;text-align:center;letter-spacing:.08em}.calc-time-preview{margin-top:12px;padding:11px;border-radius:7px;background:var(--surface-2);text-align:center;font-size:24px;font-weight:700}.calc-time-actions{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:15px}.calc-time-actions button{min-height:40px}
+@media(max-width:900px){.calc-workspace{grid-template-columns:1fr}.calc-result-card{position:relative;top:auto}}
+@media(max-width:700px){.calc-shell{max-width:none}.calc-form{padding:13px}.calc-dates{grid-template-columns:1fr;gap:12px}.calc-date-row{grid-template-columns:minmax(0,1fr) 44px}.calc-date-row input[type=text]{height:44px;font-size:16px}.calc-calendar{width:44px;height:44px}.calc-extract textarea{min-height:105px;font-size:16px}.calc-extract-actions{flex-direction:column;align-items:stretch}.calc-secondary{width:100%;min-height:42px}.calc-controls{display:flex;flex-direction:column}.calc-tolerance{width:100%;min-width:0;min-height:48px}.calc-main-actions{display:grid;grid-template-columns:1fr 1fr}.calc-main-actions button{width:100%;min-width:0;min-height:46px}.calc-result-number{font-size:62px}.calc-time-modal{align-items:flex-end;padding:0}.calc-time-dialog{width:100%;max-width:none;border-radius:14px 14px 0 0}.calc-time-body{padding-bottom:calc(16px + env(safe-area-inset-bottom))}}
+@media(max-width:420px){.calc-main-actions,.calc-time-actions{grid-template-columns:1fr}.calc-result-number{font-size:56px}}
+
 </style>
 </head>
 <body>
 <div class="app">
 <header class="header"><div class="header-inner"><div class="brand"><h1>Controle de Kits</h1><p>Organização e controle de equipamentos de estoque</p></div><div class="header-actions"><button class="btn" onclick="exportData()">EXPORTAR</button><button class="btn" onclick="document.getElementById('importFile').click()">IMPORTAR</button><input id="importFile" type="file" accept="application/json" hidden onchange="importData(event)"></div></div></header>
 <main class="container">
-<nav class="nav"><button class="active" data-page="equipamentos">Equipamentos</button><button data-page="produtos">Produtos</button><button data-page="montar">Montar Kit</button><button data-page="kits">Kits Ativos</button><button data-page="dados">Dados</button></nav>
+<nav class="nav"><button class="active" data-page="equipamentos">Equipamentos</button><button data-page="produtos">Produtos</button><button data-page="montar">Montar Kit</button><button data-page="kits">Kits Ativos</button><button data-page="calculadora">Calculadora de Diárias</button><button data-page="dados">Dados</button></nav>
 <section id="equipamentos" class="page active">
 <div class="page-title"><div><h2>Equipamentos</h2><p>Cadastre, pesquise e acompanhe os equipamentos do estoque.</p></div><button class="btn btn-primary" onclick="openEquipmentModal()">+ CADASTRAR EQUIPAMENTO</button></div>
 <div class="dashboard"><div class="card metric"><div class="label">Equipamentos</div><div class="value" id="mTotal">0</div></div><div class="card metric"><div class="label">Disponíveis</div><div class="value" id="mAvailable">0</div></div><div class="card metric"><div class="label">Em kits</div><div class="value" id="mInKit">0</div></div><div class="card metric"><div class="label">Kits ativos</div><div class="value" id="mKits">0</div></div></div>
@@ -184,6 +215,22 @@ button,input,select{font:inherit}button{cursor:pointer}
 <div class="page-title"><div><h2>Kits Ativos</h2><p>Consulte, filtre, edite ou desmonte os kits existentes.</p></div></div>
 <div class="card toolbar"><div class="field grow"><label>Nome / ID</label><input id="kitFilterName" placeholder="Ex.: Campo 01 ou KIT-001" oninput="renderKits()"></div><div class="field"><label>Tipo</label><select id="kitFilterNtrip" onchange="renderKits()"><option value="">Todos</option><option value="true">NTrip</option><option value="false">Completo</option></select></div><div class="field"><label>Criação a partir de</label><input id="kitFilterCreatedFrom" type="date" onchange="renderKits()"></div><div class="field"><label>Criação até</label><input id="kitFilterCreatedTo" type="date" onchange="renderKits()"></div><div class="field"><label>Alteração a partir de</label><input id="kitFilterUpdatedFrom" type="date" onchange="renderKits()"></div><div class="field"><label>Alteração até</label><input id="kitFilterUpdatedTo" type="date" onchange="renderKits()"></div><button class="btn" onclick="clearKitFilters()">LIMPAR</button></div>
 <div id="kitGrid" class="kit-grid"></div>
+</section>
+<section id="calculadora" class="page">
+<div class="page-title"><div><h2>Calculadora de Diárias</h2><p>Cálculo do período de locação e devolução para apoio ao faturamento.</p><span class="calc-version">Calculadora v1.6 integrada</span></div></div>
+<div class="calc-shell"><div class="calc-workspace">
+<section class="card calc-form">
+ <div class="calc-card-head"><div><h3 class="calc-card-title">Período da locação</h3><p class="calc-card-desc">Informe manualmente ou extraia as datas do texto do faturamento.</p></div></div>
+ <div class="calc-dates">
+  <div class="calc-group"><label for="retirada">Retirada</label><div class="calc-date-row"><input type="text" id="retirada" maxlength="12" placeholder="DDMMAAAAHHMM" inputmode="numeric" onfocus="campoEntrou(this)" onblur="campoSaiu(this)"><button type="button" class="calc-calendar" onclick="abrirCalendario('retirada')" title="Selecionar data">📅</button><input type="date" id="datepicker-retirada" class="calc-datepicker" onchange="dataSelecionada('retirada')"></div></div>
+  <div class="calc-group"><label for="devolucao">Devolução</label><div class="calc-date-row"><input type="text" id="devolucao" maxlength="12" placeholder="DDMMAAAAHHMM" inputmode="numeric" onfocus="campoEntrou(this)" onblur="campoSaiu(this)"><button type="button" class="calc-calendar" onclick="abrirCalendario('devolucao')" title="Selecionar data">📅</button><input type="date" id="datepicker-devolucao" class="calc-datepicker" onchange="dataSelecionada('devolucao')"></div></div>
+ </div>
+ <div class="calc-extract"><label for="extracaoAutomatica">Extração automática</label><textarea id="extracaoAutomatica" placeholder="REFERENTE AO PERÍODO DE dd/mm/aaaa A dd/mm/aaaa"></textarea><div class="calc-extract-actions"><span class="calc-help">Cole a observação do faturamento contendo as duas datas.</span><button type="button" class="calc-secondary" onclick="preencherAutomaticamente()">PREENCHER PERÍODO</button></div></div>
+ <div class="calc-controls"><div class="calc-tolerance"><div class="calc-tolerance-info"><span class="calc-tolerance-title">Tolerância</span><span class="calc-tolerance-sub">Ativa o limite de devolução até 12:30</span></div><label class="calc-switch" title="Ligado: devolução considera tolerância até 12:30"><input type="checkbox" id="tolerancia"><span class="calc-slider"></span></label></div><div class="calc-main-actions"><button type="button" class="calc-calculate" onclick="calcularDiarias()">CALCULAR</button><button type="button" class="calc-clear" onclick="limparCalculadora()">LIMPAR</button></div></div>
+ <div id="mensagem" class="calc-message"></div>
+</section>
+<aside class="card calc-result-card"><div class="calc-result-top"><h3 class="calc-card-title">Resultado do cálculo</h3><p class="calc-card-desc">Quantidade de diárias para faturamento.</p></div><div class="calc-result"><span id="numeroResultado" class="calc-result-number">0</span><span id="textoResultado" class="calc-result-text">diárias</span></div><div class="calc-result-actions"><button type="button" class="calc-copy" onclick="copiarResultado()">COPIAR RESULTADO</button><div id="mensagemCopia" class="calc-copy-message"></div></div></aside>
+</div></div>
 </section>
 <section id="dados" class="page">
 <div class="page-title"><div><h2>Dados</h2><p>Indicadores gerais, gráficos e ferramentas de segurança dos dados locais.</p></div></div>
@@ -209,7 +256,7 @@ button,input,select{font:inherit}button{cursor:pointer}
 <div id="printLabelModal" class="modal-backdrop"><div class="modal wide"><div class="modal-head"><h3 id="printLabelTitle">Imprimir identificação</h3><button class="close" onclick="closeModal('printLabelModal')">×</button></div><div class="modal-body"><p class="hint" style="margin-top:0">Selecione o equipamento que será destacado na etiqueta. A identificação completa do kit ficará na etiqueta esquerda.</p><div id="printLabelEquipmentList" class="selected-list"></div></div><div class="modal-footer"><button class="btn btn-primary" onclick="printCompleteKitFromModal()">IMPRIMIR KIT COMPLETO</button><button class="btn" onclick="closeModal('printLabelModal')">FECHAR</button></div></div></div>
 
 <div id="confirmModal" class="modal-backdrop"><div class="modal"><div class="modal-head"><h3>Confirmar ação</h3><button class="close" onclick="closeModal('confirmModal')">×</button></div><div class="modal-body"><p id="confirmText"></p></div><div class="modal-footer"><button class="btn" onclick="closeModal('confirmModal')">CANCELAR</button><button id="confirmAction" class="btn btn-danger">CONFIRMAR</button></div></div></div>
-<div id="toast" class="toast"></div>
+<div id="modalHora" class="calc-time-modal"><div class="calc-time-dialog"><h3>Informe a hora</h3><div class="calc-time-body"><input type="text" id="horaManual" maxlength="4" inputmode="numeric" placeholder="HHMM" oninput="atualizarPreviewHora()" onkeydown="if(event.key==='Enter') confirmarHora()"><div class="calc-time-preview" id="previewHora">--:--</div><div class="calc-time-actions"><button type="button" class="btn" onclick="cancelarHora()">CANCELAR</button><button type="button" class="btn btn-primary" onclick="confirmarHora()">CONFIRMAR</button></div></div></div></div>\n<div id="toast" class="toast"></div>
 <script>
 /* QR Code Generator for JavaScript, Kazuhiko Arase.
    Implementação vendorizada localmente. Licença MIT.
@@ -2044,6 +2091,331 @@ function importData(ev){
 function clearAllData(){confirm('Isso apagará códigos, produtos, equipamentos e kits deste navegador. Esta ação não pode ser desfeita sem um backup.',()=>{localStorage.removeItem(CONFIG.STORAGE_KEY);state=emptyState();selectedEquipment=[];save();renderAll();toast('Todos os dados foram apagados.')})}
 function confirm(text,cb){$('confirmText').textContent=text;confirmCallback=cb;$('confirmAction').onclick=()=>{closeModal('confirmModal');const f=confirmCallback;confirmCallback=null;if(f)f()};openModal('confirmModal')}
 
+
+/* ===== Lógica da Calculadora de Diárias v1.6 integrada ===== */
+let tipoSelecionado=null;
+let dataTemporaria=null;
+
+function campoEntrou(campo){
+    let numeros=campo.value.replace(/\D/g,"");
+    if(numeros.length===10){
+        numeros=numeros.slice(0,4)+"20"+numeros.slice(4);
+    }
+    if(numeros.length===12){
+        campo.value=numeros;
+    }
+}
+
+function campoSaiu(campo){
+    let numeros=campo.value.replace(/\D/g,"");
+    if(numeros.length===10){
+        numeros=numeros.slice(0,4)+"20"+numeros.slice(4);
+    }
+    if(numeros.length!==12)return;
+
+    const dia=numeros.slice(0,2);
+    const mes=numeros.slice(2,4);
+    const ano=numeros.slice(4,8);
+    const hora=numeros.slice(8,10);
+    const minuto=numeros.slice(10,12);
+
+    campo.value=dia+"/"+mes+"/"+ano+" "+hora+":"+minuto;
+}
+
+function abrirCalendario(tipo){
+    const calendario=document.getElementById("datepicker-"+tipo);
+    if(calendario.showPicker){
+        calendario.showPicker();
+    }else{
+        calendario.click();
+    }
+}
+
+function dataSelecionada(tipo){
+    const calendario=document.getElementById("datepicker-"+tipo);
+    if(!calendario.value)return;
+
+    tipoSelecionado=tipo;
+    dataTemporaria=calendario.value;
+
+    const modal=document.getElementById("modalHora");
+    const campoHora=document.getElementById("horaManual");
+    const preview=document.getElementById("previewHora");
+
+    campoHora.value="";
+    preview.textContent="--:--";
+    modal.style.display="flex";
+
+    setTimeout(function(){campoHora.focus();},50);
+}
+
+function atualizarPreviewHora(){
+    const campo=document.getElementById("horaManual");
+    const preview=document.getElementById("previewHora");
+
+    let numeros=campo.value.replace(/\D/g,"").slice(0,4);
+    campo.value=numeros;
+
+    if(numeros.length===0){
+        preview.textContent="--:--";
+        return;
+    }
+
+    if(numeros.length<=2){
+        preview.textContent=numeros.padEnd(2,"-")+":--";
+        return;
+    }
+
+    const hora=numeros.slice(0,2);
+    const minuto=numeros.slice(2,4);
+    preview.textContent=hora+":"+minuto.padEnd(2,"-");
+}
+
+function confirmarHora(){
+    const campoHora=document.getElementById("horaManual");
+    const numeros=campoHora.value.replace(/\D/g,"");
+
+    if(numeros.length!==4){
+        alert("Informe o horário com 4 números. Exemplo: 0830.");
+        campoHora.focus();
+        return;
+    }
+
+    const hora=Number(numeros.slice(0,2));
+    const minuto=Number(numeros.slice(2,4));
+
+    if(hora<0||hora>23||minuto<0||minuto>59){
+        alert("Informe um horário válido.");
+        campoHora.focus();
+        return;
+    }
+
+    if(!tipoSelecionado||!dataTemporaria){
+        fecharModalHora();
+        return;
+    }
+
+    const partes=dataTemporaria.split("-");
+    const ano=partes[0];
+    const mes=partes[1];
+    const dia=partes[2];
+
+    document.getElementById(tipoSelecionado).value=
+        dia+"/"+mes+"/"+ano+" "+
+        String(hora).padStart(2,"0")+":"+
+        String(minuto).padStart(2,"0");
+
+    fecharModalHora();
+}
+
+function cancelarHora(){
+    fecharModalHora();
+}
+
+function fecharModalHora(){
+    document.getElementById("modalHora").style.display="none";
+
+    if(tipoSelecionado){
+        const calendario=document.getElementById("datepicker-"+tipoSelecionado);
+        if(calendario)calendario.value="";
+    }
+
+    tipoSelecionado=null;
+    dataTemporaria=null;
+    document.getElementById("horaManual").value="";
+    document.getElementById("previewHora").textContent="--:--";
+}
+
+function preencherAutomaticamente(){
+    const campoExtracao=document.getElementById("extracaoAutomatica");
+    const mensagem=document.getElementById("mensagem");
+    const texto=campoExtracao.value.trim();
+
+    mensagem.textContent="";
+    mensagem.style.color="#b00020";
+
+    if(!texto){
+        mensagem.textContent="Cole o texto do período (obs. do faturamento) na Extração automática.";
+        return;
+    }
+
+    const datas=texto.match(/\b\d{2}\/\d{2}\/\d{4}\b/g);
+
+    if(!datas || datas.length<2){
+        mensagem.textContent="Não foi possível encontrar duas datas no formato DD/MM/AAAA.";
+        return;
+    }
+
+    const validarData=function(dataTexto){
+        const partes=dataTexto.split("/");
+        const dia=Number(partes[0]);
+        const mes=Number(partes[1]);
+        const ano=Number(partes[2]);
+        const data=new Date(ano,mes-1,dia);
+
+        return (
+            data.getFullYear()===ano &&
+            data.getMonth()===mes-1 &&
+            data.getDate()===dia
+        );
+    };
+
+    if(!validarData(datas[0]) || !validarData(datas[1])){
+        mensagem.textContent="Foi encontrada uma data inválida no texto.";
+        return;
+    }
+
+    document.getElementById("retirada").value=datas[0]+" 08:44";
+    document.getElementById("devolucao").value=datas[1]+" 12:44";
+
+    mensagem.style.color="#333";
+    mensagem.textContent="Período preenchido automaticamente.";
+}
+
+function converterData(valor){
+    let numeros=valor.replace(/\D/g,"");
+
+    if(numeros.length===10){
+        numeros=numeros.slice(0,4)+"20"+numeros.slice(4);
+    }
+
+    if(numeros.length!==12)return null;
+
+    const dia=Number(numeros.slice(0,2));
+    const mes=Number(numeros.slice(2,4));
+    const ano=Number(numeros.slice(4,8));
+    const hora=Number(numeros.slice(8,10));
+    const minuto=Number(numeros.slice(10,12));
+
+    const data=new Date(ano,mes-1,dia,hora,minuto,0,0);
+
+    if(
+        data.getFullYear()!==ano||
+        data.getMonth()!==mes-1||
+        data.getDate()!==dia||
+        data.getHours()!==hora||
+        data.getMinutes()!==minuto
+    ){
+        return null;
+    }
+
+    return data;
+}
+
+function calcularDiarias(){
+    const campoRetirada=document.getElementById("retirada");
+    const campoDevolucao=document.getElementById("devolucao");
+    const mensagem=document.getElementById("mensagem");
+
+    mensagem.textContent="";
+    mensagem.style.color="#b00020";
+
+    const retirada=converterData(campoRetirada.value);
+    const devolucao=converterData(campoDevolucao.value);
+
+    if(!retirada){
+        mensagem.textContent="Informe uma data de retirada válida.";
+        return;
+    }
+
+    if(!devolucao){
+        mensagem.textContent="Informe uma data de devolução válida.";
+        return;
+    }
+
+    if(devolucao<retirada){
+        mensagem.textContent="A devolução não pode ser anterior à retirada.";
+        return;
+    }
+
+    const toleranciaAtiva=
+        document.getElementById("tolerancia").checked;
+
+    function dataOperacional(data, tipo){
+        const resultado=new Date(
+            data.getFullYear(),
+            data.getMonth(),
+            data.getDate()
+        );
+
+        let limiteMinutos=12*60;
+
+        if(tipo==="devolucao" && toleranciaAtiva){
+            limiteMinutos=(12*60)+30;
+        }
+
+        const horarioEmMinutos=
+            (data.getHours()*60)+data.getMinutes();
+
+        if(horarioEmMinutos<limiteMinutos){
+            resultado.setDate(resultado.getDate()-1);
+        }
+
+        return resultado;
+    }
+
+    const retiradaOperacional=
+        dataOperacional(retirada,"retirada");
+
+    const devolucaoOperacional=
+        dataOperacional(devolucao,"devolucao");
+
+    const diferenca=Math.round(
+        (devolucaoOperacional-retiradaOperacional)/
+        (1000*60*60*24)
+    );
+
+    const diarias=Math.max(1,diferenca);
+
+    document.getElementById("numeroResultado").textContent=diarias;
+    document.getElementById("textoResultado").textContent=
+        diarias===1?"diária":"diárias";
+}
+
+function copiarResultado(){
+    const numero=document.getElementById("numeroResultado").textContent;
+    const texto=document.getElementById("textoResultado").textContent;
+    const resultado=numero+" "+texto;
+
+    navigator.clipboard.writeText(resultado).then(function(){
+        const mensagem=document.getElementById("mensagemCopia");
+        mensagem.textContent="Resultado copiado.";
+        setTimeout(function(){mensagem.textContent="";},1800);
+    }).catch(function(){
+        document.getElementById("mensagemCopia").textContent=
+            "Não foi possível copiar automaticamente.";
+    });
+}
+
+function limparCalculadora(){
+    document.getElementById("retirada").value="";
+    document.getElementById("devolucao").value="";
+    document.getElementById("extracaoAutomatica").value="";
+    document.getElementById("tolerancia").checked=false;
+    document.getElementById("numeroResultado").textContent="0";
+    document.getElementById("textoResultado").textContent="diárias";
+    document.getElementById("mensagem").textContent="";
+    document.getElementById("mensagemCopia").textContent="";
+    document.getElementById("datepicker-retirada").value="";
+    document.getElementById("datepicker-devolucao").value="";
+    fecharModalHora();
+    document.getElementById("retirada").focus();
+}
+
+document.getElementById("modalHora").addEventListener("click",function(event){
+    if(event.target===document.getElementById("modalHora")){
+        fecharModalHora();
+    }
+});
+
+document.addEventListener("keydown",function(event){
+    if(
+        event.key==="Escape" &&
+        document.getElementById("modalHora").style.display==="flex"
+    ){
+        fecharModalHora();
+    }
+});
 function renderBuilderProductFilter(){$('builderProduct').innerHTML='<option value="">Todos</option>'+state.products.slice().sort((a,b)=>a.name.localeCompare(b.name,'pt-BR')).map(p=>`<option value="${p.id}">${esc(productSiteName(p))}</option>`).join('')}
 
 function applyResponsiveTableLabels(){
