@@ -132,7 +132,7 @@ button,input,select{font:inherit}button{cursor:pointer}
 <section id="equipamentos" class="page active">
 <div class="page-title"><div><h2>Equipamentos</h2><p>Cadastre, pesquise e acompanhe os equipamentos do estoque.</p></div><button class="btn btn-primary" onclick="openEquipmentModal()">+ CADASTRAR EQUIPAMENTO</button></div>
 <div class="dashboard"><div class="card metric"><div class="label">Equipamentos</div><div class="value" id="mTotal">0</div></div><div class="card metric"><div class="label">Disponíveis</div><div class="value" id="mAvailable">0</div></div><div class="card metric"><div class="label">Em kits</div><div class="value" id="mInKit">0</div></div><div class="card metric"><div class="label">Kits ativos</div><div class="value" id="mKits">0</div></div></div>
-<div class="card toolbar"><div class="field grow"><label>Produto</label><input id="filterProduct" placeholder="Contém: i73, GNSS, prisma..." oninput="renderEquipmentTable()"></div><div class="field"><label>Disponibilidade</label><select id="filterStatus" onchange="renderEquipmentTable()"><option value="">Todos</option><option value="available">Disponível</option><option value="kit">Em kit</option></select></div><div class="field"><label>Tipo</label><select id="filterType" onchange="renderEquipmentTable()"><option value="">Todos</option><option value="TX/RX">TX/RX</option><option value="RX">RX</option><option value="RX*">RX*</option><option value="none">Sem tipo</option></select></div><div class="field grow"><label>Busca geral</label><input id="filterGeneral" placeholder="Código, local ou série" oninput="renderEquipmentTable()"></div><button class="btn" onclick="clearEquipmentFilters()">LIMPAR</button></div>
+<div class="card toolbar"><div class="field grow"><label>Produto</label><input id="filterProduct" placeholder="Contém: i73, Receptor, prisma..." oninput="renderEquipmentTable()"></div><div class="field"><label>Disponibilidade</label><select id="filterStatus" onchange="renderEquipmentTable()"><option value="">Todos</option><option value="available">Disponível</option><option value="kit">Em kit</option></select></div><div class="field"><label>Tipo</label><select id="filterType" onchange="renderEquipmentTable()"><option value="">Todos</option><option value="TX/RX">TX/RX</option><option value="RX">RX</option><option value="RX*">RX*</option><option value="none">Sem tipo</option></select></div><div class="field grow"><label>Busca geral</label><input id="filterGeneral" placeholder="Código, local ou série" oninput="renderEquipmentTable()"></div><button class="btn" onclick="clearEquipmentFilters()">LIMPAR</button></div>
 <div class="card table-wrap"><table class="table"><thead><tr><th>Código</th><th>Local</th><th>Produto</th><th>Tipo</th><th>Série</th><th>Variáveis</th><th>Status</th><th>Ações</th></tr></thead><tbody id="equipmentTable"></tbody></table></div>
 </section>
 <section id="produtos" class="page">
@@ -157,7 +157,7 @@ button,input,select{font:inherit}button{cursor:pointer}
 </section>
 </main></div>
 
-<div id="equipmentModal" class="modal-backdrop"><div class="modal"><div class="modal-head"><h3 id="equipmentModalTitle">Cadastrar equipamento</h3><button class="close" onclick="closeModal('equipmentModal')">×</button></div><div class="modal-body"><form id="equipmentForm" onsubmit="saveEquipment(event)"><input type="hidden" id="equipmentId"><div class="form-grid"><div class="field"><label>Código</label><input id="eqCodeInput" autocomplete="off" inputmode="numeric" maxlength="4" pattern="[0-9]{4}" placeholder="Ex.: 7797" required><input type="hidden" id="eqCode"><div class="hint">Digite os 4 dígitos do código. O EAN-13 é gerado automaticamente em segundo plano.</div></div><div class="field"><label>Local</label><input id="eqLocation" required></div><div class="field full"><label>Produto</label><div class="product-combobox"><input id="eqProductInput" autocomplete="off" placeholder="Selecione ou digite o produto..." onclick="openProductDropdown()" oninput="filterProductDropdown()" onfocus="openProductDropdown()" required><input type="hidden" id="eqProduct"><div id="productDropdown" class="product-dropdown"></div></div><div class="hint">Digite para localizar um produto e selecione uma opção da lista.</div><div class="actions" style="margin-top:7px"><button type="button" class="btn btn-small" onclick="openProductModal()">+ CADASTRAR NOVO PRODUTO</button><button type="button" class="btn btn-small" onclick="openProductManager()">GERENCIAR PRODUTOS</button></div></div><div class="field" id="typeField" style="display:none"><label>Tipo</label><select id="eqType"><option value="">Selecione</option><option>TX/RX</option><option>RX</option><option>RX*</option></select></div><div class="field" id="hceField" style="display:none"><label>Plataforma HCE</label><div class="checkboxes"><label class="check"><input id="eqLandstar" type="checkbox"> Landstar</label><label class="check"><input id="eqSmartGO" type="checkbox"> SmartGO</label></div><div class="hint">É possível marcar Landstar e SmartGO simultaneamente.</div></div><div class="field" id="seriesField"><label>Série</label><input id="eqSeries" required></div></div></form></div><div class="modal-footer"><button class="btn" onclick="closeModal('equipmentModal')">CANCELAR</button><button class="btn btn-primary" onclick="document.getElementById('equipmentForm').requestSubmit()">SALVAR</button></div></div></div>
+<div id="equipmentModal" class="modal-backdrop"><div class="modal"><div class="modal-head"><h3 id="equipmentModalTitle">Cadastrar equipamento</h3><button class="close" onclick="closeModal('equipmentModal')">×</button></div><div class="modal-body"><form id="equipmentForm" onsubmit="saveEquipment(event)"><input type="hidden" id="equipmentId"><div class="form-grid"><div class="field"><label>Código</label><input id="eqCodeInput" autocomplete="off" inputmode="numeric" maxlength="4" pattern="[0-9]{4}" placeholder="Ex.: 7797" required><input type="hidden" id="eqCode"><div class="hint">Digite os 4 dígitos do código. O EAN-13 é gerado automaticamente em segundo plano.</div></div><div class="field"><label>Local</label><input id="eqLocation" required></div><div class="field full"><label>Produto</label><div class="product-combobox"><input id="eqProductInput" autocomplete="off" placeholder="Selecione ou digite o produto..." onclick="openProductDropdown()" oninput="filterProductDropdown()" onfocus="openProductDropdown()" required><input type="hidden" id="eqProduct"><div id="productDropdown" class="product-dropdown"></div></div><div class="hint">Digite para localizar um produto e selecione uma opção da lista.</div><div class="actions" style="margin-top:7px"><button type="button" class="btn btn-small" onclick="openProductModal()">+ CADASTRAR NOVO PRODUTO</button><button type="button" class="btn btn-small" onclick="openProductManager()">GERENCIAR PRODUTOS</button></div></div><div class="field" id="typeField" style="display:none"><label>Tipo</label><select id="eqType"><option value="">Selecione</option><option>TX/RX</option><option>RX</option><option>RX*</option></select></div><div class="field" id="hceField" style="display:none"><label>Plataforma da Coletora</label><div class="checkboxes"><label class="check"><input id="eqLandstar" type="checkbox"> Landstar</label><label class="check"><input id="eqSmartGO" type="checkbox"> SmartGO</label></div><div class="hint">É possível marcar Landstar e SmartGO simultaneamente.</div></div><div class="field" id="seriesField"><label>Série</label><input id="eqSeries" required></div></div></form></div><div class="modal-footer"><button class="btn" onclick="closeModal('equipmentModal')">CANCELAR</button><button class="btn btn-primary" onclick="document.getElementById('equipmentForm').requestSubmit()">SALVAR</button></div></div></div>
 
 <div id="duplicateSeriesModal" class="modal-backdrop"><div class="modal"><div class="modal-head"><h3>Duplicar equipamento</h3><button class="close" onclick="cancelDuplicateEquipment()">×</button></div><div class="modal-body"><form id="duplicateSeriesForm" onsubmit="saveDuplicateEquipment(event)"><div class="field"><label>Série do novo equipamento</label><input id="duplicateSeries" autocomplete="off" required placeholder="Informe a série"></div></form></div><div class="modal-footer"><button class="btn" onclick="cancelDuplicateEquipment()">CANCELAR</button><button class="btn btn-primary" onclick="document.getElementById('duplicateSeriesForm').requestSubmit()">SALVAR</button></div></div></div>
 
@@ -165,7 +165,7 @@ button,input,select{font:inherit}button{cursor:pointer}
 
 <div id="codeManagerModal" class="modal-backdrop"><div class="modal wide"><div class="modal-head"><h3>Gerenciar códigos</h3><button class="close" onclick="closeModal('codeManagerModal')">×</button></div><div class="modal-body"><div id="codeManager"></div></div><div class="modal-footer"><button class="btn" onclick="closeModal('codeManagerModal')">FECHAR</button></div></div></div>
 
-<div id="productModal" class="modal-backdrop"><div class="modal"><div class="modal-head"><h3 id="productModalTitle">Cadastrar produto</h3><button class="close" onclick="closeModal('productModal')">×</button></div><div class="modal-body"><form id="productForm" onsubmit="saveProduct(event)"><input type="hidden" id="productId"><div class="field"><label>Nome do produto</label><input id="productName" required placeholder="Ex.: i73"></div><div style="height:15px"></div><div class="field"><label>Variáveis do produto</label><div class="checkboxes"><label class="check"><input id="varGnss" type="checkbox"> GNSS</label><label class="check"><input id="varHce" type="checkbox"> HCE</label><label class="check"><input id="varEcho" type="checkbox"> Ecobatímetro</label><label class="check"><input id="varAccessory" type="checkbox"> Acessório</label></div></div><p class="hint">Um produto pode ter mais de uma variável. HCE permite Landstar e SmartGO simultaneamente. Produtos marcados como Acessório usam automaticamente “Equipamento não seriado”.</p></form></div><div class="modal-footer"><button class="btn" onclick="closeModal('productModal')">CANCELAR</button><button class="btn btn-primary" onclick="document.getElementById('productForm').requestSubmit()">SALVAR PRODUTO</button></div></div></div>
+<div id="productModal" class="modal-backdrop"><div class="modal"><div class="modal-head"><h3 id="productModalTitle">Cadastrar produto</h3><button class="close" onclick="closeModal('productModal')">×</button></div><div class="modal-body"><form id="productForm" onsubmit="saveProduct(event)"><input type="hidden" id="productId"><div class="field"><label>Nome do produto</label><input id="productName" required placeholder="Ex.: i73"></div><div style="height:15px"></div><div class="field"><label>Variáveis do produto</label><div class="checkboxes"><label class="check"><input id="varReceiver" class="product-category" type="checkbox" onchange="selectSingleProductCategory(this)"> Receptor</label><label class="check"><input id="varCollector" class="product-category" type="checkbox" onchange="selectSingleProductCategory(this)"> Coletora</label><label class="check"><input id="varTotalStation" class="product-category" type="checkbox" onchange="selectSingleProductCategory(this)"> Estação Total</label><label class="check"><input id="varLaser" class="product-category" type="checkbox" onchange="selectSingleProductCategory(this)"> Laser</label><label class="check"><input id="varDrone" class="product-category" type="checkbox" onchange="selectSingleProductCategory(this)"> Drone</label><label class="check"><input id="varEcho" class="product-category" type="checkbox" onchange="selectSingleProductCategory(this)"> Ecobatímetro</label><label class="check"><input id="varAccessory" class="product-category" type="checkbox" onchange="selectSingleProductCategory(this)"> Acessório</label></div></div><p class="hint">Selecione apenas uma categoria por produto. Coletora permite Landstar e SmartGO simultaneamente nos equipamentos. Laser só pode compartilhar um kit com uma Coletora quando essa Coletora possuir SmartGO. Produtos marcados como Acessório usam automaticamente “Equipamento não seriado”.</p></form></div><div class="modal-footer"><button class="btn" onclick="closeModal('productModal')">CANCELAR</button><button class="btn btn-primary" onclick="document.getElementById('productForm').requestSubmit()">SALVAR PRODUTO</button></div></div></div>
 
 <div id="productManagerModal" class="modal-backdrop"><div class="modal"><div class="modal-head"><h3>Gerenciar produtos</h3><button class="close" onclick="closeModal('productManagerModal')">×</button></div><div class="modal-body"><div class="product-manager" id="productManager"></div></div></div></div>
 
@@ -1448,7 +1448,7 @@ module.exports = QRCode;
 </script>
 <script>
 const CONFIG={STORAGE_KEY:'controle_kits_v2'};
-const CURRENT_DATA_VERSION=1;
+const CURRENT_DATA_VERSION=3;
 function emptyState(){return {dataVersion:CURRENT_DATA_VERSION,products:[],codes:[],equipments:[],kits:[],nextKitNumber:1}}
 let state=emptyState();
 let selectedEquipment=[];
@@ -1464,7 +1464,7 @@ function dateOnly(value){if(!value)return '';return new Date(value).toISOString(
 function esc(value){return String(value??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
 function varsText(p){return p?.variables?.length?p.variables.join(' · '):'Sem variável'}
 function hceText(e){const h=e?.hce||{};if(h.landstar&&h.smartgo)return 'LS/SMG';if(h.landstar)return 'LS';if(h.smartgo)return 'SMG';return ''}
-function equipmentMetricHtml(e){const p=getProduct(e?.productId);const out=[];if(p?.variables.includes('GNSS')&&e?.type)out.push(`<span class="badge badge-blue">${esc(e.type)}</span>`);if(p?.variables.includes('HCE')){if(e?.hce?.landstar)out.push('<span class="badge badge-blue">Landstar</span>');if(e?.hce?.smartgo)out.push('<span class="badge badge-blue">SmartGO</span>')}return out.length?out.join(' '):'-'}
+function equipmentMetricHtml(e){const p=getProduct(e?.productId);const out=[];if(p?.variables.includes('Receptor')&&e?.type)out.push(`<span class="badge badge-blue">${esc(e.type)}</span>`);if(p?.variables.includes('Coletora')){if(e?.hce?.landstar)out.push('<span class="badge badge-blue">Landstar</span>');if(e?.hce?.smartgo)out.push('<span class="badge badge-blue">SmartGO</span>')}return out.length?out.join(' '):'-'}
 function getProduct(id){return state.products.find(p=>p.id===id)}
 function getCode(id){return state.codes.find(c=>c.id===id)}
 function ensureCodeRecord(code){
@@ -1497,6 +1497,26 @@ function migrateData(data){
             if(!Array.isArray(data.codes))data.codes=[];
             data.dataVersion=1;
             version=1;
+            continue;
+        }
+        if(version===1){
+            // B19.0: adiciona suporte à categoria Laser e às regras de compatibilidade de kits.
+            // Produtos existentes não precisam ser alterados; a nova variável é opt-in.
+            data.dataVersion=2;
+            version=2;
+            continue;
+        }
+        if(version===2){
+            // B20.0: renomeia categorias canônicas e adiciona Drone / Estação Total.
+            // Converte automaticamente produtos antigos para preservar todas as dependências.
+            if(Array.isArray(data.products)){
+                data.products.forEach(p=>{
+                    if(!Array.isArray(p.variables))p.variables=[];
+                    p.variables=p.variables.map(v=>v==='GNSS'?'Receptor':v==='HCE'?'Coletora':v);
+                });
+            }
+            data.dataVersion=3;
+            version=3;
             continue;
         }
         throw new Error('Não existe migração para esta versão de dados');
@@ -1565,8 +1585,8 @@ function normalize(){
         e.hce=e.hce&&typeof e.hce==='object'?e.hce:{landstar:false,smartgo:false};
         e.hce.landstar=!!e.hce.landstar;e.hce.smartgo=!!e.hce.smartgo;
         const p=getProduct(e.productId);if(p?.variables.includes('Acessório')){e.series='Equipamento não seriado';e.type='';e.hce={landstar:false,smartgo:false};e.balance=Math.max(1,Number(e.balance)||1)}else delete e.balance
-        if(p?.variables.includes('GNSS')&&!e.type)e.type='RX';
-        if(!p?.variables.includes('HCE'))e.hce={landstar:false,smartgo:false};
+        if(p?.variables.includes('Receptor')&&!e.type)e.type='RX';
+        if(!p?.variables.includes('Coletora'))e.hce={landstar:false,smartgo:false};
     });
     state.kits.forEach(k=>{
         if(!k.id)k.id=uid('kit');if(!k.name)k.name=k.id;if(!k.createdAt)k.createdAt=k.updatedAt||now();if(!k.updatedAt)k.updatedAt=k.createdAt;if(!Array.isArray(k.equipmentIds))k.equipmentIds=[];k.ntrip=calcNtrip(k.equipmentIds)
@@ -1589,8 +1609,8 @@ function load(){
 }
 
 function calcNtrip(ids){
-    const serial=ids.map(getEquipment).filter(Boolean).filter(e=>{const p=getProduct(e.productId);return p?.variables.includes('GNSS')||p?.variables.includes('Ecobatímetro')});
-    return serial.length===1 && getProduct(serial[0].productId)?.variables.includes('GNSS');
+    const serial=ids.map(getEquipment).filter(Boolean).filter(e=>{const p=getProduct(e.productId);return p?.variables.includes('Receptor')||p?.variables.includes('Ecobatímetro')});
+    return serial.length===1 && getProduct(serial[0].productId)?.variables.includes('Receptor');
 }
 function kitId(){let n=state.nextKitNumber;state.nextKitNumber++;return 'KIT-'+String(n).padStart(3,'0')}
 function updateDashboard(){$('mTotal').textContent=state.equipments.length;$('mAvailable').textContent=state.equipments.filter(e=>!isInKit(e.id)).length;$('mInKit').textContent=state.equipments.filter(e=>isInKit(e.id)).length;$('mKits').textContent=state.kits.length}
@@ -1625,19 +1645,19 @@ function openEquipmentModal(id=''){
     updateProductFields();filterProductDropdown();openModal('equipmentModal')
 }
 function updateProductFields(){
-    const p=getProduct($('eqProduct').value);const accessory=p?.variables.includes('Acessório');const gnss=p?.variables.includes('GNSS');const hce=p?.variables.includes('HCE');
-    $('typeField').style.display=gnss?'flex':'none';$('eqType').required=gnss;
-    $('hceField').style.display=hce?'flex':'none';
+    const p=getProduct($('eqProduct').value);const accessory=p?.variables.includes('Acessório');const receiver=p?.variables.includes('Receptor');const collector=p?.variables.includes('Coletora');
+    $('typeField').style.display=receiver?'flex':'none';$('eqType').required=receiver;
+    $('hceField').style.display=collector?'flex':'none';
     $('seriesField').style.display='flex';$('eqSeries').readOnly=!!accessory;$('eqSeries').required=!accessory;
     if(!hce){$('eqLandstar').checked=false;$('eqSmartGO').checked=false}
     if(accessory){$('eqSeries').value='Equipamento não seriado';$('eqType').value='';$('eqLandstar').checked=false;$('eqSmartGO').checked=false}
 }
 function saveEquipment(ev){
     ev.preventDefault();const id=$('equipmentId').value;const rawCode=$('eqCodeInput').value.trim().replace(/\D/g,'');if(!/^\d{4}$/.test(rawCode)){toast('Informe um código com exatamente 4 dígitos.');$('eqCodeInput').focus();return}const c=ensureCodeRecord(rawCode);$('eqCode').value=c.id;const p=getProduct($('eqProduct').value);if(!p){toast('Selecione um produto da lista.');$('eqProductInput').focus();return}
-    const accessory=p.variables.includes('Acessório');const gnss=p.variables.includes('GNSS');const hce=p.variables.includes('HCE');let series=accessory?'Equipamento não seriado':$('eqSeries').value.trim();let type=gnss?$('eqType').value:'';
-    const hceData=hce&&!accessory?{landstar:$('eqLandstar').checked,smartgo:$('eqSmartGO').checked}:{landstar:false,smartgo:false};
-    if(!accessory&&!series){toast('Informe a série.');return}if(gnss&&!type){toast('Selecione o tipo do GNSS.');return}
-    if(hce&&!accessory&&!hceData.landstar&&!hceData.smartgo){toast('Selecione Landstar, SmartGO ou os dois.');return}
+    const accessory=p.variables.includes('Acessório');const receiver=p.variables.includes('Receptor');const collector=p.variables.includes('Coletora');let series=accessory?'Equipamento não seriado':$('eqSeries').value.trim();let type=receiver?$('eqType').value:'';
+    const hceData=collector&&!accessory?{landstar:$('eqLandstar').checked,smartgo:$('eqSmartGO').checked}:{landstar:false,smartgo:false};
+    if(!accessory&&!series){toast('Informe a série.');return}if(receiver&&!type){toast('Selecione o tipo do Receptor.');return}
+    if(collector&&!accessory&&!hceData.landstar&&!hceData.smartgo){toast('Selecione Landstar, SmartGO ou os dois.');return}
     const duplicate=state.equipments.find(e=>e.id!==id&&e.series===series&&series!=='Equipamento não seriado');if(duplicate){toast('Essa série já está cadastrada.');return}
     if(id){const e=getEquipment(id);e.codeId=c.id;e.code=c.code;e.location=$('eqLocation').value.trim();e.productId=p.id;e.series=series;e.type=type;e.hce=hceData;if(accessory)e.balance=Math.max(1,Number(e.balance)||1);else delete e.balance}
     else state.equipments.push({id:uid('eq'),codeId:c.id,code:c.code,location:$('eqLocation').value.trim(),productId:p.id,series,type,hce:hceData,...(accessory?{balance:1}:{})})
@@ -1719,8 +1739,12 @@ function openCodeManager(){renderCodeManager();openModal('codeManagerModal')}
 function renderCodeManager(){$('codeManager').innerHTML=state.codes.length?state.codes.slice().sort((a,b)=>String(a.code).localeCompare(String(b.code),'pt-BR',{numeric:true})).map(c=>`<div class="product-row"><div><strong>${esc(c.code)}</strong><div class="hint">EAN-13: ${esc(c.ean||'Não informado')}</div></div><div class="table-actions"><button class="btn btn-small" onclick="openCodeModal('${c.id}')">EDITAR</button><button class="btn btn-small btn-danger" onclick="deleteCode('${c.id}')">EXCLUIR</button></div></div>`).join(''):'<div class="empty">Nenhum código cadastrado.</div>'}
 function deleteCode(id){if(state.equipments.some(e=>e.codeId===id)){toast('Não é possível excluir um código que possui equipamentos cadastrados.');return}confirm('Excluir este código?',()=>{state.codes=state.codes.filter(c=>c.id!==id);save();renderAll();renderCodeManager();toast('Código excluído.')})}
 
-function openProductModal(id=''){$('productForm').reset();$('productId').value=id;if(id){const p=getProduct(id);$('productModalTitle').textContent='Editar produto';$('productName').value=p.name;$('varGnss').checked=p.variables.includes('GNSS');$('varHce').checked=p.variables.includes('HCE');$('varAccessory').checked=p.variables.includes('Acessório');$('varEcho').checked=p.variables.includes('Ecobatímetro')}else $('productModalTitle').textContent='Cadastrar produto';openModal('productModal')}
-function saveProduct(ev){ev.preventDefault();const id=$('productId').value;const name=$('productName').value.trim();const variables=[];if($('varGnss').checked)variables.push('GNSS');if($('varHce').checked)variables.push('HCE');if($('varEcho').checked)variables.push('Ecobatímetro');if($('varAccessory').checked)variables.push('Acessório');if(!name){toast('Informe o nome do produto.');return}const duplicate=state.products.find(p=>p.id!==id&&p.name.toLowerCase()===name.toLowerCase());if(duplicate){toast('Já existe um produto com esse nome.');return}let productId=id;if(id){const p=getProduct(id);p.name=name;p.variables=variables;state.equipments.filter(e=>e.productId===id).forEach(e=>{if(variables.includes('Acessório')){e.series='Equipamento não seriado';e.type='';e.hce={landstar:false,smartgo:false}}else{if(!variables.includes('GNSS'))e.type='';if(!variables.includes('HCE'))e.hce={landstar:false,smartgo:false};else if(!e.hce)e.hce={landstar:false,smartgo:false}}})}else{productId=uid('prd');state.products.push({id:productId,name,variables})}save();closeModal('productModal');renderAll();renderProductManager();if($('equipmentModal').classList.contains('open')){renderProductSelect(productId);updateProductFields();$('eqProductInput').focus();openProductDropdown()}toast(id?'Produto atualizado.':'Produto cadastrado.');
+function selectSingleProductCategory(selected){
+    if(!selected.checked)return;
+    document.querySelectorAll('.product-category').forEach(input=>{if(input!==selected)input.checked=false});
+}
+function openProductModal(id=''){$('productForm').reset();$('productId').value=id;if(id){const p=getProduct(id);$('productModalTitle').textContent='Editar produto';$('productName').value=p.name;$('varReceiver').checked=p.variables.includes('Receptor');$('varCollector').checked=p.variables.includes('Coletora');$('varAccessory').checked=p.variables.includes('Acessório');$('varEcho').checked=p.variables.includes('Ecobatímetro');$('varLaser').checked=p.variables.includes('Laser');$('varDrone').checked=p.variables.includes('Drone');$('varTotalStation').checked=p.variables.includes('Estação Total')}else $('productModalTitle').textContent='Cadastrar produto';openModal('productModal')}
+function saveProduct(ev){ev.preventDefault();const id=$('productId').value;const name=$('productName').value.trim();const checkedCategories=[...document.querySelectorAll('.product-category:checked')];if(checkedCategories.length!==1){toast('Selecione exatamente uma categoria para o produto.');return}const variables=[];if($('varReceiver').checked)variables.push('Receptor');if($('varCollector').checked)variables.push('Coletora');if($('varEcho').checked)variables.push('Ecobatímetro');if($('varLaser').checked)variables.push('Laser');if($('varDrone').checked)variables.push('Drone');if($('varTotalStation').checked)variables.push('Estação Total');if($('varAccessory').checked)variables.push('Acessório');if(!name){toast('Informe o nome do produto.');return}const duplicate=state.products.find(p=>p.id!==id&&p.name.toLowerCase()===name.toLowerCase());if(duplicate){toast('Já existe um produto com esse nome.');return}let productId=id;if(id){const p=getProduct(id);p.name=name;p.variables=variables;state.equipments.filter(e=>e.productId===id).forEach(e=>{if(variables.includes('Acessório')){e.series='Equipamento não seriado';e.type='';e.hce={landstar:false,smartgo:false}}else{if(!variables.includes('Receptor'))e.type='';if(!variables.includes('Coletora'))e.hce={landstar:false,smartgo:false};else if(!e.hce)e.hce={landstar:false,smartgo:false}}})}else{productId=uid('prd');state.products.push({id:productId,name,variables})}save();closeModal('productModal');renderAll();renderProductManager();if($('equipmentModal').classList.contains('open')){renderProductSelect(productId);updateProductFields();$('eqProductInput').focus();openProductDropdown()}toast(id?'Produto atualizado.':'Produto cadastrado.');
 }
 function openProductManager(){renderProductManager();openModal('productManagerModal')}
 function renderProductPage(){
@@ -1733,23 +1757,41 @@ function clearProductPageSearch(){const el=$('productPageSearch');if(el)el.value
 function renderProductManager(){renderProductPage();$('productManager').innerHTML=state.products.length?state.products.slice().sort((a,b)=>a.name.localeCompare(b.name,'pt-BR')).map(p=>`<div class="product-row"><div><strong>${esc(p.name)}</strong><div class="product-vars">${p.variables.map(v=>`<span class="badge badge-blue">${esc(v)}</span>`).join('')||'<span class="badge badge-gray">Sem variável</span>'}</div></div><div class="table-actions"><button class="btn btn-small" onclick="openProductModal('${p.id}')">EDITAR</button><button class="btn btn-small btn-danger" onclick="deleteProduct('${p.id}')">EXCLUIR</button></div></div>`).join(''):'<div class="empty">Nenhum produto cadastrado.</div>'}
 function deleteProduct(id){if(state.equipments.some(e=>e.productId===id)){toast('Não é possível excluir um produto que possui equipamentos cadastrados.');return}confirm('Excluir este produto?',()=>{state.products=state.products.filter(p=>p.id!==id);save();renderAll();renderProductManager();toast('Produto excluído.')})}
 
+function isLaserEquipment(e){return !!getProduct(e?.productId)?.variables?.includes('Laser')}
+function isHceEquipment(e){return !!getProduct(e?.productId)?.variables?.includes('HCE')}
+function validateLaserHceCompatibility(ids){
+    const items=ids.map(getEquipment).filter(Boolean);
+    const hasLaser=items.some(isLaserEquipment);
+    if(!hasLaser)return {ok:true};
+    const invalidCollector=items.find(e=>isCollectorEquipment(e)&&!e.hce?.smartgo);
+    if(invalidCollector){
+        const p=getProduct(invalidCollector.productId);
+        return {ok:false,message:`${p?.name||'Coletora'} (${invalidCollector.series||invalidCollector.code}) não pode ficar no mesmo kit que um Laser porque não possui SmartGO.`};
+    }
+    return {ok:true};
+}
+function canAddToLaserKit(id,currentIds){
+    const result=validateLaserHceCompatibility([...currentIds,id]);
+    if(!result.ok)toast(result.message);
+    return result.ok;
+}
 function renderBuilder(){
     const q=($('builderSearch').value||'').toLowerCase().trim();const pf=$('builderProduct').value;
     const selected=new Set(selectedEquipment);const list=state.equipments.filter(e=>!isAccessoryEquipment(e)&&!isInKit(e.id)&&!selected.has(e.id)).filter(e=>{const p=getProduct(e.productId);const txt=[e.code,e.location,e.series,p?.name].join(' ').toLowerCase();return(!q||txt.includes(q))&&(!pf||e.productId===pf)});
     $('availableList').innerHTML=list.length?list.map(e=>{const p=getProduct(e.productId);return `<div class="equip-option"><div class="equip-info"><strong>${esc(p?.name||'Produto')}</strong><small>Cód. ${esc(e.code)} · ${esc(e.location)} · Série: ${esc(e.series)}${e.type?' · Tipo: '+esc(e.type):''}${hceText(e)?' · '+esc(hceText(e)):''}</small></div><button class="btn btn-small btn-primary" onclick="addSelected('${e.id}')">+</button></div>`}).join(''):'<div class="empty">Nenhum equipamento disponível.</div>';
     $('selectedList').innerHTML=selectedEquipment.length?selectedEquipment.map(id=>{const e=getEquipment(id);const p=getProduct(e?.productId);return `<div class="selected-item"><div><strong>${esc(p?.name||'Produto')}</strong><div class="hint">${esc(e?.series||'')}${e?.type?' · '+esc(e.type):''}${hceText(e)?' · '+esc(hceText(e)):''}</div></div><button class="btn btn-small btn-danger" onclick="removeSelected('${id}')">REMOVER</button></div>`}).join(''):'<div class="empty">Nenhum equipamento selecionado.</div>';$('selectedCount').textContent=selectedEquipment.length;
 }
-function addSelected(id){const e=getEquipment(id);if(e&&!isAccessoryEquipment(e)&&!selectedEquipment.includes(id)){selectedEquipment.push(id);renderBuilder()}}
+function addSelected(id){const e=getEquipment(id);if(e&&!isAccessoryEquipment(e)&&!selectedEquipment.includes(id)){if(!canAddToLaserKit(id,selectedEquipment))return;selectedEquipment.push(id);renderBuilder()}}
 function removeSelected(id){selectedEquipment=selectedEquipment.filter(x=>x!==id);renderBuilder()}
-function createKit(){if(!selectedEquipment.length){toast('Adicione pelo menos um equipamento.');return}const created=now();const id=kitId();state.kits.push({id,name:id,createdAt:created,updatedAt:created,equipmentIds:[...selectedEquipment],ntrip:calcNtrip(selectedEquipment)});selectedEquipment=[];save();renderAll();toast('Kit '+id+' criado.')}
+function createKit(){if(!selectedEquipment.length){toast('Adicione pelo menos um equipamento.');return}const compatibility=validateLaserHceCompatibility(selectedEquipment);if(!compatibility.ok){toast(compatibility.message);return}const created=now();const id=kitId();state.kits.push({id,name:id,createdAt:created,updatedAt:created,equipmentIds:[...selectedEquipment],ntrip:calcNtrip(selectedEquipment)});selectedEquipment=[];save();renderAll();toast('Kit '+id+' criado.')}
 
 function openKitEdit(id){const k=state.kits.find(x=>x.id===id);if(!k)return;editingKitId=id;editingKitEquipment=[...k.equipmentIds];$('kitEditTitle').textContent='Editar '+k.id;$('editKitName').value=k.name;renderEditKit();openModal('kitEditModal')}
 function renderEditKit(){$('editKitList').innerHTML=editingKitEquipment.length?editingKitEquipment.map(id=>{const e=getEquipment(id);const p=getProduct(e?.productId);return `<div class="selected-item"><div><strong>${esc(p?.name||'Produto')}</strong><div class="hint">Cód. ${esc(e?.code)} · Série: ${esc(e?.series)}${e?.type?' · Tipo: '+esc(e.type):''}${hceText(e)?' · '+esc(hceText(e)):''}</div></div><button class="btn btn-small btn-danger" onclick="removeFromEditingKit('${id}')">REMOVER</button></div>`}).join(''):'<div class="empty">Nenhum equipamento no kit.</div>';
     const avail=state.equipments.filter(e=>!isAccessoryEquipment(e)&&!isInKit(e.id)&&!editingKitEquipment.includes(e.id));$('editKitAdd').innerHTML='<option value="">Selecione um equipamento...</option>'+avail.map(e=>{const p=getProduct(e.productId);return `<option value="${e.id}">${esc(p?.name||'Produto')} · ${esc(e.series)} · ${esc(e.location)}</option>`}).join('')
 }
-function addToEditingKit(id){const e=getEquipment(id);if(id&&e&&!isAccessoryEquipment(e)&&!editingKitEquipment.includes(id)){editingKitEquipment.push(id);renderEditKit()}}
+function addToEditingKit(id){const e=getEquipment(id);if(id&&e&&!isAccessoryEquipment(e)&&!editingKitEquipment.includes(id)){if(!canAddToLaserKit(id,editingKitEquipment))return;editingKitEquipment.push(id);renderEditKit()}}
 function removeFromEditingKit(id){editingKitEquipment=editingKitEquipment.filter(x=>x!==id);renderEditKit()}
-function saveKitEdit(){if(!editingKitEquipment.length){toast('O kit precisa ter pelo menos um equipamento.');return}const k=state.kits.find(x=>x.id===editingKitId);if(!k)return;k.name=$('editKitName').value.trim()||'Kit sem nome';k.equipmentIds=[...editingKitEquipment];k.updatedAt=now();k.ntrip=calcNtrip(k.equipmentIds);save();closeModal('kitEditModal');renderAll();toast('Kit atualizado.')}
+function saveKitEdit(){if(!editingKitEquipment.length){toast('O kit precisa ter pelo menos um equipamento.');return}const compatibility=validateLaserHceCompatibility(editingKitEquipment);if(!compatibility.ok){toast(compatibility.message);return}const k=state.kits.find(x=>x.id===editingKitId);if(!k)return;k.name=$('editKitName').value.trim()||'Kit sem nome';k.equipmentIds=[...editingKitEquipment];k.updatedAt=now();k.ntrip=calcNtrip(k.equipmentIds);save();closeModal('kitEditModal');renderAll();toast('Kit atualizado.')}
 function disassembleKit(id){const k=state.kits.find(x=>x.id===id);if(!k)return;confirm(`Desmontar ${k.id}? Os equipamentos serão liberados e o kit deixará de aparecer em Kits Ativos.`,()=>{state.kits=state.kits.filter(x=>x.id!==id);save();renderAll();toast('Kit desmontado.')})}
 function renderKits(){
     const name=($('kitFilterName').value||'').toLowerCase().trim();const nt=$('kitFilterNtrip').value;const cf=$('kitFilterCreatedFrom').value;const ct=$('kitFilterCreatedTo').value;const uf=$('kitFilterUpdatedFrom').value;const ut=$('kitFilterUpdatedTo').value;
@@ -1863,14 +1905,25 @@ function buildAccessoryEanLabelPdf(e){
  const mm=72/25.4,H=30*mm,L=50*mm,RX=53*mm,R=50*mm,M=3*mm,lx=M,lw=L-2*M,rx=RX+M,rw=R-2*M;
  const title='CPE - SP',ean=generateEanFromCode(e.code),product=getProduct(e.productId)?.name||'Produto';
  const info=[e.code,product,e.location,'N/S'].filter(Boolean).join(' ');
- let s='',bh=11.5*mm,by=M+13.5;
- [ [lx,lw], [rx,rw] ].forEach(([x,w])=>{
-   s+=pdfTextCommand(title,x,H-M-10,10,w,true,'center');
-   s+=pdfEan13Command(ean,x,by,w,bh);
-   s+=pdfTextCommand(ean,x,by-5.6,5.8,w,true,'center');
-   let fs=7.2;while(pdfApproxWidth(info,fs,true)>w&&fs>4.8)fs-=.2;
-   s+=pdfTextCommand(info,x,M,fs,w,true,'center');
- });
+ let s='';
+
+ // Etiqueta esquerda: LOCAL + número do local em destaque.
+ s+=pdfTextCommand('LOCAL',lx,H-M-11,10,lw,true,'center');
+ const location=String(e.location||'').trim()||'-';
+ let locationFs=24;
+ while(pdfApproxWidth(location,locationFs,true)>lw&&locationFs>12)locationFs-=.5;
+ // Centralização visual vertical da identificação grande.
+ s+=pdfTextCommand(location,lx,(H-locationFs)/2-2,locationFs,lw,true,'center');
+
+ // Etiqueta direita: identificação CPE + EAN-13 + informações do acessório.
+ const bh=11.5*mm,by=M+13.5;
+ s+=pdfTextCommand(title,rx,H-M-10,10,rw,true,'center');
+ s+=pdfEan13Command(ean,rx,by,rw,bh);
+ s+=pdfTextCommand(ean,rx,by-5.6,5.8,rw,true,'center');
+ let fs=7.2;
+ while(pdfApproxWidth(info,fs,true)>rw&&fs>4.8)fs-=.2;
+ s+=pdfTextCommand(info,rx,M,fs,rw,true,'center');
+
  return pdfDoc(s);
 }
 function printStandaloneEquipmentLabel(id){
