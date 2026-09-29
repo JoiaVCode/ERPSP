@@ -189,17 +189,66 @@ button,input,select{font:inherit}button{cursor:pointer}
 @media(max-width:420px){.calc-main-actions,.calc-time-actions{grid-template-columns:1fr}.calc-result-number{font-size:56px}}
 
 
-/* ===== B22.0 · Autenticação e sincronização Supabase ===== */
-.auth-gate{position:fixed;inset:0;z-index:500;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:22px}
+/* ===== B22.1 · Login e cadastro separados ===== */
+.auth-gate{
+ position:fixed;inset:0;z-index:500;background:var(--bg);
+ display:flex;align-items:center;justify-content:center;padding:22px
+}
 .auth-gate.hidden{display:none}
-.auth-card{width:min(430px,100%);background:#fff;border:1px solid var(--border);border-radius:12px;box-shadow:0 18px 55px rgba(0,0,0,.12);overflow:hidden}
+.auth-card{
+ width:min(460px,100%);background:#fff;border:1px solid var(--border);
+ border-radius:12px;box-shadow:0 18px 55px rgba(0,0,0,.12);overflow:hidden
+}
 .auth-accent{height:6px;background:var(--primary)}
-.auth-body{padding:26px}
-.auth-brand{margin-bottom:20px}.auth-brand h1{font-size:23px;margin:0 0 6px}.auth-brand p{margin:0;color:var(--muted);line-height:1.45}
-.auth-form{display:grid;gap:13px}
-.auth-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px}
-.auth-message{min-height:18px;margin-top:11px;font-size:12px;color:var(--danger);line-height:1.4}
-.auth-note{margin-top:14px;padding-top:13px;border-top:1px solid var(--border);font-size:11px;color:var(--muted);line-height:1.45}
+.auth-body{padding:28px}
+.auth-brand{margin-bottom:22px}
+.auth-brand h1{font-size:24px;margin:0 0 6px}
+.auth-brand p{margin:0;color:var(--muted);line-height:1.45}
+.auth-view{display:none}.auth-view.active{display:block}
+.auth-form{display:grid;gap:15px}
+.auth-field{display:grid;gap:7px}
+.auth-label-row{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.auth-field label{font-size:12px;font-weight:700;color:var(--text)}
+.auth-input-wrap{position:relative}
+.auth-field input{
+ min-height:44px;padding:10px 12px;border:1px solid var(--border);
+ border-radius:8px;background:#fff;font-size:15px
+}
+.auth-field input:focus{border-color:var(--primary);box-shadow:0 0 0 2px rgba(242,195,0,.18)}
+.auth-password-input{padding-right:45px!important}
+.auth-eye{
+ position:absolute;right:6px;top:50%;transform:translateY(-50%);
+ width:34px;height:34px;border:1px solid transparent;border-radius:7px;
+ background:transparent;color:var(--muted);font-size:16px;cursor:pointer
+}
+.auth-eye:hover{background:var(--surface-2);border-color:var(--border)}
+.auth-submit{
+ width:100%;min-height:48px;margin-top:5px;border-radius:8px;
+ font-size:13px;font-weight:800
+}
+.auth-switch{
+ margin-top:22px;padding-top:18px;border-top:1px solid var(--border);
+ text-align:center;color:var(--muted);font-size:12px
+}
+.auth-link{
+ border:0;background:transparent;padding:0;color:var(--text);
+ font-weight:800;text-decoration:underline;cursor:pointer
+}
+.auth-link:hover{color:#000}
+.auth-message{min-height:18px;margin-top:12px;font-size:12px;color:var(--danger);line-height:1.4}
+.auth-note{margin-top:12px;font-size:11px;color:var(--muted);line-height:1.45}
+.display-name-status{
+ min-height:16px;font-size:11px;font-weight:700;line-height:1.35
+}
+.display-name-status.checking{color:var(--muted)}
+.display-name-status.available{color:var(--success)}
+.display-name-status.unavailable{color:var(--danger)}
+.auth-back{
+ display:inline-flex;align-items:center;gap:5px;margin-bottom:17px;
+ border:0;background:transparent;padding:0;color:var(--muted);
+ font-size:12px;font-weight:700;cursor:pointer
+}
+.auth-back:hover{color:var(--text)}
 .app.auth-locked{visibility:hidden}
 .user-area{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .user-chip{display:flex;flex-direction:column;align-items:flex-end;line-height:1.15}
@@ -213,14 +262,15 @@ button,input,select{font:inherit}button{cursor:pointer}
 .sync-status[data-state="local"] .sync-dot{background:#bcbcbc}
 @media(max-width:700px){
  .auth-gate{align-items:flex-end;padding:0}
- .auth-card{border-radius:14px 14px 0 0;border-bottom:0}
+ .auth-card{width:100%;border-radius:14px 14px 0 0;border-bottom:0}
  .auth-body{padding:22px 16px calc(20px + env(safe-area-inset-bottom))}
- .auth-actions{grid-template-columns:1fr}
+ .auth-brand h1{font-size:22px}
+ .auth-field input{font-size:16px;min-height:46px}
+ .auth-submit{min-height:48px}
  .user-area{width:100%;display:grid;grid-template-columns:1fr auto;gap:7px}
  .user-chip{align-items:flex-start;grid-column:1/-1}
  .sync-status{justify-content:center}
 }
-
 </style>
 </head>
 <body>
@@ -229,21 +279,83 @@ button,input,select{font:inherit}button{cursor:pointer}
   <div class="auth-card">
     <div class="auth-accent"></div>
     <div class="auth-body">
-      <div class="auth-brand">
-        <h1>ERPSP</h1>
-        <p>Entre para acessar o controle de equipamentos e kits.</p>
-      </div>
-      <form class="auth-form" onsubmit="loginWithEmail(event)">
-        <div class="field"><label>E-mail</label><input id="authEmail" type="email" autocomplete="username" required placeholder="nome@empresa.com"></div>
-        <div class="field"><label>Senha</label><input id="authPassword" type="password" autocomplete="current-password" minlength="6" required placeholder="Sua senha"></div>
-        <div class="field"><label>Nome de exibição <span style="font-weight:400">(somente para criar acesso)</span></label><input id="authDisplayName" autocomplete="name" placeholder="Ex.: Eduardo"></div>
-        <div class="auth-actions">
-          <button class="btn btn-primary" type="submit">ENTRAR</button>
-          <button class="btn" type="button" onclick="signupWithEmail()">CRIAR ACESSO</button>
+
+      <section id="loginView" class="auth-view active">
+        <div class="auth-brand">
+          <h1>Entrar no ERPSP</h1>
+          <p>Acesse o controle de equipamentos, kits e ferramentas.</p>
         </div>
-      </form>
-      <div id="authMessage" class="auth-message"></div>
-      <div class="auth-note">O primeiro acesso criado neste projeto recebe perfil de administrador. Acessos seguintes ficam pendentes até liberação.</div>
+
+        <form class="auth-form" onsubmit="loginWithEmail(event)">
+          <div class="auth-field">
+            <label for="authEmail">E-mail</label>
+            <input id="authEmail" type="email" autocomplete="username" required placeholder="voce@empresa.com">
+          </div>
+
+          <div class="auth-field">
+            <div class="auth-label-row">
+              <label for="authPassword">Senha</label>
+            </div>
+            <div class="auth-input-wrap">
+              <input id="authPassword" class="auth-password-input" type="password" autocomplete="current-password" minlength="6" required placeholder="Sua senha">
+              <button class="auth-eye" type="button" onclick="togglePasswordVisibility('authPassword',this)" aria-label="Mostrar ou ocultar senha">◉</button>
+            </div>
+          </div>
+
+          <button class="btn btn-primary auth-submit" type="submit">ENTRAR</button>
+        </form>
+
+        <div id="authMessage" class="auth-message"></div>
+
+        <div class="auth-switch">
+          Ainda não tem acesso?
+          <button class="auth-link" type="button" onclick="showSignupView()">Cadastrar</button>
+        </div>
+      </section>
+
+      <section id="signupView" class="auth-view">
+        <button class="auth-back" type="button" onclick="showLoginView()">← Voltar para o login</button>
+
+        <div class="auth-brand">
+          <h1>Criar acesso</h1>
+          <p>Preencha seus dados para solicitar acesso ao ERPSP.</p>
+        </div>
+
+        <form class="auth-form" onsubmit="signupWithEmail(event)">
+          <div class="auth-field">
+            <label for="signupDisplayName">Nome de exibição</label>
+            <input id="signupDisplayName" autocomplete="nickname" minlength="3" maxlength="40" required placeholder="Ex.: Estoque - CPESP" oninput="scheduleDisplayNameCheck()">
+            <div id="displayNameStatus" class="display-name-status"></div>
+          </div>
+
+          <div class="auth-field">
+            <label for="signupEmail">E-mail</label>
+            <input id="signupEmail" type="email" autocomplete="email" required placeholder="voce@empresa.com">
+          </div>
+
+          <div class="auth-field">
+            <label for="signupPassword">Senha</label>
+            <div class="auth-input-wrap">
+              <input id="signupPassword" class="auth-password-input" type="password" autocomplete="new-password" minlength="6" required placeholder="Mínimo de 6 caracteres">
+              <button class="auth-eye" type="button" onclick="togglePasswordVisibility('signupPassword',this)" aria-label="Mostrar ou ocultar senha">◉</button>
+            </div>
+          </div>
+
+          <div class="auth-field">
+            <label for="signupPasswordConfirm">Confirmar senha</label>
+            <div class="auth-input-wrap">
+              <input id="signupPasswordConfirm" class="auth-password-input" type="password" autocomplete="new-password" minlength="6" required placeholder="Digite a senha novamente">
+              <button class="auth-eye" type="button" onclick="togglePasswordVisibility('signupPasswordConfirm',this)" aria-label="Mostrar ou ocultar senha">◉</button>
+            </div>
+          </div>
+
+          <button id="signupSubmitButton" class="btn btn-primary auth-submit" type="submit">CADASTRAR</button>
+        </form>
+
+        <div id="signupMessage" class="auth-message"></div>
+        <div class="auth-note">Novos acessos ficam pendentes até liberação por um administrador.</div>
+      </section>
+
     </div>
   </div>
 </div>
@@ -1604,8 +1716,8 @@ let syncTimer=null;
 let syncInFlight=false;
 let pendingCloudSave=false;
 
-function setAuthMessage(message='',ok=false){
-  const el=$('authMessage');if(!el)return;
+function setAuthMessage(message='',ok=false,target='authMessage'){
+  const el=$(target);if(!el)return;
   el.textContent=message;el.style.color=ok?'var(--success)':'var(--danger)';
 }
 function setSyncStatus(stateName,textValue){
@@ -1898,27 +2010,148 @@ async function activateAuthenticatedSession(session){
     setAuthMessage('Não foi possível carregar seu acesso: '+(err.message||'erro desconhecido'));
   }
 }
+
+let displayNameCheckTimer=null;
+let displayNameAvailable=false;
+let lastCheckedDisplayName='';
+
+function showSignupView(){
+  $('loginView').classList.remove('active');
+  $('signupView').classList.add('active');
+  setAuthMessage('');
+  setAuthMessage('',false,'signupMessage');
+  setTimeout(()=>$('signupDisplayName').focus(),0);
+}
+function showLoginView(){
+  $('signupView').classList.remove('active');
+  $('loginView').classList.add('active');
+  setAuthMessage('',false,'signupMessage');
+  displayNameAvailable=false;
+  lastCheckedDisplayName='';
+  clearTimeout(displayNameCheckTimer);
+  $('displayNameStatus').textContent='';
+  $('displayNameStatus').className='display-name-status';
+  setTimeout(()=>$('authEmail').focus(),0);
+}
+function togglePasswordVisibility(inputId,button){
+  const input=$(inputId);if(!input)return;
+  const visible=input.type==='text';
+  input.type=visible?'password':'text';
+  button.textContent=visible?'◉':'◎';
+  button.setAttribute('aria-label',visible?'Mostrar senha':'Ocultar senha');
+}
+function normalizeDisplayName(value){
+  return String(value||'').trim().replace(/\s+/g,' ');
+}
+function setDisplayNameStatus(kind,text){
+  const el=$('displayNameStatus');
+  el.className='display-name-status'+(kind?' '+kind:'');
+  el.textContent=text||'';
+}
+function scheduleDisplayNameCheck(){
+  clearTimeout(displayNameCheckTimer);
+  displayNameAvailable=false;
+  const name=normalizeDisplayName($('signupDisplayName').value);
+  lastCheckedDisplayName='';
+  if(!name){setDisplayNameStatus('','');return}
+  if(name.length<3){setDisplayNameStatus('unavailable','Use pelo menos 3 caracteres.');return}
+  if(name.length>40){setDisplayNameStatus('unavailable','Use no máximo 40 caracteres.');return}
+  setDisplayNameStatus('checking','Verificando disponibilidade...');
+  displayNameCheckTimer=setTimeout(()=>checkDisplayNameAvailability(name),420);
+}
+async function checkDisplayNameAvailability(nameOverride=''){
+  const name=normalizeDisplayName(nameOverride||$('signupDisplayName').value);
+  if(name.length<3||name.length>40){displayNameAvailable=false;return false}
+  setDisplayNameStatus('checking','Verificando disponibilidade...');
+  try{
+    const {data,error}=await supabaseClient.rpc('is_display_name_available',{candidate:name});
+    if(error)throw error;
+    lastCheckedDisplayName=name;
+    displayNameAvailable=data===true;
+    setDisplayNameStatus(
+      displayNameAvailable?'available':'unavailable',
+      displayNameAvailable?'Nome disponível.':'Este nome de exibição já está em uso.'
+    );
+    return displayNameAvailable;
+  }catch(err){
+    console.error('Falha ao verificar nome de exibição:',err);
+    displayNameAvailable=false;
+    setDisplayNameStatus('unavailable','Não foi possível verificar o nome agora.');
+    return false;
+  }
+}
 async function loginWithEmail(ev){
   ev?.preventDefault();
   const email=$('authEmail').value.trim();
   const password=$('authPassword').value;
   setAuthMessage('Entrando...',true);
   const {data,error}=await supabaseClient.auth.signInWithPassword({email,password});
-  if(error){setAuthMessage(error.message);return}
+  if(error){setAuthMessage('E-mail ou senha inválidos.');return}
   await activateAuthenticatedSession(data.session);
 }
-async function signupWithEmail(){
-  const email=$('authEmail').value.trim();
-  const password=$('authPassword').value;
-  const display_name=$('authDisplayName').value.trim();
-  if(!email||password.length<6){setAuthMessage('Informe um e-mail válido e uma senha com pelo menos 6 caracteres.');return}
-  setAuthMessage('Criando acesso...',true);
-  const {data,error}=await supabaseClient.auth.signUp({email,password,options:{data:{display_name}}});
-  if(error){setAuthMessage(error.message);return}
-  if(data.session){
-    await activateAuthenticatedSession(data.session);
-  }else{
-    setAuthMessage('Acesso criado. Confirme o e-mail enviado pelo Supabase e depois entre.',true);
+
+async function signupWithEmail(ev){
+  ev?.preventDefault();
+  const email=$('signupEmail').value.trim();
+  const password=$('signupPassword').value;
+  const confirmation=$('signupPasswordConfirm').value;
+  const display_name=normalizeDisplayName($('signupDisplayName').value);
+
+  if(display_name.length<3||display_name.length>40){
+    setAuthMessage('O nome de exibição deve ter entre 3 e 40 caracteres.',false,'signupMessage');
+    return;
+  }
+  if(!email){
+    setAuthMessage('Informe um e-mail válido.',false,'signupMessage');
+    return;
+  }
+  if(password.length<6){
+    setAuthMessage('A senha deve ter pelo menos 6 caracteres.',false,'signupMessage');
+    return;
+  }
+  if(password!==confirmation){
+    setAuthMessage('As senhas não coincidem.',false,'signupMessage');
+    return;
+  }
+
+  if(lastCheckedDisplayName!==display_name||!displayNameAvailable){
+    const available=await checkDisplayNameAvailability(display_name);
+    if(!available){
+      setAuthMessage('Escolha um nome de exibição disponível.',false,'signupMessage');
+      return;
+    }
+  }
+
+  setAuthMessage('Criando acesso...',true,'signupMessage');
+  const button=$('signupSubmitButton');
+  button.disabled=true;
+
+  try{
+    const {data,error}=await supabaseClient.auth.signUp({
+      email,
+      password,
+      options:{data:{display_name}}
+    });
+    if(error){
+      const msg=String(error.message||'');
+      if(/duplicate|already|registered|unique/i.test(msg)){
+        setAuthMessage('Não foi possível criar o acesso. O e-mail ou nome de exibição já pode estar em uso.',false,'signupMessage');
+      }else{
+        setAuthMessage(msg||'Não foi possível criar o acesso.',false,'signupMessage');
+      }
+      return;
+    }
+
+    if(data.session){
+      await activateAuthenticatedSession(data.session);
+    }else{
+      $('authEmail').value=email;
+      $('authPassword').value='';
+      showLoginView();
+      setAuthMessage('Cadastro criado. Confirme o e-mail enviado pelo Supabase e depois entre.',true);
+    }
+  }finally{
+    button.disabled=false;
   }
 }
 async function logoutUser(){
