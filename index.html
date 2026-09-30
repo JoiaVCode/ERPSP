@@ -328,11 +328,63 @@ body.role-admin .admin-only.grid{display:grid!important}
  .permissions-head,.permissions-row{min-width:720px}
 }
 
+
+/* ===== B23.5 · Bootstrap de sessão + calculadora rápida sem login ===== */
+.boot-gate{
+ position:fixed;inset:0;z-index:700;background:var(--bg);
+ display:flex;align-items:center;justify-content:center;padding:22px
+}
+.boot-gate.hidden{display:none}
+.boot-card{
+ min-width:210px;padding:22px 26px;background:#fff;border:1px solid var(--border);
+ border-radius:12px;box-shadow:0 18px 55px rgba(0,0,0,.10);
+ display:flex;align-items:center;gap:13px
+}
+.boot-spinner{
+ width:22px;height:22px;border:3px solid #ddd;border-top-color:var(--primary);
+ border-radius:50%;animation:erpsp-spin .75s linear infinite;flex:0 0 auto
+}
+.boot-text strong{display:block;font-size:13px}
+.boot-text span{display:block;margin-top:3px;color:var(--muted);font-size:11px}
+@keyframes erpsp-spin{to{transform:rotate(360deg)}}
+
+.auth-quick-tools{margin-top:12px;text-align:center}
+.auth-quick-button{
+ border:1px solid var(--border);background:#fff;color:var(--text);
+ border-radius:7px;padding:7px 10px;font-size:11px;font-weight:700;cursor:pointer
+}
+.auth-quick-button:hover{border-color:#aaa;background:var(--surface-2)}
+
+.guest-calc-only{display:none!important}
+body.guest-calculator-mode .guest-calc-only{display:inline-flex!important}
+body.guest-calculator-mode #mainApp{visibility:visible!important}
+body.guest-calculator-mode #mainApp .header,
+body.guest-calculator-mode #mainApp .nav,
+body.guest-calculator-mode #readonlyBanner{display:none!important}
+body.guest-calculator-mode #mainApp .page{display:none!important}
+body.guest-calculator-mode #mainApp #calculadora{display:block!important}
+body.guest-calculator-mode #mainApp .container{padding-top:24px}
+@media(max-width:700px){
+ .boot-gate{padding:16px}
+ .boot-card{width:min(320px,100%)}
+}
+
 </style>
 </head>
 <body>
 
-<div id="authGate" class="auth-gate">
+
+<div id="bootGate" class="boot-gate">
+  <div class="boot-card">
+    <div class="boot-spinner" aria-hidden="true"></div>
+    <div class="boot-text">
+      <strong>ERPSP</strong>
+      <span>Verificando sessão...</span>
+    </div>
+  </div>
+</div>
+
+<div id="authGate" class="auth-gate hidden">
   <div class="auth-card">
     <div class="auth-accent"></div>
     <div class="auth-body">
@@ -367,6 +419,9 @@ body.role-admin .admin-only.grid{display:grid!important}
         <div class="auth-switch">
           Ainda não tem acesso?
           <button class="auth-link" type="button" onclick="showSignupView()">Cadastrar</button>
+        </div>
+        <div class="auth-quick-tools">
+          <button class="auth-quick-button" type="button" onclick="openGuestCalculator()">CALCULADORA DE DIÁRIAS</button>
         </div>
       </section>
 
@@ -444,7 +499,7 @@ body.role-admin .admin-only.grid{display:grid!important}
 <div id="kitGrid" class="kit-grid"></div>
 </section>
 <section id="calculadora" class="page">
-<div class="page-title"><div><h2>Calculadora de Diárias</h2><p>Cálculo do período de locação e devolução para apoio ao faturamento.</p><span class="calc-version">Calculadora v1.6 integrada</span></div></div>
+<div class="page-title"><div><h2>Calculadora de Diárias</h2><p>Cálculo do período de locação e devolução para apoio ao faturamento.</p><span class="calc-version">Calculadora v1.6 integrada</span></div><button class="btn guest-calc-only" type="button" onclick="closeGuestCalculator()">VOLTAR AO LOGIN</button></div>
 <div class="calc-shell"><div class="calc-workspace">
 <section class="card calc-form">
  <div class="calc-card-head"><div><h3 class="calc-card-title">Período da locação</h3><p class="calc-card-desc">Informe manualmente ou extraia as datas do texto do faturamento.</p></div></div>
@@ -1956,12 +2011,48 @@ async function flushCloudSave(){
   }
 }
 function toast(msg){$('toast').textContent=msg;$('toast').classList.add('show');setTimeout(()=>$('toast').classList.remove('show'),2400)}
-function openModal(id){closeProductDropdown();$(id).classList.add('open')}function closeModal(id){$(id).classList.remove('open');if(id==='equipmentModal')closeProductDropdown()}
+let modalStackLevel=100;
+function openModal(id){
+    closeProductDropdown();
+    const modal=$(id);
+    if(!modal)return;
+    modalStackLevel+=10;
+    modal.style.zIndex=String(modalStackLevel);
+    modal.classList.add('open');
+}
+function closeModal(id){
+    const modal=$(id);
+    if(!modal)return;
+    modal.classList.remove('open');
+    modal.style.zIndex='';
+    if(id==='equipmentModal')closeProductDropdown();
+
+    const openModals=[...document.querySelectorAll('.modal-backdrop.open')];
+    modalStackLevel=openModals.reduce((max,el)=>Math.max(max,Number(el.style.zIndex)||100),100);
+}
+function getTopOpenModal(){
+    return [...document.querySelectorAll('.modal-backdrop.open')]
+        .sort((a,b)=>(Number(b.style.zIndex)||100)-(Number(a.style.zIndex)||100))[0]||null;
+}
 document.addEventListener('mousedown',ev=>{
     const productCombo=$('eqProductInput')?.closest('.product-combobox');
     if(productCombo&&!productCombo.contains(ev.target))closeProductDropdown();
+
+    // Qualquer pop-up padrão com fundo escuro fecha ao clicar no próprio backdrop.
+    // Cliques dentro da janela não fecham o modal.
+    if(ev.target?.classList?.contains('modal-backdrop')){
+        closeModal(ev.target.id);
+    }
 });
-document.addEventListener('keydown',ev=>{if(ev.key==='Escape')closeProductDropdown()});
+document.addEventListener('keydown',ev=>{
+    if(ev.key!=='Escape')return;
+    closeProductDropdown();
+
+    // Fecha primeiro o pop-up padrão que estiver visualmente por cima.
+    // Isso vale para cadastro, edição, gerenciadores, impressão e confirmações.
+    const top=getTopOpenModal();
+    if(top)closeModal(top.id);
+});
 
 function migrateData(data){
     if(!data||typeof data!=='object'||Array.isArray(data))throw new Error('Estrutura de dados inválida');
@@ -2355,26 +2446,59 @@ async function loadCloudState(){
   $('mainApp').classList.remove('auth-locked');
   return true;
 }
+
+let guestCalculatorMode=false;
+
+function hideBootGate(){
+  $('bootGate')?.classList.add('hidden');
+}
+function showLoginGate(message=''){
+  hideBootGate();
+  guestCalculatorMode=false;
+  document.body.classList.remove('guest-calculator-mode');
+  $('mainApp')?.classList.add('auth-locked');
+  $('authGate')?.classList.remove('hidden');
+  showLoginView();
+  if(message)setAuthMessage(message);
+}
+function openGuestCalculator(){
+  guestCalculatorMode=true;
+  document.body.classList.add('guest-calculator-mode');
+  $('authGate').classList.add('hidden');
+  $('mainApp').classList.remove('auth-locked');
+
+  // Não carrega estoque, produtos ou kits no modo público.
+  document.querySelectorAll('#mainApp .page').forEach(p=>p.classList.remove('active'));
+  $('calculadora').classList.add('active');
+  limparCalculadora();
+}
+function closeGuestCalculator(){
+  guestCalculatorMode=false;
+  document.body.classList.remove('guest-calculator-mode');
+  $('mainApp').classList.add('auth-locked');
+  $('authGate').classList.remove('hidden');
+  showLoginView();
+}
 async function activateAuthenticatedSession(session){
   currentSession=session;
   if(!session){
     cloudReady=false;currentAccess=null;applyRoleToInterface();
-    $('mainApp').classList.add('auth-locked');
-    $('authGate').classList.remove('hidden');
     setSyncStatus('local','Local');
+    showLoginGate();
     return;
   }
   try{
-    setAuthMessage('Carregando dados...',true);
+    guestCalculatorMode=false;
+    document.body.classList.remove('guest-calculator-mode');
     load();
     renderAll();
     await loadCloudState();
+    hideBootGate();
+    $('authGate').classList.add('hidden');
     setAuthMessage('');
   }catch(err){
     console.error('Falha ao iniciar sessão:',err);
-    $('mainApp').classList.add('auth-locked');
-    $('authGate').classList.remove('hidden');
-    setAuthMessage('Não foi possível carregar seu acesso: '+(err.message||'erro desconhecido'));
+    showLoginGate('Não foi possível carregar seu acesso: '+(err.message||'erro desconhecido'));
   }
 }
 
@@ -2525,16 +2649,20 @@ async function logoutUser(){
   await flushCloudSave();
   await supabaseClient.auth.signOut();
   currentSession=null;currentAccess=null;cloudReady=false;applyRoleToInterface();
-  $('mainApp').classList.add('auth-locked');
-  $('authGate').classList.remove('hidden');
   $('authPassword').value='';
-  setAuthMessage('Sessão encerrada.',true);
   setSyncStatus('local','Local');
+  showLoginGate();
+  setAuthMessage('Sessão encerrada.',true);
 }
 async function bootApp(){
-  load();renderAll();
-  const {data:{session}}=await supabaseClient.auth.getSession();
-  await activateAuthenticatedSession(session);
+  try{
+    const {data:{session},error}=await supabaseClient.auth.getSession();
+    if(error)throw error;
+    await activateAuthenticatedSession(session);
+  }catch(err){
+    console.error('Falha ao verificar sessão:',err);
+    showLoginGate('Não foi possível verificar a sessão. Tente entrar novamente.');
+  }
   supabaseClient.auth.onAuthStateChange((event,session)=>{
     if(event==='SIGNED_OUT')activateAuthenticatedSession(null);
   });
@@ -2837,7 +2965,7 @@ function buildKitLabelPdf(k,serialized,e){
  }
 
  s+=pdfTextCommand(k.name,rx,H-M-8.5,10,rw,true,'center');
- let ean=getCode(e.codeId)?.ean||'',bh=11.5*mm,by=M+18.7;
+ let ean=getCode(e.codeId)?.ean||'',bh=11.5*mm,by=M+21.7;
  s+=pdfEan13Command(ean,rx,by,rw,bh);
  s+=pdfTextCommand(ean,rx,by-5.6,5.8,rw,true,'center');
 
@@ -2881,7 +3009,7 @@ function buildStandaloneEquipmentLabelPdf(e){
  }
 
  s+=pdfTextCommand(title,rx,H-M-8.5,10,rw,true,'center');
- let ean=getCode(e.codeId)?.ean||'',bh=11.5*mm,by=M+18.7;
+ let ean=getCode(e.codeId)?.ean||'',bh=11.5*mm,by=M+21.7;
  s+=pdfEan13Command(ean,rx,by,rw,bh);
  s+=pdfTextCommand(ean,rx,by-5.6,5.8,rw,true,'center');
 
@@ -2920,7 +3048,7 @@ function buildAccessoryEanLabelPdf(e){
 
  s+=pdfTextCommand(title,rx,H-M-8.5,10,rw,true,'center');
  const barcodeHeight=11.8*mm;
- const barcodeY=M+18.4;
+ const barcodeY=M+21.4;
  s+=pdfEan13Command(ean,rx,barcodeY,rw,barcodeHeight);
  s+=pdfTextCommand(ean,rx,barcodeY-5.6,5.8,rw,true,'center');
 
@@ -3229,7 +3357,7 @@ function converterData(valor){
     return data;
 }
 
-function calcularDiarias(){if(!requirePermission('calculator.use'))return;
+function calcularDiarias(){if(!guestCalculatorMode&&!requirePermission('calculator.use'))return;
     const campoRetirada=document.getElementById("retirada");
     const campoDevolucao=document.getElementById("devolucao");
     const mensagem=document.getElementById("mensagem");
