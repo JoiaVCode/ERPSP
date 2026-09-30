@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
+<link rel="icon" href="https://cpetecnologia.com.br/favicon.ico" type="image/x-icon">
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Controle de Kits | CPE Tecnologia</title>
@@ -369,6 +371,29 @@ body.guest-calculator-mode #mainApp .container{padding-top:24px}
  .boot-card{width:min(320px,100%)}
 }
 
+
+.site-footer{
+  margin-top:22px;
+  border-top:1px solid var(--border);
+  background:var(--surface);
+}
+.site-footer-inner{
+  max-width:1180px;
+  margin:0 auto;
+  padding:16px 20px 20px;
+  text-align:center;
+  color:var(--muted);
+  font-size:11px;
+  line-height:1.6;
+}
+.site-footer-inner strong{color:var(--text)}
+.site-footer-separator{margin:0 5px;color:#aaa}
+@media(max-width:700px){
+  .site-footer-inner{padding:14px 16px 18px}
+  .site-footer-separator{display:none}
+  .site-footer-inner span{display:block}
+}
+
 </style>
 </head>
 <body>
@@ -547,7 +572,15 @@ body.guest-calculator-mode #mainApp .container{padding-top:24px}
 <div class="charts"><div class="card chart-card"><h3>Equipamentos</h3><div class="chart-content"><div id="equipmentPie" class="pie"></div><div id="equipmentLegend" class="legend"></div></div></div><div class="card chart-card"><h3>Kits ativos</h3><div class="chart-content"><div id="kitPie" class="pie"></div><div id="kitLegend" class="legend"></div></div></div></div>
 <div class="card panel" style="margin-top:16px"><h3>Backup e dados locais</h3><p class="hint">Os dados ficam armazenados no navegador. O backup JSON permite levar os cadastros para outro navegador ou computador.</p><div class="actions" style="margin-top:13px"><button class="btn btn-primary" data-permission="data.export" onclick="exportData()">EXPORTAR JSON</button><button class="btn" data-permission="data.import" onclick="document.getElementById('importFile').click()">IMPORTAR JSON</button><button class="btn btn-danger" data-permission="data.clear" onclick="clearAllData()">APAGAR TODOS OS DADOS</button></div></div>
 </section>
-</main></div>
+</main>
+<footer class="site-footer">
+  <div class="site-footer-inner">
+    <span>© <span id="footerYear"></span> <strong>Eduardo Aliberti - CPE SP</strong>. Todos os direitos reservados.</span>
+    <span class="site-footer-separator">•</span>
+    <span>Desenvolvido com auxílio do <strong>GPT-5.6 Sol, da OpenAI</strong>.</span>
+  </div>
+</footer>
+</div>
 
 <div id="equipmentModal" class="modal-backdrop"><div class="modal"><div class="modal-head"><h3 id="equipmentModalTitle">Cadastrar equipamento</h3><button class="close" onclick="closeModal('equipmentModal')">×</button></div><div class="modal-body"><form id="equipmentForm" onsubmit="saveEquipment(event)"><input type="hidden" id="equipmentId"><div class="form-grid"><div class="field"><label>Código</label><input id="eqCodeInput" autocomplete="off" inputmode="numeric" maxlength="4" pattern="[0-9]{4}" placeholder="Ex.: 7797" required><input type="hidden" id="eqCode"><div class="hint">Digite os 4 dígitos do código. O EAN-13 é gerado automaticamente em segundo plano.</div></div><div class="field"><label>Local</label><input id="eqLocation" required></div><div class="field full"><label>Produto</label><div class="product-combobox"><input id="eqProductInput" autocomplete="off" placeholder="Selecione ou digite o produto..." onclick="openProductDropdown()" oninput="filterProductDropdown()" onfocus="openProductDropdown()" required><input type="hidden" id="eqProduct"><div id="productDropdown" class="product-dropdown"></div></div><div class="hint">Digite para localizar um produto e selecione uma opção da lista.</div><div class="actions" style="margin-top:7px"><button type="button" class="btn btn-small" onclick="openProductModal()">+ CADASTRAR NOVO PRODUTO</button><button type="button" class="btn btn-small" onclick="openProductManager()">GERENCIAR PRODUTOS</button></div></div><div class="field" id="typeField" style="display:none"><label>Tipo</label><select id="eqType"><option value="">Selecione</option><option>TX/RX</option><option>RX</option><option>RX*</option></select></div><div class="field" id="hceField" style="display:none"><label>Plataforma da Coletora</label><div class="checkboxes"><label class="check"><input id="eqLandstar" type="checkbox"> Landstar</label><label class="check"><input id="eqSmartGO" type="checkbox"> SmartGO</label></div><div class="hint">É possível marcar Landstar e SmartGO simultaneamente.</div></div><div class="field" id="seriesField"><label>Série</label><input id="eqSeries" required></div></div></form></div><div class="modal-footer"><button class="btn" onclick="closeModal('equipmentModal')">CANCELAR</button><button class="btn btn-primary" onclick="document.getElementById('equipmentForm').requestSubmit()">SALVAR</button></div></div></div>
 
@@ -3484,6 +3517,9 @@ function applyResponsiveTableLabels(){
 function renderAll(){updateDashboard();renderEquipmentTable();renderProductPage();renderBuilderProductFilter();renderBuilder();renderKits();updateCharts();renderProductManager();renderCodeManager();applyPermissionVisibility();if(canAdmin()){renderUsersPage();renderPermissionsPage()}}
 
 document.querySelectorAll('.nav button').forEach(btn=>btn.addEventListener('click',()=>{document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));btn.classList.add('active');$(btn.dataset.page).classList.add('active');if(btn.dataset.page==='dados')updateCharts();if(btn.dataset.page==='produtos')renderProductPage();if(btn.dataset.page==='usuarios')renderUsersPage();if(btn.dataset.page==='permissoes')renderPermissionsPage()}));
+const footerYearEl=$('footerYear');
+if(footerYearEl)footerYearEl.textContent=String(new Date().getFullYear());
+
 bootApp();
 
 const responsiveTableObserver=new MutationObserver(()=>applyResponsiveTableLabels());
