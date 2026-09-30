@@ -2813,54 +2813,130 @@ function pdfDoc(stream){
  o[4]=`<< /Length ${pdfLatin1Bytes(stream).length} >>\nstream\n${stream}endstream`;o[5]='<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>';o[6]='<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>';
  let p='%PDF-1.4\n%âãÏÓ\n',off=[0];for(let i=1;i<o.length;i++){off[i]=pdfLatin1Bytes(p).length;p+=`${i} 0 obj\n${o[i]}\nendobj\n`}let xr=pdfLatin1Bytes(p).length;p+=`xref\n0 ${o.length}\n0000000000 65535 f \n`;for(let i=1;i<o.length;i++)p+=String(off[i]).padStart(10,'0')+' 00000 n \n';p+=`trailer\n<< /Size ${o.length} /Root 1 0 R >>\nstartxref\n${xr}\n%%EOF`;return pdfLatin1Bytes(p)
 }
+
 function buildKitLabelPdf(k,serialized,e){
- const mm=72/25.4,H=30*mm,L=50*mm,RX=53*mm,R=50*mm,M=3*mm,lx=M,lw=L-2*M,rx=RX+M,rw=R-2*M;let s='',info=`${e.code||''} ${e.location||''} S/N: ${e.series||''}`;
- s+=pdfTextCommand(k.name,lx,H-M-10,10,lw,true,'center');let qs=19*mm;s+=pdfQr(e.series,(L-qs)/2,M+5.5,qs);let fs=7.2;while(pdfApproxWidth(info,fs,true)>lw&&fs>5.3)fs-=.2;s+=pdfTextCommand(info,lx,M,fs,lw,true,'center');
- s+=pdfTextCommand(k.name,rx,H-M-10,10,rw,true,'center');let ean=generateEanFromCode(e.code),bh=11.5*mm,by=M+13.5;s+=pdfEan13Command(ean,rx,by,rw,bh);s+=pdfTextCommand(ean,rx,by-5.6,5.8,rw,true,'center');fs=7.2;while(pdfApproxWidth(info,fs,true)>rw&&fs>5.3)fs-=.2;s+=pdfTextCommand(info,rx,M,fs,rw,true,'center');return pdfDoc(s)
+ const mm=72/25.4,H=30*mm,L=50*mm,RX=53*mm,R=50*mm,M=3*mm,lx=M,lw=L-2*M,rx=RX+M,rw=R-2*M;
+ const product=productLabelName(getProduct(e.productId))||'';
+ const info=`${e.code||''} ${e.location||''} S/N: ${e.series||''}`;
+ const infoY=M+4.3,productY=M;
+ let s='';
+
+ s+=pdfTextCommand(k.name,lx,H-M-10,10,lw,true,'center');
+ let qs=19*mm;
+ s+=pdfQr(e.series,(L-qs)/2,M+5.8,qs);
+
+ let infoFs=7.0;
+ while(pdfApproxWidth(info,infoFs,true)>lw&&infoFs>5.2)infoFs-=.2;
+ s+=pdfTextCommand(info,lx,infoY,infoFs,lw,true,'center');
+
+ if(product){
+  let productFs=6.2;
+  while(pdfApproxWidth(product,productFs,true)>lw&&productFs>4.8)productFs-=.2;
+  s+=pdfTextCommand(product,lx,productY,productFs,lw,true,'center');
+ }
+
+ s+=pdfTextCommand(k.name,rx,H-M-10,10,rw,true,'center');
+ let ean=getCode(e.codeId)?.ean||'',bh=11.5*mm,by=M+13.5;
+ s+=pdfEan13Command(ean,rx,by,rw,bh);
+ s+=pdfTextCommand(ean,rx,by-5.6,5.8,rw,true,'center');
+
+ infoFs=7.0;
+ while(pdfApproxWidth(info,infoFs,true)>rw&&infoFs>5.2)infoFs-=.2;
+ s+=pdfTextCommand(info,rx,infoY,infoFs,rw,true,'center');
+
+ if(product){
+  let productFs=6.2;
+  while(pdfApproxWidth(product,productFs,true)>rw&&productFs>4.8)productFs-=.2;
+  s+=pdfTextCommand(product,rx,productY,productFs,rw,true,'center');
+ }
+
+ return pdfDoc(s);
 }
+
 function isAccessoryEquipment(e){
  return !!getProduct(e.productId)?.variables?.includes('Acessório');
 }
+
 function buildStandaloneEquipmentLabelPdf(e){
  const mm=72/25.4,H=30*mm,L=50*mm,RX=53*mm,R=50*mm,M=3*mm,lx=M,lw=L-2*M,rx=RX+M,rw=R-2*M;
- let s='',info=`${e.code||''} ${e.location||''} S/N: ${e.series||''}`,title='CPE - SP';
+ const title='CPE - SP';
+ const info=`${e.code||''} ${e.location||''} S/N: ${e.series||''}`;
+ const product=productLabelName(getProduct(e.productId))||'';
+ const infoY=M+4.3,productY=M;
+ let s='';
+
  s+=pdfTextCommand(title,lx,H-M-10,10,lw,true,'center');
- let qs=19*mm;s+=pdfQr(e.series,(L-qs)/2,M+5.5,qs);
- let fs=7.2;while(pdfApproxWidth(info,fs,true)>lw&&fs>5.3)fs-=.2;
- s+=pdfTextCommand(info,lx,M,fs,lw,true,'center');
+ let qs=19*mm;s+=pdfQr(e.series,(L-qs)/2,M+5.8,qs);
+
+ let infoFs=7.0;
+ while(pdfApproxWidth(info,infoFs,true)>lw&&infoFs>5.2)infoFs-=.2;
+ s+=pdfTextCommand(info,lx,infoY,infoFs,lw,true,'center');
+
+ if(product){
+  let productFs=6.2;
+  while(pdfApproxWidth(product,productFs,true)>lw&&productFs>4.8)productFs-=.2;
+  s+=pdfTextCommand(product,lx,productY,productFs,lw,true,'center');
+ }
+
  s+=pdfTextCommand(title,rx,H-M-10,10,rw,true,'center');
  let ean=getCode(e.codeId)?.ean||'',bh=11.5*mm,by=M+13.5;
  s+=pdfEan13Command(ean,rx,by,rw,bh);
  s+=pdfTextCommand(ean,rx,by-5.6,5.8,rw,true,'center');
- fs=7.2;while(pdfApproxWidth(info,fs,true)>rw&&fs>5.3)fs-=.2;
- s+=pdfTextCommand(info,rx,M,fs,rw,true,'center');
+
+ infoFs=7.0;
+ while(pdfApproxWidth(info,infoFs,true)>rw&&infoFs>5.2)infoFs-=.2;
+ s+=pdfTextCommand(info,rx,infoY,infoFs,rw,true,'center');
+
+ if(product){
+  let productFs=6.2;
+  while(pdfApproxWidth(product,productFs,true)>rw&&productFs>4.8)productFs-=.2;
+  s+=pdfTextCommand(product,rx,productY,productFs,rw,true,'center');
+ }
+
  return pdfDoc(s);
 }
+
+
 function buildAccessoryEanLabelPdf(e){
  const mm=72/25.4,H=30*mm,L=50*mm,RX=53*mm,R=50*mm,M=3*mm,lx=M,lw=L-2*M,rx=RX+M,rw=R-2*M;
- const title='CPE - SP',ean=generateEanFromCode(e.code),product=productLabelName(getProduct(e.productId));
- const info=[e.code,product,e.location,'N/S'].filter(Boolean).join(' ');
+ const title='CPE - SP',ean=generateEanFromCode(e.code),product=productLabelName(getProduct(e.productId))||'';
+ const info=[e.code,e.location,'N/S'].filter(Boolean).join(' ');
+ const infoY=M+4.3,productY=M;
  let s='';
 
- // Etiqueta esquerda: LOCAL + número do local em destaque.
+ // Etiqueta esquerda: LOCAL + número do local em destaque + nome do produto.
  s+=pdfTextCommand('LOCAL',lx,H-M-11,10,lw,true,'center');
  const location=String(e.location||'').trim()||'-';
  let locationFs=24;
  while(pdfApproxWidth(location,locationFs,true)>lw&&locationFs>12)locationFs-=.5;
- // Centralização visual vertical da identificação grande.
- s+=pdfTextCommand(location,lx,(H-locationFs)/2-2,locationFs,lw,true,'center');
+ s+=pdfTextCommand(location,lx,(H-locationFs)/2-1,locationFs,lw,true,'center');
 
- // Etiqueta direita: identificação CPE + EAN-13 + informações do acessório.
- const bh=11.5*mm,by=M+13.5;
+ if(product){
+  let productFs=6.2;
+  while(pdfApproxWidth(product,productFs,true)>lw&&productFs>4.8)productFs-=.2;
+  s+=pdfTextCommand(product,lx,productY,productFs,lw,true,'center');
+ }
+
+ // Etiqueta direita: identificação CPE + EAN-13 + legenda + nome do produto.
  s+=pdfTextCommand(title,rx,H-M-10,10,rw,true,'center');
- s+=pdfEan13Command(ean,rx,by,rw,bh);
- s+=pdfTextCommand(ean,rx,by-5.6,5.8,rw,true,'center');
- let fs=7.2;
- while(pdfApproxWidth(info,fs,true)>rw&&fs>4.8)fs-=.2;
- s+=pdfTextCommand(info,rx,M,fs,rw,true,'center');
+ const barcodeHeight=11.8*mm;
+ const barcodeY=M+13.2;
+ s+=pdfEan13Command(ean,rx,barcodeY,rw,barcodeHeight);
+ s+=pdfTextCommand(ean,rx,barcodeY-5.6,5.8,rw,true,'center');
+
+ let infoFs=6.8;
+ while(pdfApproxWidth(info,infoFs,true)>rw&&infoFs>5.0)infoFs-=.2;
+ s+=pdfTextCommand(info,rx,infoY,infoFs,rw,true,'center');
+
+ if(product){
+  let productFs=6.2;
+  while(pdfApproxWidth(product,productFs,true)>rw&&productFs>4.8)productFs-=.2;
+  s+=pdfTextCommand(product,rx,productY,productFs,rw,true,'center');
+ }
 
  return pdfDoc(s);
 }
+
 function printStandaloneEquipmentLabel(id){if(!requirePermission('equipment.print'))return;
  const e=getEquipment(id);
  if(!e){toast('Equipamento não encontrado.');return}
