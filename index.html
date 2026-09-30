@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<link rel="icon" href="https://cpetecnologia.com.br/favicon.ico" type="image/x-icon">
-
+<link rel="icon" href="favicon.ico" type="image/x-icon">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Controle de Kits | CPE Tecnologia</title>
@@ -372,26 +371,21 @@ body.guest-calculator-mode #mainApp .container{padding-top:24px}
 }
 
 
+/* ===== B23.8 · Rodapé institucional discreto ===== */
 .site-footer{
-  margin-top:22px;
-  border-top:1px solid var(--border);
-  background:var(--surface);
+    margin-top:24px;
+    padding:14px 0 18px;
+    text-align:right;
+    color:var(--muted);
+    font-size:10.5px;
+    line-height:1.45;
 }
-.site-footer-inner{
-  max-width:1180px;
-  margin:0 auto;
-  padding:16px 20px 20px;
-  text-align:center;
-  color:var(--muted);
-  font-size:11px;
-  line-height:1.6;
-}
-.site-footer-inner strong{color:var(--text)}
-.site-footer-separator{margin:0 5px;color:#aaa}
+.site-footer span{display:inline}
 @media(max-width:700px){
-  .site-footer-inner{padding:14px 16px 18px}
-  .site-footer-separator{display:none}
-  .site-footer-inner span{display:block}
+    .site-footer{
+        text-align:center;
+        padding-bottom:20px;
+    }
 }
 
 </style>
@@ -574,11 +568,7 @@ body.guest-calculator-mode #mainApp .container{padding-top:24px}
 </section>
 </main>
 <footer class="site-footer">
-  <div class="site-footer-inner">
-    <span>© <span id="footerYear"></span> <strong>Eduardo Aliberti - CPE SP</strong>. Todos os direitos reservados.</span>
-    <span class="site-footer-separator">•</span>
-    <span>Desenvolvido com auxílio do <strong>GPT-5.6 Sol, da OpenAI</strong>.</span>
-  </div>
+  <span>© 2026 Eduardo Aliberti - CPE SP. Todos os direitos reservados. Desenvolvimento com auxílio do GPT-5.6 Sol, da OpenAI.</span>
 </footer>
 </div>
 
@@ -3517,9 +3507,6 @@ function applyResponsiveTableLabels(){
 function renderAll(){updateDashboard();renderEquipmentTable();renderProductPage();renderBuilderProductFilter();renderBuilder();renderKits();updateCharts();renderProductManager();renderCodeManager();applyPermissionVisibility();if(canAdmin()){renderUsersPage();renderPermissionsPage()}}
 
 document.querySelectorAll('.nav button').forEach(btn=>btn.addEventListener('click',()=>{document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));btn.classList.add('active');$(btn.dataset.page).classList.add('active');if(btn.dataset.page==='dados')updateCharts();if(btn.dataset.page==='produtos')renderProductPage();if(btn.dataset.page==='usuarios')renderUsersPage();if(btn.dataset.page==='permissoes')renderPermissionsPage()}));
-const footerYearEl=$('footerYear');
-if(footerYearEl)footerYearEl.textContent=String(new Date().getFullYear());
-
 bootApp();
 
 const responsiveTableObserver=new MutationObserver(()=>applyResponsiveTableLabels());
