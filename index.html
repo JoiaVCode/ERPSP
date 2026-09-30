@@ -2814,16 +2814,17 @@ function pdfDoc(stream){
  let p='%PDF-1.4\n%âãÏÓ\n',off=[0];for(let i=1;i<o.length;i++){off[i]=pdfLatin1Bytes(p).length;p+=`${i} 0 obj\n${o[i]}\nendobj\n`}let xr=pdfLatin1Bytes(p).length;p+=`xref\n0 ${o.length}\n0000000000 65535 f \n`;for(let i=1;i<o.length;i++)p+=String(off[i]).padStart(10,'0')+' 00000 n \n';p+=`trailer\n<< /Size ${o.length} /Root 1 0 R >>\nstartxref\n${xr}\n%%EOF`;return pdfLatin1Bytes(p)
 }
 
+
 function buildKitLabelPdf(k,serialized,e){
  const mm=72/25.4,H=30*mm,L=50*mm,RX=53*mm,R=50*mm,M=3*mm,lx=M,lw=L-2*M,rx=RX+M,rw=R-2*M;
  const product=productLabelName(getProduct(e.productId))||'';
  const info=`${e.code||''} ${e.location||''} S/N: ${e.series||''}`;
- const infoY=M+4.3,productY=M;
+ const infoY=M+6.2,productY=M;
  let s='';
 
- s+=pdfTextCommand(k.name,lx,H-M-10,10,lw,true,'center');
+ s+=pdfTextCommand(k.name,lx,H-M-8.5,10,lw,true,'center');
  let qs=19*mm;
- s+=pdfQr(e.series,(L-qs)/2,M+5.8,qs);
+ s+=pdfQr(e.series,(L-qs)/2,M+7.4,qs);
 
  let infoFs=7.0;
  while(pdfApproxWidth(info,infoFs,true)>lw&&infoFs>5.2)infoFs-=.2;
@@ -2835,8 +2836,8 @@ function buildKitLabelPdf(k,serialized,e){
   s+=pdfTextCommand(product,lx,productY,productFs,lw,true,'center');
  }
 
- s+=pdfTextCommand(k.name,rx,H-M-10,10,rw,true,'center');
- let ean=getCode(e.codeId)?.ean||'',bh=11.5*mm,by=M+13.5;
+ s+=pdfTextCommand(k.name,rx,H-M-8.5,10,rw,true,'center');
+ let ean=getCode(e.codeId)?.ean||'',bh=11.5*mm,by=M+18.7;
  s+=pdfEan13Command(ean,rx,by,rw,bh);
  s+=pdfTextCommand(ean,rx,by-5.6,5.8,rw,true,'center');
 
@@ -2857,16 +2858,17 @@ function isAccessoryEquipment(e){
  return !!getProduct(e.productId)?.variables?.includes('Acessório');
 }
 
+
 function buildStandaloneEquipmentLabelPdf(e){
  const mm=72/25.4,H=30*mm,L=50*mm,RX=53*mm,R=50*mm,M=3*mm,lx=M,lw=L-2*M,rx=RX+M,rw=R-2*M;
  const title='CPE - SP';
  const info=`${e.code||''} ${e.location||''} S/N: ${e.series||''}`;
  const product=productLabelName(getProduct(e.productId))||'';
- const infoY=M+4.3,productY=M;
+ const infoY=M+6.2,productY=M;
  let s='';
 
- s+=pdfTextCommand(title,lx,H-M-10,10,lw,true,'center');
- let qs=19*mm;s+=pdfQr(e.series,(L-qs)/2,M+5.8,qs);
+ s+=pdfTextCommand(title,lx,H-M-8.5,10,lw,true,'center');
+ let qs=19*mm;s+=pdfQr(e.series,(L-qs)/2,M+7.4,qs);
 
  let infoFs=7.0;
  while(pdfApproxWidth(info,infoFs,true)>lw&&infoFs>5.2)infoFs-=.2;
@@ -2878,8 +2880,8 @@ function buildStandaloneEquipmentLabelPdf(e){
   s+=pdfTextCommand(product,lx,productY,productFs,lw,true,'center');
  }
 
- s+=pdfTextCommand(title,rx,H-M-10,10,rw,true,'center');
- let ean=getCode(e.codeId)?.ean||'',bh=11.5*mm,by=M+13.5;
+ s+=pdfTextCommand(title,rx,H-M-8.5,10,rw,true,'center');
+ let ean=getCode(e.codeId)?.ean||'',bh=11.5*mm,by=M+18.7;
  s+=pdfEan13Command(ean,rx,by,rw,bh);
  s+=pdfTextCommand(ean,rx,by-5.6,5.8,rw,true,'center');
 
@@ -2901,15 +2903,14 @@ function buildAccessoryEanLabelPdf(e){
  const mm=72/25.4,H=30*mm,L=50*mm,RX=53*mm,R=50*mm,M=3*mm,lx=M,lw=L-2*M,rx=RX+M,rw=R-2*M;
  const title='CPE - SP',ean=generateEanFromCode(e.code),product=productLabelName(getProduct(e.productId))||'';
  const info=[e.code,e.location,'N/S'].filter(Boolean).join(' ');
- const infoY=M+4.3,productY=M;
+ const infoY=M+6.2,productY=M;
  let s='';
 
- // Etiqueta esquerda: LOCAL + número do local em destaque + nome do produto.
- s+=pdfTextCommand('LOCAL',lx,H-M-11,10,lw,true,'center');
+ s+=pdfTextCommand('LOCAL',lx,H-M-9.5,10,lw,true,'center');
  const location=String(e.location||'').trim()||'-';
  let locationFs=24;
  while(pdfApproxWidth(location,locationFs,true)>lw&&locationFs>12)locationFs-=.5;
- s+=pdfTextCommand(location,lx,(H-locationFs)/2-1,locationFs,lw,true,'center');
+ s+=pdfTextCommand(location,lx,(H-locationFs)/2,locationFs,lw,true,'center');
 
  if(product){
   let productFs=6.2;
@@ -2917,10 +2918,9 @@ function buildAccessoryEanLabelPdf(e){
   s+=pdfTextCommand(product,lx,productY,productFs,lw,true,'center');
  }
 
- // Etiqueta direita: identificação CPE + EAN-13 + legenda + nome do produto.
- s+=pdfTextCommand(title,rx,H-M-10,10,rw,true,'center');
+ s+=pdfTextCommand(title,rx,H-M-8.5,10,rw,true,'center');
  const barcodeHeight=11.8*mm;
- const barcodeY=M+13.2;
+ const barcodeY=M+18.4;
  s+=pdfEan13Command(ean,rx,barcodeY,rw,barcodeHeight);
  s+=pdfTextCommand(ean,rx,barcodeY-5.6,5.8,rw,true,'center');
 
