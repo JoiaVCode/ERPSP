@@ -29,12 +29,12 @@
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,Helvetica,sans-serif;font-size:14px;border-left:5px solid var(--primary)}
 button,input,select{font:inherit}button{cursor:pointer}
-.app{min-height:100vh}
+.app{min-height:100vh;display:flex;flex-direction:column}
 .header{background:#3a3a3a;color:#fff;padding:18px 24px}
 .header-inner{max-width:1450px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:20px}
 .brand h1{margin:0;font-size:21px;font-weight:700}.brand p{margin:5px 0 0;color:#c9d7df;font-size:12px}
 .header-actions{display:flex;gap:8px;flex-wrap:wrap}.header-actions button{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);color:#fff}
-.container{max-width:1450px;margin:auto;padding:20px 24px 32px}
+.container{width:100%;max-width:1450px;box-sizing:border-box;margin:0 auto;padding:20px 24px 32px;flex:1 0 auto}
 .nav{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:20px;border-bottom:1px solid var(--border);padding-bottom:8px}
 .nav button{border:0;background:transparent;color:var(--muted);padding:10px 14px;border-radius:7px;font-weight:600}.nav button.active{background:var(--primary-soft);color:var(--primary)}
 .page{display:none}.page.active{display:block}
@@ -373,12 +373,16 @@ body.guest-calculator-mode #mainApp .container{padding-top:24px}
 
 /* ===== B23.8 · Rodapé institucional discreto ===== */
 .site-footer{
-    margin-top:24px;
-    padding:14px 0 18px;
+    width:100%;
+    max-width:1450px;
+    box-sizing:border-box;
+    margin:auto auto 0;
+    padding:14px 24px 18px;
     text-align:right;
     color:var(--muted);
     font-size:10.5px;
     line-height:1.45;
+    flex:0 0 auto;
 }
 .site-footer span{display:inline}
 @media(max-width:700px){
