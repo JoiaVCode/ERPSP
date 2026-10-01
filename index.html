@@ -1927,6 +1927,13 @@ let syncTimer=null;
 let syncInFlight=false;
 let pendingCloudSave=false;
 
+// B25.0 · Sincronização quase em tempo real entre dispositivos.
+let realtimeStateChannel=null;
+let realtimeFallbackTimer=null;
+let remoteSyncInFlight=false;
+let remoteSyncDeferred=false;
+let remoteSyncToastShown=false;
+
 function setAuthMessage(message='',ok=false,target='authMessage'){
   const el=$(target);if(!el)return;
   el.textContent=message;el.style.color=ok?'var(--success)':'var(--danger)';
@@ -1987,6 +1994,136 @@ function scheduleCloudSave(actionKey='state.write'){
   clearTimeout(syncTimer);
   syncTimer=setTimeout(flushCloudSave,650);
 }
+
+function hasBlockingEditModal(){
+  return !!document.querySelector('.modal-backdrop.open');
+}
+function canApplyRemoteStateNow(){
+  return !syncInFlight&&!pendingCloudSave&&!hasBlockingEditModal();
+}
+async function fetchCloudStateRow(){
+  const {data:row,error}=await supabaseClient.from('app_state')
+    .select('data,data_version,revision,updated_at')
+    .eq('id',SUPABASE_CONFIG.STATE_ID)
+    .single();
+  if(error)throw error;
+  return row;
+}
+async function applyLatestCloudState(reason='realtime',silent=false){
+  if(!currentSession||!cloudReady||remoteSyncInFlight||!navigator.onLine)return false;
+
+  if(!canApplyRemoteStateNow()){
+    remoteSyncDeferred=true;
+    setSyncStatus('syncing','Atualização pendente');
+    if(!silent&&!remoteSyncToastShown){
+      remoteSyncToastShown=true;
+      toast('Há alterações mais recentes. Elas serão aplicadas ao concluir a edição atual.');
+    }
+    return false;
+  }
+
+  remoteSyncInFlight=true;
+  try{
+    const row=await fetchCloudStateRow();
+    const remoteRevision=Number(row.revision)||0;
+
+    if(remoteRevision<=cloudRevision){
+      remoteSyncDeferred=false;
+      remoteSyncToastShown=false;
+      if(!pendingCloudSave)setSyncStatus('synced','Sincronizado');
+      return false;
+    }
+
+    const previousState=state;
+    try{
+      prepareState(row.data);
+    }catch(err){
+      state=previousState;
+      throw err;
+    }
+
+    cloudRevision=remoteRevision;
+    localStorage.setItem(CONFIG.STORAGE_KEY,JSON.stringify(state));
+    remoteSyncDeferred=false;
+    remoteSyncToastShown=false;
+    renderAll();
+    setSyncStatus('synced','Sincronizado');
+
+    if(!silent&&reason==='realtime')toast('Dados atualizados automaticamente.');
+    return true;
+  }catch(err){
+    console.error('Falha ao atualizar dados remotos:',err);
+    if(currentSession&&navigator.onLine)setSyncStatus('error','Falha ao atualizar');
+    return false;
+  }finally{
+    remoteSyncInFlight=false;
+  }
+}
+async function checkCloudRevisionAndSync(){
+  if(!currentSession||!cloudReady||remoteSyncInFlight||!navigator.onLine)return;
+  try{
+    const {data:row,error}=await supabaseClient.from('app_state')
+      .select('revision')
+      .eq('id',SUPABASE_CONFIG.STATE_ID)
+      .single();
+    if(error)throw error;
+    if((Number(row?.revision)||0)>cloudRevision){
+      remoteSyncDeferred=true;
+      await applyLatestCloudState('polling',true);
+    }
+  }catch(err){
+    console.error('Falha na verificação periódica de sincronização:',err);
+  }
+}
+async function processDeferredRemoteSync(){
+  if(remoteSyncDeferred&&canApplyRemoteStateNow()){
+    await applyLatestCloudState('deferred',true);
+  }
+}
+function stopRealtimeSync(){
+  if(realtimeFallbackTimer){
+    clearInterval(realtimeFallbackTimer);
+    realtimeFallbackTimer=null;
+  }
+  if(realtimeStateChannel){
+    try{supabaseClient.removeChannel(realtimeStateChannel)}catch(_){}
+    realtimeStateChannel=null;
+  }
+  remoteSyncDeferred=false;
+  remoteSyncInFlight=false;
+  remoteSyncToastShown=false;
+}
+function startRealtimeSync(){
+  stopRealtimeSync();
+  if(!currentSession||!cloudReady||!currentAccess?.active)return;
+
+  realtimeStateChannel=supabaseClient
+    .channel('erpsp-app-state-'+currentSession.user.id)
+    .on(
+      'postgres_changes',
+      {
+        event:'UPDATE',
+        schema:'public',
+        table:'app_state',
+        filter:`id=eq.${SUPABASE_CONFIG.STATE_ID}`
+      },
+      payload=>{
+        const remoteRevision=Number(payload?.new?.revision)||0;
+        if(remoteRevision<=cloudRevision)return;
+        remoteSyncDeferred=true;
+        applyLatestCloudState('realtime',false);
+      }
+    )
+    .subscribe(status=>{
+      if(status==='SUBSCRIBED'&&!pendingCloudSave){
+        setSyncStatus('synced','Sincronizado');
+      }
+    });
+
+  // Rede de segurança caso o WebSocket seja interrompido sem aviso.
+  realtimeFallbackTimer=setInterval(checkCloudRevisionAndSync,60000);
+}
+
 async function reloadStateFromCloudAfterDenied(){
   try{
     const {data:row,error}=await supabaseClient.from('app_state')
@@ -2035,6 +2172,7 @@ async function flushCloudSave(){
     setSyncStatus(navigator.onLine?'error':'offline',navigator.onLine?'Erro de sincronização':'Offline');
   }finally{
     syncInFlight=false;
+    if(remoteSyncDeferred&&!pendingCloudSave)processDeferredRemoteSync();
   }
 }
 function toast(msg){$('toast').textContent=msg;$('toast').classList.add('show');setTimeout(()=>$('toast').classList.remove('show'),2400)}
@@ -2056,6 +2194,10 @@ function closeModal(id){
 
     const openModals=[...document.querySelectorAll('.modal-backdrop.open')];
     modalStackLevel=openModals.reduce((max,el)=>Math.max(max,Number(el.style.zIndex)||100),100);
+
+    if(!openModals.length&&remoteSyncDeferred&&!pendingCloudSave){
+        processDeferredRemoteSync();
+    }
 }
 function getTopOpenModal(){
     return [...document.querySelectorAll('.modal-backdrop.open')]
@@ -2471,6 +2613,7 @@ async function loadCloudState(){
   setSyncStatus('synced','Sincronizado');
   $('authGate').classList.add('hidden');
   $('mainApp').classList.remove('auth-locked');
+  startRealtimeSync();
   return true;
 }
 
@@ -2509,6 +2652,7 @@ function closeGuestCalculator(){
 async function activateAuthenticatedSession(session){
   currentSession=session;
   if(!session){
+    stopRealtimeSync();
     cloudReady=false;currentAccess=null;applyRoleToInterface();
     setSyncStatus('local','Local');
     showLoginGate();
@@ -2674,6 +2818,7 @@ async function signupWithEmail(ev){
 }
 async function logoutUser(){
   await flushCloudSave();
+  stopRealtimeSync();
   await supabaseClient.auth.signOut();
   currentSession=null;currentAccess=null;cloudReady=false;applyRoleToInterface();
   $('authPassword').value='';
@@ -2694,8 +2839,22 @@ async function bootApp(){
     if(event==='SIGNED_OUT')activateAuthenticatedSession(null);
   });
 }
-window.addEventListener('online',()=>{if(pendingCloudSave)flushCloudSave();else if(currentSession)setSyncStatus('synced','Sincronizado')});
+window.addEventListener('online',async()=>{
+  if(pendingCloudSave)await flushCloudSave();
+  if(currentSession&&cloudReady){
+    if(!realtimeStateChannel)startRealtimeSync();
+    await checkCloudRevisionAndSync();
+  }
+});
 window.addEventListener('offline',()=>setSyncStatus('offline','Offline'));
+document.addEventListener('visibilitychange',()=>{
+  if(document.visibilityState==='visible'&&currentSession&&cloudReady){
+    checkCloudRevisionAndSync();
+  }
+});
+window.addEventListener('focus',()=>{
+  if(currentSession&&cloudReady)checkCloudRevisionAndSync();
+});
 
 function calcNtrip(ids){
     const serial=ids.map(getEquipment).filter(Boolean).filter(e=>{const p=getProduct(e.productId);return p?.variables.includes('Receptor')||p?.variables.includes('Ecobatímetro')});
