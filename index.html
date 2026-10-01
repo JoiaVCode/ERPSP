@@ -2964,7 +2964,7 @@ function pdfQr(text,x,y,size){
 function pdfDoc(stream){
  const mm=72/25.4,W=103*mm,H=30*mm,o=[];
  o[1]='<< /Type /Catalog /Pages 2 0 R >>';o[2]='<< /Type /Pages /Kids [3 0 R] /Count 1 >>';
- o[3]=`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${W.toFixed(3)} ${H.toFixed(3)}] /CropBox [0 0 ${W.toFixed(3)} ${H.toFixed(3)}] /TrimBox [0 0 ${W.toFixed(3)} ${H.toFixed(3)}] /Resources << /Font << /F1 5 0 R /F2 6 0 R >> >> /Contents 4 0 R >>`;
+ o[3]=`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${W.toFixed(3)} ${H.toFixed(3)}] /CropBox [0 0 ${W.toFixed(3)} ${H.toFixed(3)}] /TrimBox [0 0 ${W.toFixed(3)} ${H.toFixed(3)}] /Rotate 0 /Resources << /Font << /F1 5 0 R /F2 6 0 R >> >> /Contents 4 0 R >>`;
  o[4]=`<< /Length ${pdfLatin1Bytes(stream).length} >>\nstream\n${stream}endstream`;o[5]='<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>';o[6]='<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>';
  let p='%PDF-1.4\n%âãÏÓ\n',off=[0];for(let i=1;i<o.length;i++){off[i]=pdfLatin1Bytes(p).length;p+=`${i} 0 obj\n${o[i]}\nendobj\n`}let xr=pdfLatin1Bytes(p).length;p+=`xref\n0 ${o.length}\n0000000000 65535 f \n`;for(let i=1;i<o.length;i++)p+=String(off[i]).padStart(10,'0')+' 00000 n \n';p+=`trailer\n<< /Size ${o.length} /Root 1 0 R >>\nstartxref\n${xr}\n%%EOF`;return pdfLatin1Bytes(p)
 }
@@ -2974,7 +2974,7 @@ function buildKitLabelPdf(k,serialized,e){
  const mm=72/25.4,H=30*mm,L=50*mm,RX=53*mm,R=50*mm,M=3*mm,lx=M,lw=L-2*M,rx=RX+M,rw=R-2*M;
  const product=productLabelName(getProduct(e.productId))||'';
  const info=`${e.code||''} ${e.location||''} S/N: ${e.series||''}`;
- const infoY=M+6.2,productY=M;
+ const infoY=M+7.2,productY=M;
  let s='';
 
  s+=pdfTextCommand(k.name,lx,H-M-8.5,10,lw,true,'center');
@@ -3019,7 +3019,7 @@ function buildStandaloneEquipmentLabelPdf(e){
  const title='CPE - SP';
  const info=`${e.code||''} ${e.location||''} S/N: ${e.series||''}`;
  const product=productLabelName(getProduct(e.productId))||'';
- const infoY=M+6.2,productY=M;
+ const infoY=M+7.2,productY=M;
  let s='';
 
  s+=pdfTextCommand(title,lx,H-M-8.5,10,lw,true,'center');
@@ -3058,7 +3058,7 @@ function buildAccessoryEanLabelPdf(e){
  const mm=72/25.4,H=30*mm,L=50*mm,RX=53*mm,R=50*mm,M=3*mm,lx=M,lw=L-2*M,rx=RX+M,rw=R-2*M;
  const title='CPE - SP',ean=generateEanFromCode(e.code),product=productLabelName(getProduct(e.productId))||'';
  const info=[e.code,e.location,'N/S'].filter(Boolean).join(' ');
- const infoY=M+6.2,productY=M;
+ const infoY=M+7.2,productY=M;
  let s='';
 
  s+=pdfTextCommand('LOCAL',lx,H-M-9.5,10,lw,true,'center');
