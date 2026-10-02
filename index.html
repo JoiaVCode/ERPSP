@@ -32,7 +32,7 @@ button,input,select{font:inherit}button{cursor:pointer}
 .app{min-height:100vh;display:flex;flex-direction:column}
 .header{background:#3a3a3a;color:#fff;padding:18px 24px}
 .header-inner{max-width:1450px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:20px}
-.brand h1{margin:0;font-size:21px;font-weight:700}.brand p{margin:5px 0 0;color:#c9d7df;font-size:12px}
+.brand{display:flex;align-items:center;gap:12px;min-width:0}.brand-logo{display:block;width:86px;height:auto;max-height:48px;object-fit:contain;flex:0 0 auto}.brand-text{min-width:0}.brand h1{margin:0;font-size:21px;font-weight:700}.brand p{margin:5px 0 0;color:#c9d7df;font-size:12px}
 .header-actions{display:flex;gap:8px;flex-wrap:wrap}.header-actions button{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);color:#fff}
 .container{width:100%;max-width:1450px;box-sizing:border-box;margin:0 auto;padding:20px 24px 32px;flex:1 0 auto}
 .nav{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:20px;border-bottom:1px solid var(--border);padding-bottom:8px}
@@ -72,7 +72,7 @@ button,input,select{font:inherit}button{cursor:pointer}
  .app{min-width:0}
  .header{padding:13px 14px}
  .header-inner{align-items:flex-start;flex-direction:column;gap:12px}
- .brand{min-width:0}.brand h1{font-size:19px;line-height:1.2}.brand p{font-size:11px;line-height:1.4}
+ .brand{min-width:0;width:100%;gap:10px}.brand-logo{width:72px;max-height:40px}.brand-text{min-width:0}.brand h1{font-size:19px;line-height:1.2}.brand p{font-size:11px;line-height:1.4}
  .header-actions{width:100%;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
  .header-actions button{width:100%;min-width:0;min-height:42px;padding:8px 7px;font-size:11px}
  .container{padding:0 11px 24px}
@@ -496,15 +496,15 @@ body.guest-calculator-mode #mainApp .container{padding-top:24px}
 </div>
 
 <div id="mainApp" class="app auth-locked">
-<header class="header"><div class="header-inner"><div class="brand"><h1>Controle de Kits</h1><p>Organização e controle de equipamentos de estoque</p></div><div class="header-actions"><button class="btn" data-permission="data.export" onclick="exportData()">EXPORTAR</button><button class="btn" data-permission="data.import" onclick="document.getElementById('importFile').click()">IMPORTAR</button><input id="importFile" type="file" accept="application/json" hidden onchange="importData(event)"><div class="user-area"><div class="user-chip"><strong id="currentUserName">Usuário</strong><span id="currentUserRole">-</span></div><div id="syncStatus" class="sync-status" data-state="local"><span class="sync-dot"></span><span id="syncStatusText">Local</span></div><button class="btn" onclick="logoutUser()">SAIR</button></div></div></div></header>
+<header class="header"><div class="header-inner"><div class="brand"><img class="brand-logo" src="assets/logo.png" alt="CPE Tecnologia"><div class="brand-text"><h1>ERPSP</h1><p>Organização e controle de equipamentos de estoque</p></div></div><div class="header-actions"><button class="btn" data-permission="data.export" onclick="exportData()">EXPORTAR</button><button class="btn" data-permission="data.import" onclick="document.getElementById('importFile').click()">IMPORTAR</button><input id="importFile" type="file" accept="application/json" hidden onchange="importData(event)"><div class="user-area"><div class="user-chip"><strong id="currentUserName">Usuário</strong><span id="currentUserRole">-</span></div><div id="syncStatus" class="sync-status" data-state="local"><span class="sync-dot"></span><span id="syncStatusText">Local</span></div><button class="btn" onclick="logoutUser()">SAIR</button></div></div></div></header>
 <main class="container">
 <nav class="nav"><button class="active" data-page="equipamentos">Equipamentos</button><button data-page="produtos">Produtos</button><button data-page="montar">Montar Kit</button><button data-page="kits">Kits Ativos</button><button data-page="calculadora">Calculadora de Diárias</button><button id="usersNavButton" class="admin-only" data-page="usuarios">Usuários</button><button id="permissionsNavButton" class="admin-only" data-page="permissoes">Permissões</button><button data-page="dados">Dados</button></nav>
 <div id="readonlyBanner" class="readonly-banner permission-note">Seu perfil é de <strong>Consulta</strong>. Você pode visualizar dados, imprimir etiquetas, exportar backups e usar a calculadora, mas alterações de estoque estão bloqueadas.</div>
 <section id="equipamentos" class="page active">
 <div class="page-title"><div><h2>Equipamentos</h2><p>Cadastre, pesquise e acompanhe os equipamentos do estoque.</p></div><button class="btn btn-primary" data-permission="equipment.create" onclick="openEquipmentModal()">+ CADASTRAR EQUIPAMENTO</button></div>
 <div class="dashboard"><div class="card metric"><div class="label">Equipamentos</div><div class="value" id="mTotal">0</div></div><div class="card metric"><div class="label">Disponíveis</div><div class="value" id="mAvailable">0</div></div><div class="card metric"><div class="label">Em kits</div><div class="value" id="mInKit">0</div></div><div class="card metric"><div class="label">Kits ativos</div><div class="value" id="mKits">0</div></div></div>
-<div class="card toolbar"><div class="field grow"><label>Produto</label><input id="filterProduct" placeholder="Contém: i73, Receptor, prisma..." oninput="renderEquipmentTable()"></div><div class="field"><label>Disponibilidade</label><select id="filterStatus" onchange="renderEquipmentTable()"><option value="">Todos</option><option value="available">Disponível</option><option value="kit">Em kit</option></select></div><div class="field"><label>Tipo</label><select id="filterType" onchange="renderEquipmentTable()"><option value="">Todos</option><option value="TX/RX">TX/RX</option><option value="RX">RX</option><option value="RX*">RX*</option><option value="none">Sem tipo</option></select></div><div class="field grow"><label>Busca geral</label><input id="filterGeneral" placeholder="Código, local ou série" oninput="renderEquipmentTable()"></div><button class="btn" onclick="clearEquipmentFilters()">LIMPAR</button></div>
-<div class="card table-wrap"><table class="table"><thead><tr><th>Código</th><th>Local</th><th>Produto</th><th>Tipo</th><th>Série</th><th>Variáveis</th><th>Status</th><th>Ações</th></tr></thead><tbody id="equipmentTable"></tbody></table></div>
+<div class="card toolbar"><div class="field grow"><label>Pesquisar</label><input id="filterSearch" placeholder="Produto, código, local, série..." oninput="renderEquipmentTable()"></div><div class="field"><label>Disponibilidade</label><select id="filterStatus" onchange="renderEquipmentTable()"><option value="">Todos</option><option value="available">Disponível</option><option value="kit">Em kit</option></select></div><div class="field"><label>Categoria</label><select id="filterVariable" onchange="renderEquipmentTable()"><option value="">Todas</option><option value="Receptor">Receptor</option><option value="Coletora">Coletora</option><option value="Estação Total">Estação Total</option><option value="Laser">Laser</option><option value="Drone">Drone</option><option value="Ecobatímetro">Ecobatímetro</option><option value="Acessório">Acessório</option></select></div><button class="btn" onclick="clearEquipmentFilters()">LIMPAR</button><button class="btn btn-primary" data-permission="equipment.print" onclick="openPrintLocalModal()">IMPRIMIR LOCAL</button></div>
+<div class="card table-wrap"><table class="table"><thead><tr><th>Código</th><th>Local</th><th>Produto</th><th>Software</th><th>Série</th><th>Tipo</th><th>Status</th><th>Ações</th></tr></thead><tbody id="equipmentTable"></tbody></table></div>
 </section>
 <section id="produtos" class="page">
 <div class="page-title"><div><h2>Produtos</h2><p>Cadastre e gerencie os produtos usados nos equipamentos.</p></div><button class="btn btn-primary" data-permission="products.create" onclick="openProductModal()">+ CADASTRAR PRODUTO</button></div>
@@ -512,9 +512,9 @@ body.guest-calculator-mode #mainApp .container{padding-top:24px}
 <div class="card panel"><div class="product-manager" id="productPageManager"></div></div>
 </section>
 <section id="montar" class="page">
-<div class="page-title"><div><h2>Montar Kit</h2><p>Adicione quantos equipamentos forem necessários. Kits são temporários e podem ser alterados depois.</p></div></div>
+<div class="page-title"><div><h2>Montar Kit</h2><p>Kits são temporários e podem ser alterados depois.</p></div></div>
 <div class="kit-builder"><div class="card panel"><h3>Equipamentos disponíveis</h3><div class="toolbar" style="padding:0;margin:0 0 12px;border:0;box-shadow:none"><div class="field grow"><label>Filtrar</label><input id="builderSearch" placeholder="Produto, código, local ou série" oninput="renderBuilder()"></div><div class="field"><label>Produto</label><select id="builderProduct" onchange="renderBuilder()"><option value="">Todos</option></select></div></div><div id="availableList" class="available-list"></div></div>
-<div class="card panel"><div class="hint">O kit será criado automaticamente com um identificador sequencial, como KIT-001, KIT-002 etc. O nome pode ser personalizado depois em Kits Ativos.</div><div style="height:14px"></div><h3>Equipamentos selecionados <span id="selectedCount" class="badge badge-blue">0</span></h3><div id="selectedList" class="selected-list"></div><div style="height:15px"></div><button class="btn btn-primary" data-permission="kits.create" style="width:100%" onclick="createKit()">CRIAR KIT</button></div></div>
+<div class="card panel"><div class="hint">O nome do kit pode ser personalizado em Kits Ativos.</div><div style="height:14px"></div><h3>Equipamentos selecionados <span id="selectedCount" class="badge badge-blue">0</span></h3><div id="selectedList" class="selected-list"></div><div style="height:15px"></div><button class="btn btn-primary" data-permission="kits.create" style="width:100%" onclick="createKit()">CRIAR KIT</button></div></div>
 </section>
 <section id="kits" class="page">
 <div class="page-title"><div><h2>Kits Ativos</h2><p>Consulte, filtre, edite ou desmonte os kits existentes.</p></div></div>
@@ -576,7 +576,7 @@ body.guest-calculator-mode #mainApp .container{padding-top:24px}
 </footer>
 </div>
 
-<div id="equipmentModal" class="modal-backdrop"><div class="modal"><div class="modal-head"><h3 id="equipmentModalTitle">Cadastrar equipamento</h3><button class="close" onclick="closeModal('equipmentModal')">×</button></div><div class="modal-body"><form id="equipmentForm" onsubmit="saveEquipment(event)"><input type="hidden" id="equipmentId"><div class="form-grid"><div class="field"><label>Código</label><input id="eqCodeInput" autocomplete="off" inputmode="numeric" maxlength="4" pattern="[0-9]{4}" placeholder="Ex.: 7797" required><input type="hidden" id="eqCode"><div class="hint">Digite os 4 dígitos do código. O EAN-13 é gerado automaticamente em segundo plano.</div></div><div class="field"><label>Local</label><input id="eqLocation" required></div><div class="field full"><label>Produto</label><div class="product-combobox"><input id="eqProductInput" autocomplete="off" placeholder="Selecione ou digite o produto..." onclick="openProductDropdown()" oninput="filterProductDropdown()" onfocus="openProductDropdown()" required><input type="hidden" id="eqProduct"><div id="productDropdown" class="product-dropdown"></div></div><div class="hint">Digite para localizar um produto e selecione uma opção da lista.</div><div class="actions" style="margin-top:7px"><button type="button" class="btn btn-small" onclick="openProductModal()">+ CADASTRAR NOVO PRODUTO</button><button type="button" class="btn btn-small" onclick="openProductManager()">GERENCIAR PRODUTOS</button></div></div><div class="field" id="typeField" style="display:none"><label>Tipo</label><select id="eqType"><option value="">Selecione</option><option>TX/RX</option><option>RX</option><option>RX*</option></select></div><div class="field" id="hceField" style="display:none"><label>Plataforma da Coletora</label><div class="checkboxes"><label class="check"><input id="eqLandstar" type="checkbox"> Landstar</label><label class="check"><input id="eqSmartGO" type="checkbox"> SmartGO</label></div><div class="hint">É possível marcar Landstar e SmartGO simultaneamente.</div></div><div class="field" id="seriesField"><label>Série</label><input id="eqSeries" required></div></div></form></div><div class="modal-footer"><button class="btn" onclick="closeModal('equipmentModal')">CANCELAR</button><button class="btn btn-primary" onclick="document.getElementById('equipmentForm').requestSubmit()">SALVAR</button></div></div></div>
+<div id="equipmentModal" class="modal-backdrop"><div class="modal"><div class="modal-head"><h3 id="equipmentModalTitle">Cadastrar equipamento</h3><button class="close" onclick="closeModal('equipmentModal')">×</button></div><div class="modal-body"><form id="equipmentForm" onsubmit="saveEquipment(event)"><input type="hidden" id="equipmentId"><div class="form-grid"><div class="field"><label>Código</label><input id="eqCodeInput" autocomplete="off" inputmode="numeric" maxlength="4" pattern="[0-9]{4}" placeholder="Ex.: 7797, 0217..." required><input type="hidden" id="eqCode"><div class="hint">Digite os 4 dígitos do código.</div></div><div class="field"><label>Local</label><input id="eqLocation" required></div><div class="field full"><label>Produto</label><div class="product-combobox"><input id="eqProductInput" autocomplete="off" placeholder="Selecione ou digite o produto..." onclick="openProductDropdown()" oninput="filterProductDropdown()" onfocus="openProductDropdown()" required><input type="hidden" id="eqProduct"><div id="productDropdown" class="product-dropdown"></div></div><div class="hint">Digite para localizar um produto e selecione uma opção da lista.</div><div class="actions" style="margin-top:7px"><button type="button" class="btn btn-small" onclick="openProductModal()">+ CADASTRAR NOVO PRODUTO</button><button type="button" class="btn btn-small" onclick="openProductManager()">GERENCIAR PRODUTOS</button></div></div><div class="field" id="typeField" style="display:none"><label>Tipo</label><select id="eqType"><option value="">Selecione</option><option>TX/RX</option><option>RX</option><option>RX*</option></select></div><div class="field" id="hceField" style="display:none"><label>Plataforma da Coletora</label><div class="checkboxes"><label class="check"><input id="eqLandstar" type="checkbox"> Landstar</label><label class="check"><input id="eqSmartGO" type="checkbox"> SmartGO</label></div><div class="hint">É possível marcar Landstar e SmartGO simultaneamente.</div></div><div class="field" id="seriesField"><label>Série</label><input id="eqSeries" required></div></div></form></div><div class="modal-footer"><button class="btn" onclick="closeModal('equipmentModal')">CANCELAR</button><button class="btn btn-primary" onclick="document.getElementById('equipmentForm').requestSubmit()">SALVAR</button></div></div></div>
 
 <div id="duplicateSeriesModal" class="modal-backdrop"><div class="modal"><div class="modal-head"><h3>Duplicar equipamento</h3><button class="close" onclick="cancelDuplicateEquipment()">×</button></div><div class="modal-body"><form id="duplicateSeriesForm" onsubmit="saveDuplicateEquipment(event)"><div class="field"><label>Série do novo equipamento</label><input id="duplicateSeries" autocomplete="off" required placeholder="Informe a série"></div></form></div><div class="modal-footer"><button class="btn" onclick="cancelDuplicateEquipment()">CANCELAR</button><button class="btn btn-primary" onclick="document.getElementById('duplicateSeriesForm').requestSubmit()">SALVAR</button></div></div></div>
 
@@ -584,11 +584,13 @@ body.guest-calculator-mode #mainApp .container{padding-top:24px}
 
 <div id="codeManagerModal" class="modal-backdrop"><div class="modal wide"><div class="modal-head"><h3>Gerenciar códigos</h3><button class="close" onclick="closeModal('codeManagerModal')">×</button></div><div class="modal-body"><div id="codeManager"></div></div><div class="modal-footer"><button class="btn" onclick="closeModal('codeManagerModal')">FECHAR</button></div></div></div>
 
-<div id="productModal" class="modal-backdrop"><div class="modal"><div class="modal-head"><h3 id="productModalTitle">Cadastrar produto</h3><button class="close" onclick="closeModal('productModal')">×</button></div><div class="modal-body"><form id="productForm" onsubmit="saveProduct(event)"><input type="hidden" id="productId"><div class="field"><label>Nome do produto</label><input id="productName" required placeholder="Ex.: Adap. P/Base Niv."><div class="hint">Nome curto usado nas etiquetas.</div></div><div style="height:12px"></div><div class="field"><label>Nome de exibição <span style="font-weight:400">(opcional)</span></label><input id="productDisplayName" placeholder="Ex.: Adaptador para base nivelante com prumo óptico"><div class="hint">Quando preenchido, este nome aparece no site. Se ficar vazio, o Nome do produto será exibido normalmente.</div></div><div style="height:15px"></div><div class="field"><label>Variáveis do produto</label><div class="checkboxes"><label class="check"><input id="varReceiver" class="product-category" type="checkbox" onchange="selectSingleProductCategory(this)"> Receptor</label><label class="check"><input id="varCollector" class="product-category" type="checkbox" onchange="selectSingleProductCategory(this)"> Coletora</label><label class="check"><input id="varTotalStation" class="product-category" type="checkbox" onchange="selectSingleProductCategory(this)"> Estação Total</label><label class="check"><input id="varLaser" class="product-category" type="checkbox" onchange="selectSingleProductCategory(this)"> Laser</label><label class="check"><input id="varDrone" class="product-category" type="checkbox" onchange="selectSingleProductCategory(this)"> Drone</label><label class="check"><input id="varEcho" class="product-category" type="checkbox" onchange="selectSingleProductCategory(this)"> Ecobatímetro</label><label class="check"><input id="varAccessory" class="product-category" type="checkbox" onchange="selectSingleProductCategory(this)"> Acessório</label></div></div><p class="hint">Selecione apenas uma categoria por produto. Coletora permite Landstar e SmartGO simultaneamente nos equipamentos. Laser só pode compartilhar um kit com uma Coletora quando essa Coletora possuir SmartGO. Produtos marcados como Acessório usam automaticamente “Equipamento não seriado”.</p></form></div><div class="modal-footer"><button class="btn" onclick="closeModal('productModal')">CANCELAR</button><button class="btn btn-primary" onclick="document.getElementById('productForm').requestSubmit()">SALVAR PRODUTO</button></div></div></div>
+<div id="productModal" class="modal-backdrop"><div class="modal"><div class="modal-head"><h3 id="productModalTitle">Cadastrar produto</h3><button class="close" onclick="closeModal('productModal')">×</button></div><div class="modal-body"><form id="productForm" onsubmit="saveProduct(event)"><input type="hidden" id="productId"><div class="field"><label>Nome do produto</label><input id="productName" required placeholder="Ex.: Adap. P/Base Niv."><div class="hint">Nome de exibição nas etiquetas.</div></div><div style="height:12px"></div><div class="field"><label>Nome de exibição <span style="font-weight:400">(opcional)</span></label><input id="productDisplayName" placeholder="Ex.: Adaptador para base nivelante com prumo óptico"><div class="hint">Quando preenchido, este será o nome exibido no site.</div></div><div style="height:15px"></div><div class="field"><label>Variáveis do produto</label><div class="checkboxes"><label class="check"><input id="varReceiver" class="product-category" type="checkbox" onchange="selectSingleProductCategory(this)"> Receptor</label><label class="check"><input id="varCollector" class="product-category" type="checkbox" onchange="selectSingleProductCategory(this)"> Coletora</label><label class="check"><input id="varTotalStation" class="product-category" type="checkbox" onchange="selectSingleProductCategory(this)"> Estação Total</label><label class="check"><input id="varLaser" class="product-category" type="checkbox" onchange="selectSingleProductCategory(this)"> Laser</label><label class="check"><input id="varDrone" class="product-category" type="checkbox" onchange="selectSingleProductCategory(this)"> Drone</label><label class="check"><input id="varEcho" class="product-category" type="checkbox" onchange="selectSingleProductCategory(this)"> Ecobatímetro</label><label class="check"><input id="varAccessory" class="product-category" type="checkbox" onchange="selectSingleProductCategory(this)"> Acessório</label></div></div><p class="hint">Selecione apenas uma categoria por produto.</p></form></div><div class="modal-footer"><button class="btn" onclick="closeModal('productModal')">CANCELAR</button><button class="btn btn-primary" onclick="document.getElementById('productForm').requestSubmit()">SALVAR PRODUTO</button></div></div></div>
 
 <div id="productManagerModal" class="modal-backdrop"><div class="modal"><div class="modal-head"><h3>Gerenciar produtos</h3><button class="close" onclick="closeModal('productManagerModal')">×</button></div><div class="modal-body"><div class="product-manager" id="productManager"></div></div></div></div>
 
 <div id="kitEditModal" class="modal-backdrop"><div class="modal wide"><div class="modal-head"><h3 id="kitEditTitle">Editar kit</h3><button class="close" onclick="closeModal('kitEditModal')">×</button></div><div class="modal-body"><div class="form-grid"><div class="field full"><label>Nome do kit</label><input id="editKitName"></div><div class="field full"><label>Adicionar equipamento disponível</label><select id="editKitAdd" onchange="addToEditingKit(this.value);this.value=''"><option value="">Selecione um equipamento...</option></select></div></div><div style="height:15px"></div><h3>Equipamentos do kit</h3><div id="editKitList" class="selected-list"></div></div><div class="modal-footer"><button class="btn" onclick="closeModal('kitEditModal')">CANCELAR</button><button class="btn btn-primary" onclick="saveKitEdit()">SALVAR ALTERAÇÕES</button></div></div></div>
+
+<div id="printLocalModal" class="modal-backdrop"><div class="modal"><div class="modal-head"><h3>Imprimir local</h3><button class="close" onclick="closeModal('printLocalModal')">×</button></div><div class="modal-body"><form id="printLocalForm" onsubmit="printLocalLabel(event)"><div class="field"><label>Local</label><input id="printLocalValue" maxlength="16" autocomplete="off" required placeholder="Ex.: 1501, 1503..."><div class="hint">Insira o código do local imobilizado ou de terceiros acima.</div></div></form></div><div class="modal-footer"><button class="btn" onclick="closeModal('printLocalModal')">CANCELAR</button><button class="btn btn-primary" onclick="document.getElementById('printLocalForm').requestSubmit()">IMPRIMIR</button></div></div></div>
 
 <div id="printLabelModal" class="modal-backdrop"><div class="modal wide"><div class="modal-head"><h3 id="printLabelTitle">Imprimir identificação</h3><button class="close" onclick="closeModal('printLabelModal')">×</button></div><div class="modal-body"><p class="hint" style="margin-top:0">Selecione o equipamento que será destacado na etiqueta. A identificação completa do kit ficará na etiqueta esquerda.</p><div id="printLabelEquipmentList" class="selected-list"></div></div><div class="modal-footer"><button class="btn btn-primary" onclick="printCompleteKitFromModal()">IMPRIMIR KIT COMPLETO</button><button class="btn" onclick="closeModal('printLabelModal')">FECHAR</button></div></div></div>
 
@@ -2940,12 +2942,50 @@ function saveDuplicateEquipment(ev){if(!requirePermission('equipment.duplicate')
  state.equipments.push({id:uid('eq'),codeId:source.codeId,code:source.code,location:source.location,productId:source.productId,series,type:source.type||'',hce:{landstar:!!source.hce?.landstar,smartgo:!!source.hce?.smartgo}});
  pendingDuplicateEquipmentId='';closeModal('duplicateSeriesModal');save('equipment.duplicate');renderAll();toast('Equipamento duplicado com a nova série.');
 }
-function renderEquipmentTable(){
-    const product=( $('filterProduct').value||'').toLowerCase().trim();const status=$('filterStatus').value;const type=$('filterType').value;const general=($('filterGeneral').value||'').toLowerCase().trim();
-    const rows=state.equipments.filter(e=>{const p=getProduct(e.productId);const inKit=isInKit(e.id);const txt=[e.code,e.location,e.series].join(' ').toLowerCase();const prod=[productSiteName(p),p?.name||''].join(' ').toLowerCase();if(product&&!prod.includes(product))return false;if(status==='available'&&inKit)return false;if(status==='kit'&&!inKit)return false;if(type==='none'&&e.type)return false;if(type&&type!=='none'&&e.type!==type)return false;if(general&&!txt.includes(general))return false;return true}).sort((a,b)=>productSiteName(getProduct(a.productId)).localeCompare(productSiteName(getProduct(b.productId)),'pt-BR'));
-    $('equipmentTable').innerHTML=rows.length?rows.map(e=>{const p=getProduct(e.productId);return `<tr><td data-label="Código">${esc(e.code)}</td><td data-label="Local">${esc(e.location)}</td><td data-label="Produto"><strong>${esc(productSiteName(p))}</strong></td><td data-label="Tipo">${equipmentMetricHtml(e)}</td><td data-label="Série">${esc(e.series)}</td><td data-label="Categoria">${esc(varsText(p))}</td><td data-label="Status">${isAccessoryEquipment(e)?`<span class="badge badge-green">${String(Math.max(1,Number(e.balance)||1)).padStart(2,'0')} unidades</span>`:(isInKit(e.id)?'<span class="badge badge-yellow">Em kit</span>':'<span class="badge badge-green">Disponível</span>')}</td><td data-label="Ações"><div class="table-actions">${hasPermission('equipment.edit')?`<button class="btn btn-small" onclick="openEquipmentModal('${e.id}')">EDITAR</button>`:''}${hasPermission('equipment.delete')?`<button class="btn btn-small btn-danger" onclick="deleteEquipment('${e.id}')">EXCLUIR</button>`:''}${hasPermission(isAccessoryEquipment(e)?'equipment.add_stock':'equipment.duplicate')?`<button class="btn btn-small" onclick="duplicateOrAddEquipment('${e.id}')">${isAccessoryEquipment(e)?'ADICIONAR':'DUPLICAR'}</button>`:''}${hasPermission('equipment.print')?`<button class="btn btn-small btn-primary" onclick="printStandaloneEquipmentLabel('${e.id}')">${isAccessoryEquipment(e)?'EAN/EAN':'QRCODE/EAN'}</button>`:''}</div></td></tr>`}).join(''):'<tr><td colspan="8"><div class="empty">Nenhum equipamento encontrado.</div></td></tr>';
+function normalizeEquipmentSearch(value){
+    return String(value??'')
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g,'')
+        .toLowerCase()
+        .trim();
 }
-function clearEquipmentFilters(){$('filterProduct').value='';$('filterStatus').value='';$('filterType').value='';$('filterGeneral').value='';renderEquipmentTable()}
+function renderEquipmentTable(){
+    const search=normalizeEquipmentSearch($('filterSearch').value);
+    const terms=search.split(/\s+/).filter(Boolean);
+    const status=$('filterStatus').value;
+    const variable=$('filterVariable').value;
+
+    const rows=state.equipments.filter(e=>{
+        const p=getProduct(e.productId);
+        const inKit=isInKit(e.id);
+        const codeRecord=getCode(e.codeId);
+
+        const searchable=normalizeEquipmentSearch([
+            e.code,
+            codeRecord?.ean,
+            e.location,
+            e.series,
+            productSiteName(p),
+            p?.name,
+            p?.displayName,
+            e.type,
+            hceText(e),
+            varsText(p)
+        ].filter(Boolean).join(' '));
+
+        // Cada termo digitado precisa existir em algum campo do equipamento.
+        // A ordem não importa e a correspondência é parcial:
+        // "7796 1503 316767", "1503 7796" e "bastao 1503" funcionam.
+        if(terms.length&&!terms.every(term=>searchable.includes(term)))return false;
+        if(status==='available'&&inKit)return false;
+        if(status==='kit'&&!inKit)return false;
+        if(variable&&!p?.variables?.includes(variable))return false;
+        return true;
+    }).sort((a,b)=>productSiteName(getProduct(a.productId)).localeCompare(productSiteName(getProduct(b.productId)),'pt-BR'));
+
+    $('equipmentTable').innerHTML=rows.length?rows.map(e=>{const p=getProduct(e.productId);return `<tr><td data-label="Código">${esc(e.code)}</td><td data-label="Local">${esc(e.location)}</td><td data-label="Produto"><strong>${esc(productSiteName(p))}</strong></td><td data-label="Software">${equipmentMetricHtml(e)}</td><td data-label="Série">${esc(e.series)}</td><td data-label="Tipo">${esc(varsText(p))}</td><td data-label="Status">${isAccessoryEquipment(e)?`<span class="badge badge-green">${String(Math.max(1,Number(e.balance)||1)).padStart(2,'0')} unidades</span>`:(isInKit(e.id)?'<span class="badge badge-yellow">Em kit</span>':'<span class="badge badge-green">Disponível</span>')}</td><td data-label="Ações"><div class="table-actions">${hasPermission('equipment.edit')?`<button class="btn btn-small" onclick="openEquipmentModal('${e.id}')">EDITAR</button>`:''}${hasPermission('equipment.delete')?`<button class="btn btn-small btn-danger" onclick="deleteEquipment('${e.id}')">EXCLUIR</button>`:''}${hasPermission(isAccessoryEquipment(e)?'equipment.add_stock':'equipment.duplicate')?`<button class="btn btn-small" onclick="duplicateOrAddEquipment('${e.id}')">${isAccessoryEquipment(e)?'ADICIONAR':'DUPLICAR'}</button>`:''}${hasPermission('equipment.print')?`<button class="btn btn-small btn-primary" onclick="printStandaloneEquipmentLabel('${e.id}')">${isAccessoryEquipment(e)?'EAN/EAN':'QRCODE/EAN'}</button>`:''}</div></td></tr>`}).join(''):'<tr><td colspan="8"><div class="empty">Nenhum equipamento encontrado.</div></td></tr>';
+}
+function clearEquipmentFilters(){$('filterSearch').value='';$('filterStatus').value='';$('filterVariable').value='';renderEquipmentTable()}
 
 function openCodeModal(id=''){$('codeForm').reset();$('codeId').value=id;if(id){const c=getCode(id);$('codeModalTitle').textContent='Editar código';$('codeValue').value=c.code}else $('codeModalTitle').textContent='Cadastrar código';updateCodeEanPreview();openModal('codeModal')}
 
@@ -3132,7 +3172,7 @@ function pdfDoc(stream){
 function buildKitLabelPdf(k,serialized,e){
  const mm=72/25.4,H=30*mm,L=50*mm,RX=53*mm,R=50*mm,M=3*mm,lx=M,lw=L-2*M,rx=RX+M,rw=R-2*M;
  const product=productLabelName(getProduct(e.productId))||'';
- const info=`${e.code||''} ${e.location||''} S/N: ${e.series||''}`;
+ const info=`${e.code||''} S/N: ${e.series||''}`;
  const infoY=M+7.2,productY=M;
  let s='';
 
@@ -3176,7 +3216,7 @@ function isAccessoryEquipment(e){
 function buildStandaloneEquipmentLabelPdf(e){
  const mm=72/25.4,H=30*mm,L=50*mm,RX=53*mm,R=50*mm,M=3*mm,lx=M,lw=L-2*M,rx=RX+M,rw=R-2*M;
  const title='CPE - SP';
- const info=`${e.code||''} ${e.location||''} S/N: ${e.series||''}`;
+ const info=`${e.code||''} S/N: ${e.series||''}`;
  const product=productLabelName(getProduct(e.productId))||'';
  const infoY=M+7.2,productY=M;
  let s='';
@@ -3216,7 +3256,7 @@ function buildStandaloneEquipmentLabelPdf(e){
 function buildAccessoryEanLabelPdf(e){
  const mm=72/25.4,H=30*mm,L=50*mm,RX=53*mm,R=50*mm,M=3*mm,lx=M,lw=L-2*M,rx=RX+M,rw=R-2*M;
  const title='CPE - SP',ean=generateEanFromCode(e.code),product=productLabelName(getProduct(e.productId))||'';
- const info=[e.code,e.location,'N/S'].filter(Boolean).join(' ');
+ const info=[e.code,'N/S'].filter(Boolean).join(' ');
  const infoY=M+7.2,productY=M;
  let s='';
 
@@ -3225,12 +3265,6 @@ function buildAccessoryEanLabelPdf(e){
  let locationFs=24;
  while(pdfApproxWidth(location,locationFs,true)>lw&&locationFs>12)locationFs-=.5;
  s+=pdfTextCommand(location,lx,(H-locationFs)/2,locationFs,lw,true,'center');
-
- if(product){
-  let productFs=6.2;
-  while(pdfApproxWidth(product,productFs,true)>lw&&productFs>4.8)productFs-=.2;
-  s+=pdfTextCommand(product,lx,productY,productFs,lw,true,'center');
- }
 
  s+=pdfTextCommand(title,rx,H-M-8.5,10,rw,true,'center');
  const barcodeHeight=11.8*mm;
@@ -3249,6 +3283,94 @@ function buildAccessoryEanLabelPdf(e){
  }
 
  return pdfDoc(s);
+}
+
+function pdfApproxWidthLabel(text,fontSize,bold=false){
+ const widths={
+  ' ':0.278,'.':0.278,',':0.278,':':0.278,';':0.278,'-':0.333,'/':0.278,'|':0.26,
+  '0':0.556,'1':0.556,'2':0.556,'3':0.556,'4':0.556,'5':0.556,'6':0.556,'7':0.556,'8':0.556,'9':0.556,
+  'A':0.722,'B':0.722,'C':0.722,'D':0.722,'E':0.667,'F':0.611,'G':0.778,'H':0.778,'I':0.389,'J':0.5,
+  'K':0.778,'L':0.667,'M':0.944,'N':0.722,'O':0.778,'P':0.667,'Q':0.778,'R':0.722,'S':0.667,'T':0.611,
+  'U':0.722,'V':0.722,'W':1.0,'X':0.722,'Y':0.722,'Z':0.667,
+  'a':0.556,'b':0.611,'c':0.556,'d':0.611,'e':0.556,'f':0.333,'g':0.611,'h':0.611,'i':0.278,'j':0.278,
+  'k':0.556,'l':0.278,'m':0.889,'n':0.611,'o':0.611,'p':0.611,'q':0.611,'r':0.389,'s':0.556,'t':0.333,
+  'u':0.611,'v':0.556,'w':0.778,'x':0.556,'y':0.556,'z':0.5
+ };
+ let units=0;
+ for(const ch of String(text??'')){
+  if(widths[ch]!=null)units+=widths[ch];
+  else units+=bold?0.61:0.56;
+ }
+ return units*fontSize;
+}
+function pdfCenteredLabelTextCommand(text,centerX,y,size,maxWidth,bold=false){
+ text=String(text??'');
+ let scale=100;
+ const estimated=pdfApproxWidthLabel(text,size,bold);
+ if(maxWidth&&estimated>maxWidth)scale=Math.max(42,(maxWidth/estimated)*100);
+ const finalWidth=estimated*(scale/100);
+ const drawX=centerX-(finalWidth/2);
+ return `BT /${bold?'F2':'F1'} ${size.toFixed(2)} Tf ${scale.toFixed(2)} Tz 1 0 0 1 ${drawX.toFixed(2)} ${y.toFixed(2)} Tm (${pdfEscapeText(text)}) Tj ET\n`;
+}
+
+function localLabelFontSize(value){
+ const len=Array.from(String(value??'').trim()).length;
+ if(len<=4)return 24;
+ if(len<=6)return 22;
+ if(len<=8)return 20;
+ if(len<=10)return 18;
+ if(len<=12)return 16.5;
+ if(len<=14)return 15;
+ return 13.5;
+}
+function buildLocalLabelPdf(value){
+ const mm=72/25.4,H=30*mm,L=50*mm,RX=53*mm,R=50*mm,M=3*mm,lx=M,lw=L-2*M,rx=RX+M,rw=R-2*M;
+ const local=String(value??'').trim();
+ let s='';
+
+ function renderLocalHalf(x,w){
+  const cx=x+(w/2);
+
+  // Usa uma estimativa mais precisa de largura para deixar o alinhamento
+  // visualmente mais simétrico no visualizador e na seleção de texto do PDF.
+  s+=pdfCenteredLabelTextCommand('CPE SP',cx,H-M-8.5,10,w,true);
+  s+=pdfCenteredLabelTextCommand('Local',cx,H-M-24,13,w,true);
+
+  // 4 caracteres ou menos usam o mesmo tamanho-base do LOCAL das EAN/EAN.
+  // A fonte diminui progressivamente conforme o texto cresce e ainda possui
+  // uma última verificação de largura para nunca estourar a área útil.
+  let fs=localLabelFontSize(local);
+  while(pdfApproxWidthLabel(local,fs,true)>w&&fs>10)fs-=.5;
+  const localY=Math.max(M+5,(H-fs)/2-4);
+  s+=pdfCenteredLabelTextCommand(local,cx,localY,fs,w,true);
+ }
+
+ renderLocalHalf(lx,lw);
+ renderLocalHalf(rx,rw);
+
+ return pdfDoc(s);
+}
+function openPrintLocalModal(){
+ if(!requirePermission('equipment.print'))return;
+ const input=$('printLocalValue');
+ input.value='';
+ openModal('printLocalModal');
+ setTimeout(()=>input.focus(),0);
+}
+function printLocalLabel(ev){
+ ev.preventDefault();
+ if(!requirePermission('equipment.print'))return;
+ const value=String($('printLocalValue').value||'').trim();
+ const length=Array.from(value).length;
+ if(!value){toast('Informe o local que será impresso.');return}
+ if(length>16){toast('O local deve ter no máximo 16 caracteres.');return}
+ try{
+   openPdfBytes(buildLocalLabelPdf(value),`Local - ${value}`);
+   closeModal('printLocalModal');
+ }catch(err){
+   console.error(err);
+   toast('Não foi possível gerar a etiqueta de local.');
+ }
 }
 
 function printStandaloneEquipmentLabel(id){if(!requirePermission('equipment.print'))return;
@@ -3270,7 +3392,7 @@ function buildCompleteKitLabelPdf(k,rows){
  let y=H-M-24;
  let step=rows.length>1?Math.min(8.2,(y-M-1)/(rows.length-1)):0;
  let fs=6.1;
- rows.forEach(e=>{let p=getProduct(e.productId),metric=e.type||hceText(e)||'',line=[e.code,e.location,productLabelName(p),metric,'S/N:',e.series].filter(Boolean).join(' ');let lineFs=fs;while(pdfApproxWidth(line,lineFs,true)>rw&&lineFs>4)lineFs-=.2;s+=pdfTextCommand(line,rx,y,lineFs,rw,true,'center');y-=step});return pdfDoc(s)
+ rows.forEach(e=>{let p=getProduct(e.productId),metric=e.type||hceText(e)||'',line=[e.code,productLabelName(p),metric,'S/N:',e.series].filter(Boolean).join(' ');let lineFs=fs;while(pdfApproxWidth(line,lineFs,true)>rw&&lineFs>4)lineFs-=.2;s+=pdfTextCommand(line,rx,y,lineFs,rw,true,'center');y-=step});return pdfDoc(s)
 }
 function openPdfBytes(bytes,title){const w=window.open('about:blank','_blank');if(!w){toast('O navegador bloqueou a visualização. Permita pop-ups para este arquivo.');return}const blob=new Blob([bytes],{type:'application/pdf'}),url=URL.createObjectURL(blob);w.location.href=url;w.document.title=title;setTimeout(()=>URL.revokeObjectURL(url),120000)}
 function printCompleteKitFromModal(){const k=state.kits.find(x=>x.id===currentPrintKitId);if(!k){toast('Kit não encontrado.');return}const rows=k.equipmentIds.map(getEquipment).filter(e=>e&&e.series&&e.series!=='Equipamento não seriado');if(!rows.length){toast('Este kit não possui equipamentos seriados.');return}openPdfBytes(buildCompleteKitLabelPdf(k,rows),`${k.name} - Kit completo`)}
