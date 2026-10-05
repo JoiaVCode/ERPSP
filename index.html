@@ -45,6 +45,21 @@ button,input,select{font:inherit}button{cursor:pointer}
 .dashboard{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px}.metric{padding:17px}.metric .label{color:var(--muted);font-size:12px}.metric .value{font-size:27px;font-weight:700;margin-top:5px;color:var(--primary)}
 .toolbar{padding:13px;margin-bottom:14px;display:flex;gap:9px;align-items:end;flex-wrap:wrap}.equipment-print-actions{display:flex;flex-direction:column;gap:5px;align-self:flex-end}.equipment-print-actions .btn{width:100%;padding:7px 10px;font-size:11px}.field{display:flex;flex-direction:column;gap:6px;min-width:150px}.field.grow{flex:1}.field label{font-size:12px;font-weight:700;color:var(--muted)}input,select{width:100%;border:1px solid var(--border);border-radius:7px;background:#fff;color:var(--text);padding:9px 10px;outline:none}input:focus,select:focus{border-color:var(--primary);box-shadow:0 0 0 2px rgba(242,195,0,.18)}
 .table-wrap{overflow:auto}.table{width:100%;border-collapse:collapse;min-width:850px}.table th,.table td{text-align:left;padding:11px 12px;border-bottom:1px solid #edf0f2;vertical-align:middle}.table th{background:var(--surface-2);font-size:12px;color:var(--muted);font-weight:700}.table tr:last-child td{border-bottom:0}.table-actions{display:flex;gap:6px;flex-wrap:wrap}
+.equipment-group-row{background:#fafbfc}
+.equipment-group-row>td{font-weight:400}
+.equipment-group-row>td:nth-child(3) strong{font-weight:700}
+.equipment-group-row .badge{font-weight:700}
+.equipment-child-row{background:#fff}
+.equipment-child-row td{border-bottom:1px dashed #e3e7ea}
+.equipment-child-key{position:relative;color:var(--muted);white-space:nowrap}
+.equipment-branch{position:relative;display:block;width:32px;height:28px;margin:-4px 0}
+.equipment-branch::before{content:"";position:absolute;left:10px;top:-18px;bottom:-18px;border-left:2px solid #7f8a91}
+.equipment-branch::after{content:"";position:absolute;left:10px;top:50%;width:18px;border-top:2px solid #7f8a91}
+.equipment-branch.last::before{bottom:50%}
+.equipment-child-empty{color:#c7cdd1}
+.equipment-group-toggle{display:inline-flex;align-items:center;justify-content:center;gap:7px;white-space:nowrap}
+.equipment-group-toggle .group-arrow{font-size:15px;line-height:1;min-width:12px;text-align:center}
+
 .badge{display:inline-flex;align-items:center;padding:4px 8px;border-radius:999px;font-size:11px;font-weight:700}.badge-green{background:var(--success-bg);color:var(--success)}.badge-blue{background:var(--primary-soft);color:var(--primary)}.badge-yellow{background:var(--warning-bg);color:var(--warning)}.badge-gray{background:#eeeeee;color:#666666}
 .empty{padding:35px;text-align:center;color:var(--muted)}
 .kit-builder{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(300px,.8fr);gap:16px}.panel{padding:16px}.panel h3{margin:0 0 12px;font-size:15px}.available-list{display:grid;gap:8px;max-height:560px;overflow:auto}.equip-option{display:flex;align-items:center;justify-content:space-between;gap:12px;border:1px solid var(--border);border-radius:8px;padding:10px;background:#fff}.equip-option:hover{border-color:#b7c6d0}.equip-info strong{display:block}.equip-info small{display:block;color:var(--muted);margin-top:3px}.selected-list{display:grid;gap:8px}.selected-item{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px;border:1px solid var(--border);border-radius:8px;background:var(--surface-2)}
@@ -578,7 +593,7 @@ body.guest-calculator-mode #mainApp .container{padding-top:24px}
 
 <div id="equipmentModal" class="modal-backdrop"><div class="modal"><div class="modal-head"><h3 id="equipmentModalTitle">Cadastrar equipamento</h3><button class="close" onclick="closeModal('equipmentModal')">×</button></div><div class="modal-body"><form id="equipmentForm" onsubmit="saveEquipment(event)"><input type="hidden" id="equipmentId"><div class="form-grid"><div class="field"><label>Código</label><input id="eqCodeInput" autocomplete="off" inputmode="numeric" maxlength="4" pattern="[0-9]{4}" placeholder="Ex.: 7797, 0217..." required><input type="hidden" id="eqCode"><div class="hint">Digite os 4 dígitos do código.</div></div><div class="field"><label>Local</label><input id="eqLocation" required></div><div class="field full"><label>Produto</label><div class="product-combobox"><input id="eqProductInput" autocomplete="off" placeholder="Selecione ou digite o produto..." onclick="openProductDropdown()" oninput="filterProductDropdown()" onfocus="openProductDropdown()" required><input type="hidden" id="eqProduct"><div id="productDropdown" class="product-dropdown"></div></div><div class="hint">Digite para localizar um produto e selecione uma opção da lista.</div><div class="actions" style="margin-top:7px"><button type="button" class="btn btn-small" onclick="openProductModal()">+ CADASTRAR NOVO PRODUTO</button><button type="button" class="btn btn-small" onclick="openProductManager()">GERENCIAR PRODUTOS</button></div></div><div class="field" id="typeField" style="display:none"><label>Tipo</label><select id="eqType"><option value="">Selecione</option><option>TX/RX</option><option>RX</option><option>RX*</option></select></div><div class="field" id="hceField" style="display:none"><label>Plataforma da Coletora</label><div class="checkboxes"><label class="check"><input id="eqLandstar" type="checkbox"> Landstar</label><label class="check"><input id="eqSmartGO" type="checkbox"> SmartGO</label></div><div class="hint">É possível marcar Landstar e SmartGO simultaneamente.</div></div><div class="field" id="seriesField"><label>Série</label><input id="eqSeries" required></div></div></form></div><div class="modal-footer"><button class="btn" onclick="closeModal('equipmentModal')">CANCELAR</button><button class="btn btn-primary" onclick="document.getElementById('equipmentForm').requestSubmit()">SALVAR</button></div></div></div>
 
-<div id="duplicateSeriesModal" class="modal-backdrop"><div class="modal"><div class="modal-head"><h3>Duplicar equipamento</h3><button class="close" onclick="cancelDuplicateEquipment()">×</button></div><div class="modal-body"><form id="duplicateSeriesForm" onsubmit="saveDuplicateEquipment(event)"><div class="field"><label>Série do novo equipamento</label><input id="duplicateSeries" autocomplete="off" required placeholder="Informe a série"></div></form></div><div class="modal-footer"><button class="btn" onclick="cancelDuplicateEquipment()">CANCELAR</button><button class="btn btn-primary" onclick="document.getElementById('duplicateSeriesForm').requestSubmit()">SALVAR</button></div></div></div>
+<div id="duplicateSeriesModal" class="modal-backdrop"><div class="modal"><div class="modal-head"><h3>Duplicar equipamento</h3><button class="close" onclick="cancelDuplicateEquipment()">×</button></div><div class="modal-body"><form id="duplicateSeriesForm" onsubmit="saveDuplicateEquipment(event)"><div class="form-grid"><div class="field"><label>Série do novo equipamento</label><input id="duplicateSeries" autocomplete="off" required placeholder="Informe a série"></div><div class="field"><label>Software</label><select id="duplicateType" required><option value="">Selecione</option><option value="TX/RX">TX/RX</option><option value="RX">RX</option><option value="RX*">RX*</option></select></div></div></form></div><div class="modal-footer"><button class="btn" onclick="cancelDuplicateEquipment()">CANCELAR</button><button class="btn btn-primary" onclick="document.getElementById('duplicateSeriesForm').requestSubmit()">SALVAR</button></div></div></div>
 
 <div id="codeModal" class="modal-backdrop"><div class="modal"><div class="modal-head"><h3 id="codeModalTitle">Cadastrar código</h3><button class="close" onclick="closeModal('codeModal')">×</button></div><div class="modal-body"><form id="codeForm" onsubmit="saveCode(event)"><input type="hidden" id="codeId"><div class="form-grid"><div class="field"><label>Código</label><input id="codeValue" required placeholder="Ex.: 7796"></div><div class="field"><label>EAN-13</label><input id="codeEanPreview" disabled placeholder="Gerado automaticamente"></div></div><p class="hint">O EAN-13 é gerado automaticamente a partir do código usando o prefixo interno 12345678.</p></form></div><div class="modal-footer"><button class="btn" onclick="closeModal('codeModal')">CANCELAR</button><button class="btn btn-primary" onclick="document.getElementById('codeForm').requestSubmit()">SALVAR CÓDIGO</button></div></div></div>
 
@@ -2934,14 +2949,15 @@ function duplicateOrAddEquipment(id){
    e.balance=Math.max(1,Number(e.balance)||1)+1;save('equipment.add_stock');renderAll();
    toast('Saldo aumentado para '+String(e.balance).padStart(2,'0')+' unidades.');return;
  }
- pendingDuplicateEquipmentId=id;$('duplicateSeriesForm').reset();openModal('duplicateSeriesModal');setTimeout(()=>$('duplicateSeries').focus(),0);
+ pendingDuplicateEquipmentId=id;$('duplicateSeriesForm').reset();$('duplicateType').value=e.type||'';openModal('duplicateSeriesModal');setTimeout(()=>$('duplicateSeries').focus(),0);
 }
 function cancelDuplicateEquipment(){pendingDuplicateEquipmentId='';$('duplicateSeriesForm').reset();closeModal('duplicateSeriesModal')}
 function saveDuplicateEquipment(ev){if(!requirePermission('equipment.duplicate')){ev.preventDefault();return}
  ev.preventDefault();const source=getEquipment(pendingDuplicateEquipmentId);if(!source){cancelDuplicateEquipment();return}
  const series=$('duplicateSeries').value.trim();if(!series){$('duplicateSeries').focus();return}
+ const type=$('duplicateType').value;if(!type){$('duplicateType').focus();return}
  if(state.equipments.some(e=>e.series===series&&series!=='Equipamento não seriado')){toast('Essa série já está cadastrada.');return}
- state.equipments.push({id:uid('eq'),codeId:source.codeId,code:source.code,location:source.location,productId:source.productId,series,type:source.type||'',hce:{landstar:!!source.hce?.landstar,smartgo:!!source.hce?.smartgo}});
+ state.equipments.push({id:uid('eq'),codeId:source.codeId,code:source.code,location:source.location,productId:source.productId,series,type,hce:{landstar:!!source.hce?.landstar,smartgo:!!source.hce?.smartgo}});
  pendingDuplicateEquipmentId='';closeModal('duplicateSeriesModal');save('equipment.duplicate');renderAll();toast('Equipamento duplicado com a nova série.');
 }
 function normalizeEquipmentSearch(value){
@@ -2951,13 +2967,63 @@ function normalizeEquipmentSearch(value){
         .toLowerCase()
         .trim();
 }
+
+const expandedEquipmentGroups=new Set();
+
+function equipmentGroupKey(e){
+    const raw=[e?.codeId||e?.code||'',e?.location||'',e?.productId||''].join('\u001f');
+    return encodeURIComponent(raw).replace(/'/g,'%27');
+}
+
+function isSerializedEquipment(e){
+    return String(e?.series||'').trim()!=='Equipamento não seriado';
+}
+
+function toggleEquipmentGroup(key){
+    if(expandedEquipmentGroups.has(key))expandedEquipmentGroups.delete(key);
+    else expandedEquipmentGroups.add(key);
+    renderEquipmentTable();
+}
+
+function equipmentRowActions(e){
+    return `<div class="table-actions">${hasPermission('equipment.edit')?`<button class="btn btn-small" onclick="openEquipmentModal('${e.id}')">EDITAR</button>`:''}${hasPermission('equipment.delete')?`<button class="btn btn-small btn-danger" onclick="deleteEquipment('${e.id}')">EXCLUIR</button>`:''}${hasPermission(isAccessoryEquipment(e)?'equipment.add_stock':'equipment.duplicate')?`<button class="btn btn-small" onclick="duplicateOrAddEquipment('${e.id}')">${isAccessoryEquipment(e)?'ADICIONAR':'DUPLICAR'}</button>`:''}${hasPermission('equipment.print')?`<button class="btn btn-small btn-primary" onclick="printStandaloneEquipmentLabel('${e.id}')">${isAccessoryEquipment(e)?'EAN/EAN':'QRCODE/EAN'}</button>`:''}</div>`;
+}
+
+function renderSingleEquipmentRow(e){
+    const p=getProduct(e.productId);
+    return `<tr><td data-label="Código">${esc(e.code)}</td><td data-label="Local">${esc(e.location)}</td><td data-label="Produto"><strong>${esc(productSiteName(p))}</strong></td><td data-label="Software">${equipmentMetricHtml(e)}</td><td data-label="Série">${esc(e.series)}</td><td data-label="Tipo">${esc(varsText(p))}</td><td data-label="Status">${isAccessoryEquipment(e)?`<span class="badge badge-green">${String(Math.max(1,Number(e.balance)||1)).padStart(2,'0')} unidades</span>`:(isInKit(e.id)?'<span class="badge badge-yellow">Em kit</span>':'<span class="badge badge-green">Disponível</span>')}</td><td data-label="Ações">${equipmentRowActions(e)}</td></tr>`;
+}
+
+function renderSerializedEquipmentGroup(group){
+    const first=group.items[0];
+    const p=getProduct(first.productId);
+    const count=group.items.length;
+    const key=group.key;
+    const expanded=expandedEquipmentGroups.has(key);
+    const countText=`${String(count).padStart(2,'0')} ${count===1?'Série':'Séries'}`;
+    const unitText=`${String(count).padStart(2,'0')} ${count===1?'Unidade':'Unidades'}`;
+
+    let html=`<tr class="equipment-group-row"><td data-label="Código">${esc(first.code)}</td><td data-label="Local">${esc(first.location)}</td><td data-label="Produto"><strong>${esc(productSiteName(p))}</strong></td><td data-label="Software">-</td><td data-label="Série">${esc(countText)}</td><td data-label="Tipo">${esc(varsText(p))}</td><td data-label="Status"><span class="badge badge-green">${esc(unitText)}</span></td><td data-label="Ações"><button class="btn btn-small equipment-group-toggle" onclick="toggleEquipmentGroup('${key}')"><span>${expanded?'RECOLHER SÉRIES':'EXPANDIR SÉRIES'}</span><span class="group-arrow">${expanded?'▼':'▶'}</span></button></td></tr>`;
+
+    if(expanded){
+        html+=group.items
+            .slice()
+            .sort((a,b)=>String(a.series||'').localeCompare(String(b.series||''),'pt-BR',{numeric:true}))
+            .map((e,index)=>{
+                const last=index===group.items.length-1;
+                return `<tr class="equipment-child-row"><td data-label="Código" class="equipment-child-key"><span class="equipment-branch${last?' last':''}" aria-hidden="true"></span></td><td data-label="Local" class="equipment-child-empty"></td><td data-label="Produto" class="equipment-child-empty"></td><td data-label="Software">${equipmentMetricHtml(e)}</td><td data-label="Série"><strong>${esc(e.series)}</strong></td><td data-label="Tipo">-</td><td data-label="Status">${isInKit(e.id)?'<span class="badge badge-yellow">Em kit</span>':'<span class="badge badge-green">Disponível</span>'}</td><td data-label="Ações">${equipmentRowActions(e)}</td></tr>`;
+            }).join('');
+    }
+    return html;
+}
+
 function renderEquipmentTable(){
     const search=normalizeEquipmentSearch($('filterSearch').value);
     const terms=search.split(/\s+/).filter(Boolean);
     const status=$('filterStatus').value;
     const variable=$('filterVariable').value;
 
-    const rows=state.equipments.filter(e=>{
+    const filtered=state.equipments.filter(e=>{
         const p=getProduct(e.productId);
         const inKit=isInKit(e.id);
         const codeRecord=getCode(e.codeId);
@@ -2975,17 +3041,48 @@ function renderEquipmentTable(){
             varsText(p)
         ].filter(Boolean).join(' '));
 
-        // Cada termo digitado precisa existir em algum campo do equipamento.
-        // A ordem não importa e a correspondência é parcial:
-        // "7796 1503 316767", "1503 7796" e "bastao 1503" funcionam.
         if(terms.length&&!terms.every(term=>searchable.includes(term)))return false;
         if(status==='available'&&inKit)return false;
         if(status==='kit'&&!inKit)return false;
         if(variable&&!p?.variables?.includes(variable))return false;
         return true;
-    }).sort((a,b)=>productSiteName(getProduct(a.productId)).localeCompare(productSiteName(getProduct(b.productId)),'pt-BR'));
+    });
 
-    $('equipmentTable').innerHTML=rows.length?rows.map(e=>{const p=getProduct(e.productId);return `<tr><td data-label="Código">${esc(e.code)}</td><td data-label="Local">${esc(e.location)}</td><td data-label="Produto"><strong>${esc(productSiteName(p))}</strong></td><td data-label="Software">${equipmentMetricHtml(e)}</td><td data-label="Série">${esc(e.series)}</td><td data-label="Tipo">${esc(varsText(p))}</td><td data-label="Status">${isAccessoryEquipment(e)?`<span class="badge badge-green">${String(Math.max(1,Number(e.balance)||1)).padStart(2,'0')} unidades</span>`:(isInKit(e.id)?'<span class="badge badge-yellow">Em kit</span>':'<span class="badge badge-green">Disponível</span>')}</td><td data-label="Ações"><div class="table-actions">${hasPermission('equipment.edit')?`<button class="btn btn-small" onclick="openEquipmentModal('${e.id}')">EDITAR</button>`:''}${hasPermission('equipment.delete')?`<button class="btn btn-small btn-danger" onclick="deleteEquipment('${e.id}')">EXCLUIR</button>`:''}${hasPermission(isAccessoryEquipment(e)?'equipment.add_stock':'equipment.duplicate')?`<button class="btn btn-small" onclick="duplicateOrAddEquipment('${e.id}')">${isAccessoryEquipment(e)?'ADICIONAR':'DUPLICAR'}</button>`:''}${hasPermission('equipment.print')?`<button class="btn btn-small btn-primary" onclick="printStandaloneEquipmentLabel('${e.id}')">${isAccessoryEquipment(e)?'EAN/EAN':'QRCODE/EAN'}</button>`:''}</div></td></tr>`}).join(''):'<tr><td colspan="8"><div class="empty">Nenhum equipamento encontrado.</div></td></tr>';
+    const serializedGroups=new Map();
+    const standalone=[];
+
+    filtered.forEach(e=>{
+        if(!isSerializedEquipment(e)){
+            standalone.push(e);
+            return;
+        }
+        const key=equipmentGroupKey(e);
+        if(!serializedGroups.has(key))serializedGroups.set(key,{key,items:[]});
+        serializedGroups.get(key).items.push(e);
+    });
+
+    const displayRows=[];
+
+    serializedGroups.forEach(group=>{
+        if(group.items.length>1)displayRows.push({kind:'group',group,first:group.items[0]});
+        else displayRows.push({kind:'single',equipment:group.items[0],first:group.items[0]});
+    });
+
+    standalone.forEach(e=>displayRows.push({kind:'single',equipment:e,first:e}));
+
+    displayRows.sort((a,b)=>{
+        const ap=productSiteName(getProduct(a.first.productId));
+        const bp=productSiteName(getProduct(b.first.productId));
+        const productCompare=ap.localeCompare(bp,'pt-BR');
+        if(productCompare)return productCompare;
+        const codeCompare=String(a.first.code||'').localeCompare(String(b.first.code||''),'pt-BR',{numeric:true});
+        if(codeCompare)return codeCompare;
+        return String(a.first.location||'').localeCompare(String(b.first.location||''),'pt-BR',{numeric:true});
+    });
+
+    $('equipmentTable').innerHTML=displayRows.length
+        ?displayRows.map(row=>row.kind==='group'?renderSerializedEquipmentGroup(row.group):renderSingleEquipmentRow(row.equipment)).join('')
+        :'<tr><td colspan="8"><div class="empty">Nenhum equipamento encontrado.</div></td></tr>';
 }
 function clearEquipmentFilters(){$('filterSearch').value='';$('filterStatus').value='';$('filterVariable').value='';renderEquipmentTable()}
 
