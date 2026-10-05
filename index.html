@@ -44,7 +44,21 @@ button,input,select{font:inherit}button{cursor:pointer}
 .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow)}
 .dashboard{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px}.metric{padding:17px}.metric .label{color:var(--muted);font-size:12px}.metric .value{font-size:27px;font-weight:700;margin-top:5px;color:var(--primary)}
 .toolbar{padding:13px;margin-bottom:14px;display:flex;gap:9px;align-items:end;flex-wrap:wrap}.equipment-print-actions{display:flex;flex-direction:column;gap:5px;align-self:flex-end}.equipment-print-actions .btn{width:100%;padding:7px 10px;font-size:11px}.field{display:flex;flex-direction:column;gap:6px;min-width:150px}.field.grow{flex:1}.field label{font-size:12px;font-weight:700;color:var(--muted)}input,select{width:100%;border:1px solid var(--border);border-radius:7px;background:#fff;color:var(--text);padding:9px 10px;outline:none}input:focus,select:focus{border-color:var(--primary);box-shadow:0 0 0 2px rgba(242,195,0,.18)}
-.table-wrap{overflow:auto}.table{width:100%;border-collapse:collapse;min-width:850px}.table th,.table td{text-align:left;padding:11px 12px;border-bottom:1px solid #edf0f2;vertical-align:middle}.table th{background:var(--surface-2);font-size:12px;color:var(--muted);font-weight:700}.table tr:last-child td{border-bottom:0}.table-actions{display:flex;gap:6px;flex-wrap:wrap}
+.table-wrap{overflow:auto}.table{width:100%;border-collapse:collapse;min-width:850px}.table th,.table td{text-align:left;padding:11px 12px;border-bottom:1px solid #edf0f2;vertical-align:middle}.table th{background:var(--surface-2);font-size:12px;color:var(--muted);font-weight:700}.table tr:last-child td{border-bottom:0}
+.equipment-table{table-layout:fixed;min-width:1280px}
+.equipment-table th:nth-child(1),.equipment-table td:nth-child(1){width:76px}
+.equipment-table th:nth-child(2),.equipment-table td:nth-child(2){width:82px}
+.equipment-table th:nth-child(4),.equipment-table td:nth-child(4){width:92px}
+.equipment-table th:nth-child(5),.equipment-table td:nth-child(5){width:118px}
+.equipment-table th:nth-child(6),.equipment-table td:nth-child(6){width:118px}
+.equipment-table th:nth-child(7),.equipment-table td:nth-child(7){width:122px}
+.equipment-table th:nth-child(8),.equipment-table td:nth-child(8){width:443px;padding-right:5px}
+.table-actions{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.equipment-actions-collapsed{display:inline-flex;align-items:center;gap:6px;width:max-content;max-width:100%}
+.equipment-actions-collapsed .equipment-action-items{display:flex;align-items:center;gap:6px;flex-wrap:nowrap;visibility:hidden;pointer-events:none}
+.equipment-actions-collapsed.expanded .equipment-action-items{visibility:visible;pointer-events:auto}
+.equipment-action-toggle{min-width:34px;padding-left:9px;padding-right:9px;font-size:15px;line-height:1;flex:0 0 auto}
+
 .equipment-group-row{background:#fafbfc}
 .equipment-group-row>td{font-weight:400}
 .equipment-group-row>td:nth-child(3) strong{font-weight:700}
@@ -519,7 +533,7 @@ body.guest-calculator-mode #mainApp .container{padding-top:24px}
 <div class="page-title"><div><h2>Equipamentos</h2><p>Cadastre, pesquise e acompanhe os equipamentos do estoque.</p></div><button class="btn btn-primary" data-permission="equipment.create" onclick="openEquipmentModal()">+ CADASTRAR EQUIPAMENTO</button></div>
 <div class="dashboard"><div class="card metric"><div class="label">Equipamentos</div><div class="value" id="mTotal">0</div></div><div class="card metric"><div class="label">Disponíveis</div><div class="value" id="mAvailable">0</div></div><div class="card metric"><div class="label">Em kits</div><div class="value" id="mInKit">0</div></div><div class="card metric"><div class="label">Kits ativos</div><div class="value" id="mKits">0</div></div></div>
 <div class="card toolbar"><div class="field grow"><label>Pesquisar</label><input id="filterSearch" placeholder="Produto, código, local, série..." oninput="renderEquipmentTable()"></div><div class="field"><label>Disponibilidade</label><select id="filterStatus" onchange="renderEquipmentTable()"><option value="">Todos</option><option value="available">Disponível</option><option value="kit">Em kit</option></select></div><div class="field"><label>Categoria</label><select id="filterVariable" onchange="renderEquipmentTable()"><option value="">Todas</option><option value="Receptor">Receptor</option><option value="Coletora">Coletora</option><option value="Estação Total">Estação Total</option><option value="Laser">Laser</option><option value="Drone">Drone</option><option value="Ecobatímetro">Ecobatímetro</option><option value="Acessório">Acessório</option></select></div><button class="btn" onclick="clearEquipmentFilters()">LIMPAR</button><div class="equipment-print-actions"><button class="btn btn-primary" data-permission="equipment.print" onclick="openPrintLocalModal()">IMPRIMIR LOCAL</button><button class="btn btn-primary" data-permission="equipment.print" onclick="openPrintOsModal()">IMPRIMIR O.S.</button></div></div>
-<div class="card table-wrap"><table class="table"><thead><tr><th>Código</th><th>Local</th><th>Produto</th><th>Software</th><th>Série</th><th>Tipo</th><th>Status</th><th>Ações</th></tr></thead><tbody id="equipmentTable"></tbody></table></div>
+<div class="card table-wrap"><table class="table equipment-table"><thead><tr><th>Código</th><th>Local</th><th>Produto</th><th>Software</th><th>Série</th><th>Tipo</th><th>Status</th><th>Ações</th></tr></thead><tbody id="equipmentTable"></tbody></table></div>
 </section>
 <section id="produtos" class="page">
 <div class="page-title"><div><h2>Produtos</h2><p>Cadastre e gerencie os produtos usados nos equipamentos.</p></div><button class="btn btn-primary" data-permission="products.create" onclick="openProductModal()">+ CADASTRAR PRODUTO</button></div>
@@ -2986,7 +3000,24 @@ function toggleEquipmentGroup(key){
 }
 
 function equipmentRowActions(e){
-    return `<div class="table-actions">${hasPermission('equipment.edit')?`<button class="btn btn-small" onclick="openEquipmentModal('${e.id}')">EDITAR</button>`:''}${hasPermission('equipment.delete')?`<button class="btn btn-small btn-danger" onclick="deleteEquipment('${e.id}')">EXCLUIR</button>`:''}${hasPermission(isAccessoryEquipment(e)?'equipment.add_stock':'equipment.duplicate')?`<button class="btn btn-small" onclick="duplicateOrAddEquipment('${e.id}')">${isAccessoryEquipment(e)?'ADICIONAR':'DUPLICAR'}</button>`:''}${hasPermission('equipment.print')?`<button class="btn btn-small btn-primary" onclick="printStandaloneEquipmentLabel('${e.id}')">${isAccessoryEquipment(e)?'EAN/EAN':'QRCODE/EAN'}</button>`:''}</div>`;
+    const accessory=isAccessoryEquipment(e);
+    const editBtn=hasPermission('equipment.edit')?`<button class="btn btn-small" onclick="openEquipmentModal('${e.id}')">EDITAR</button>`:'';
+    const deleteBtn=hasPermission('equipment.delete')?`<button class="btn btn-small btn-danger" onclick="deleteEquipment('${e.id}')">EXCLUIR</button>`:'';
+    const addOrDuplicateBtn=hasPermission(accessory?'equipment.add_stock':'equipment.duplicate')?`<button class="btn btn-small" onclick="duplicateOrAddEquipment('${e.id}')">${accessory?'ADICIONAR':'DUPLICAR'}</button>`:'';
+    const printBtn=hasPermission('equipment.print')?`<button class="btn btn-small btn-primary" onclick="printStandaloneEquipmentLabel('${e.id}')">IMPRIMIR</button>`:'';
+    const actions=[editBtn,deleteBtn,addOrDuplicateBtn,printBtn].filter(Boolean).join('');
+    if(!actions)return '';
+    const wrapperId=`equipment-actions-${e.id}`;
+    return `<div class="table-actions"><div id="${wrapperId}" class="equipment-actions-collapsed"><button class="btn btn-small equipment-action-toggle" type="button" aria-label="Expandir ações" aria-expanded="false" onclick="toggleEquipmentActions('${wrapperId}',this)">▶</button><div class="equipment-action-items">${actions}</div></div></div>`;
+}
+
+function toggleEquipmentActions(wrapperId,button){
+    const wrapper=$(wrapperId);
+    if(!wrapper)return;
+    const expanded=wrapper.classList.toggle('expanded');
+    button.textContent=expanded?'◀':'▶';
+    button.setAttribute('aria-expanded',expanded?'true':'false');
+    button.setAttribute('aria-label',expanded?'Recolher ações':'Expandir ações');
 }
 
 function renderSingleEquipmentRow(e){
