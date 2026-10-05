@@ -4,7 +4,7 @@
 <link rel="icon" href="favicon.ico" type="image/x-icon">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Controle de Kits | CPE Tecnologia</title>
+<title>ERPSP | CPE Tecnologia</title>
 <style>
 :root{
     --bg:#f1f1f1;
@@ -43,7 +43,7 @@ button,input,select{font:inherit}button{cursor:pointer}
 .btn{border:1px solid var(--border);background:#fff;color:var(--text);padding:9px 13px;border-radius:7px;font-weight:600}.btn:hover{border-color:#b9c5ce}.btn-primary{background:var(--primary);border-color:var(--primary);color:#fff}.btn-primary:hover{background:var(--primary-dark)}.btn-success{background:var(--success);border-color:var(--success);color:#fff}.btn-danger{background:var(--danger);border-color:var(--danger);color:#fff}.btn-small{padding:6px 9px;font-size:12px}
 .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow)}
 .dashboard{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px}.metric{padding:17px}.metric .label{color:var(--muted);font-size:12px}.metric .value{font-size:27px;font-weight:700;margin-top:5px;color:var(--primary)}
-.toolbar{padding:13px;margin-bottom:14px;display:flex;gap:9px;align-items:end;flex-wrap:wrap}.field{display:flex;flex-direction:column;gap:6px;min-width:150px}.field.grow{flex:1}.field label{font-size:12px;font-weight:700;color:var(--muted)}input,select{width:100%;border:1px solid var(--border);border-radius:7px;background:#fff;color:var(--text);padding:9px 10px;outline:none}input:focus,select:focus{border-color:var(--primary);box-shadow:0 0 0 2px rgba(242,195,0,.18)}
+.toolbar{padding:13px;margin-bottom:14px;display:flex;gap:9px;align-items:end;flex-wrap:wrap}.equipment-print-actions{display:flex;flex-direction:column;gap:5px;align-self:flex-end}.equipment-print-actions .btn{width:100%;padding:7px 10px;font-size:11px}.field{display:flex;flex-direction:column;gap:6px;min-width:150px}.field.grow{flex:1}.field label{font-size:12px;font-weight:700;color:var(--muted)}input,select{width:100%;border:1px solid var(--border);border-radius:7px;background:#fff;color:var(--text);padding:9px 10px;outline:none}input:focus,select:focus{border-color:var(--primary);box-shadow:0 0 0 2px rgba(242,195,0,.18)}
 .table-wrap{overflow:auto}.table{width:100%;border-collapse:collapse;min-width:850px}.table th,.table td{text-align:left;padding:11px 12px;border-bottom:1px solid #edf0f2;vertical-align:middle}.table th{background:var(--surface-2);font-size:12px;color:var(--muted);font-weight:700}.table tr:last-child td{border-bottom:0}.table-actions{display:flex;gap:6px;flex-wrap:wrap}
 .badge{display:inline-flex;align-items:center;padding:4px 8px;border-radius:999px;font-size:11px;font-weight:700}.badge-green{background:var(--success-bg);color:var(--success)}.badge-blue{background:var(--primary-soft);color:var(--primary)}.badge-yellow{background:var(--warning-bg);color:var(--warning)}.badge-gray{background:#eeeeee;color:#666666}
 .empty{padding:35px;text-align:center;color:var(--muted)}
@@ -87,7 +87,7 @@ button,input,select{font:inherit}button{cursor:pointer}
  .metric{padding:12px;min-width:0}.metric .label{font-size:11px}.metric .value{font-size:23px}
  .toolbar{padding:10px;gap:9px;align-items:stretch}
  .toolbar .field,.toolbar .field.grow{min-width:100%;width:100%;flex:auto}
- .toolbar>.btn{width:100%;min-height:44px}
+ .toolbar>.btn{width:100%;min-height:44px}.equipment-print-actions{width:100%;align-self:stretch}.equipment-print-actions .btn{width:100%;min-height:42px;padding:8px 10px;font-size:11px}
  .actions{width:100%;gap:7px}.actions .btn{flex:1 1 140px;min-width:0}
  .btn{min-height:42px;padding:9px 10px;touch-action:manipulation}
  .btn-small{min-height:38px;padding:7px 9px}
@@ -459,7 +459,7 @@ body.guest-calculator-mode #mainApp .container{padding-top:24px}
         <form class="auth-form" onsubmit="signupWithEmail(event)">
           <div class="auth-field">
             <label for="signupDisplayName">Nome de exibição</label>
-            <input id="signupDisplayName" autocomplete="nickname" minlength="3" maxlength="40" required placeholder="Ex.: Estoque - CPESP" oninput="scheduleDisplayNameCheck()">
+            <input id="signupDisplayName" autocomplete="nickname" minlength="3" maxlength="40" required placeholder="EX.: João Silva" oninput="scheduleDisplayNameCheck()">
             <div id="displayNameStatus" class="display-name-status"></div>
           </div>
 
@@ -503,7 +503,7 @@ body.guest-calculator-mode #mainApp .container{padding-top:24px}
 <section id="equipamentos" class="page active">
 <div class="page-title"><div><h2>Equipamentos</h2><p>Cadastre, pesquise e acompanhe os equipamentos do estoque.</p></div><button class="btn btn-primary" data-permission="equipment.create" onclick="openEquipmentModal()">+ CADASTRAR EQUIPAMENTO</button></div>
 <div class="dashboard"><div class="card metric"><div class="label">Equipamentos</div><div class="value" id="mTotal">0</div></div><div class="card metric"><div class="label">Disponíveis</div><div class="value" id="mAvailable">0</div></div><div class="card metric"><div class="label">Em kits</div><div class="value" id="mInKit">0</div></div><div class="card metric"><div class="label">Kits ativos</div><div class="value" id="mKits">0</div></div></div>
-<div class="card toolbar"><div class="field grow"><label>Pesquisar</label><input id="filterSearch" placeholder="Produto, código, local, série..." oninput="renderEquipmentTable()"></div><div class="field"><label>Disponibilidade</label><select id="filterStatus" onchange="renderEquipmentTable()"><option value="">Todos</option><option value="available">Disponível</option><option value="kit">Em kit</option></select></div><div class="field"><label>Categoria</label><select id="filterVariable" onchange="renderEquipmentTable()"><option value="">Todas</option><option value="Receptor">Receptor</option><option value="Coletora">Coletora</option><option value="Estação Total">Estação Total</option><option value="Laser">Laser</option><option value="Drone">Drone</option><option value="Ecobatímetro">Ecobatímetro</option><option value="Acessório">Acessório</option></select></div><button class="btn" onclick="clearEquipmentFilters()">LIMPAR</button><button class="btn btn-primary" data-permission="equipment.print" onclick="openPrintLocalModal()">IMPRIMIR LOCAL</button></div>
+<div class="card toolbar"><div class="field grow"><label>Pesquisar</label><input id="filterSearch" placeholder="Produto, código, local, série..." oninput="renderEquipmentTable()"></div><div class="field"><label>Disponibilidade</label><select id="filterStatus" onchange="renderEquipmentTable()"><option value="">Todos</option><option value="available">Disponível</option><option value="kit">Em kit</option></select></div><div class="field"><label>Categoria</label><select id="filterVariable" onchange="renderEquipmentTable()"><option value="">Todas</option><option value="Receptor">Receptor</option><option value="Coletora">Coletora</option><option value="Estação Total">Estação Total</option><option value="Laser">Laser</option><option value="Drone">Drone</option><option value="Ecobatímetro">Ecobatímetro</option><option value="Acessório">Acessório</option></select></div><button class="btn" onclick="clearEquipmentFilters()">LIMPAR</button><div class="equipment-print-actions"><button class="btn btn-primary" data-permission="equipment.print" onclick="openPrintLocalModal()">IMPRIMIR LOCAL</button><button class="btn btn-primary" data-permission="equipment.print" onclick="openPrintOsModal()">IMPRIMIR O.S.</button></div></div>
 <div class="card table-wrap"><table class="table"><thead><tr><th>Código</th><th>Local</th><th>Produto</th><th>Software</th><th>Série</th><th>Tipo</th><th>Status</th><th>Ações</th></tr></thead><tbody id="equipmentTable"></tbody></table></div>
 </section>
 <section id="produtos" class="page">
@@ -591,6 +591,8 @@ body.guest-calculator-mode #mainApp .container{padding-top:24px}
 <div id="kitEditModal" class="modal-backdrop"><div class="modal wide"><div class="modal-head"><h3 id="kitEditTitle">Editar kit</h3><button class="close" onclick="closeModal('kitEditModal')">×</button></div><div class="modal-body"><div class="form-grid"><div class="field full"><label>Nome do kit</label><input id="editKitName"></div><div class="field full"><label>Adicionar equipamento disponível</label><select id="editKitAdd" onchange="addToEditingKit(this.value);this.value=''"><option value="">Selecione um equipamento...</option></select></div></div><div style="height:15px"></div><h3>Equipamentos do kit</h3><div id="editKitList" class="selected-list"></div></div><div class="modal-footer"><button class="btn" onclick="closeModal('kitEditModal')">CANCELAR</button><button class="btn btn-primary" onclick="saveKitEdit()">SALVAR ALTERAÇÕES</button></div></div></div>
 
 <div id="printLocalModal" class="modal-backdrop"><div class="modal"><div class="modal-head"><h3>Imprimir local</h3><button class="close" onclick="closeModal('printLocalModal')">×</button></div><div class="modal-body"><form id="printLocalForm" onsubmit="printLocalLabel(event)"><div class="field"><label>Local</label><input id="printLocalValue" maxlength="16" autocomplete="off" required placeholder="Ex.: 1501, 1503..."><div class="hint">Insira o código do local imobilizado ou de terceiros acima.</div></div></form></div><div class="modal-footer"><button class="btn" onclick="closeModal('printLocalModal')">CANCELAR</button><button class="btn btn-primary" onclick="document.getElementById('printLocalForm').requestSubmit()">IMPRIMIR</button></div></div></div>
+
+<div id="printOsModal" class="modal-backdrop"><div class="modal"><div class="modal-head"><h3>Imprimir O.S.</h3><button class="close" onclick="closeModal('printOsModal')">×</button></div><div class="modal-body"><form id="printOsForm" onsubmit="printOsLabel(event)"><div class="field"><label>Ordem de serviço</label><input id="printOsValue" maxlength="16" inputmode="numeric" autocomplete="off" required placeholder="EX.: 50670, 51067..."><div class="hint">Insira o número da ordem de serviço acima.</div></div></form></div><div class="modal-footer"><button class="btn" onclick="closeModal('printOsModal')">CANCELAR</button><button class="btn btn-primary" onclick="document.getElementById('printOsForm').requestSubmit()">IMPRIMIR</button></div></div></div>
 
 <div id="printLabelModal" class="modal-backdrop"><div class="modal wide"><div class="modal-head"><h3 id="printLabelTitle">Imprimir identificação</h3><button class="close" onclick="closeModal('printLabelModal')">×</button></div><div class="modal-body"><p class="hint" style="margin-top:0">Selecione o equipamento que será destacado na etiqueta. A identificação completa do kit ficará na etiqueta esquerda.</p><div id="printLabelEquipmentList" class="selected-list"></div></div><div class="modal-footer"><button class="btn btn-primary" onclick="printCompleteKitFromModal()">IMPRIMIR KIT COMPLETO</button><button class="btn" onclick="closeModal('printLabelModal')">FECHAR</button></div></div></div>
 
@@ -3331,17 +3333,15 @@ function buildLocalLabelPdf(value){
  function renderLocalHalf(x,w){
   const cx=x+(w/2);
 
-  // Usa uma estimativa mais precisa de largura para deixar o alinhamento
-  // visualmente mais simétrico no visualizador e na seleção de texto do PDF.
-  s+=pdfCenteredLabelTextCommand('CPE SP',cx,H-M-8.5,10,w,true);
-  s+=pdfCenteredLabelTextCommand('Local',cx,H-M-24,13,w,true);
+  // Etiqueta simplificada: apenas o título "Local" e o valor informado.
+  s+=pdfCenteredLabelTextCommand('Local',cx,H-M-11.5,13,w,true);
 
   // 4 caracteres ou menos usam o mesmo tamanho-base do LOCAL das EAN/EAN.
   // A fonte diminui progressivamente conforme o texto cresce e ainda possui
   // uma última verificação de largura para nunca estourar a área útil.
   let fs=localLabelFontSize(local);
   while(pdfApproxWidthLabel(local,fs,true)>w&&fs>10)fs-=.5;
-  const localY=Math.max(M+5,(H-fs)/2-4);
+  const localY=Math.max(M+7,(H-fs)/2-3);
   s+=pdfCenteredLabelTextCommand(local,cx,localY,fs,w,true);
  }
 
@@ -3370,6 +3370,58 @@ function printLocalLabel(ev){
  }catch(err){
    console.error(err);
    toast('Não foi possível gerar a etiqueta de local.');
+ }
+}
+
+function osLabelFontSize(value){
+ const len=Array.from(String(value??'').trim()).length;
+ if(len<=8)return 22;
+ if(len<=10)return 20;
+ if(len<=12)return 18;
+ if(len<=14)return 16;
+ return 14;
+}
+function buildOsLabelPdf(value){
+ const mm=72/25.4,H=30*mm,L=50*mm,RX=53*mm,R=50*mm,M=3*mm,lx=M,lw=L-2*M,rx=RX+M,rw=R-2*M;
+ const os=String(value??'').trim();
+ const osLine=`OS: ${os}`;
+ let s='';
+
+ function renderOsHalf(x,w){
+  const cx=x+(w/2);
+  s+=pdfCenteredLabelTextCommand('CPE - SP',cx,H-M-12,10,w,true);
+
+  let fs=osLabelFontSize(osLine);
+  while(pdfApproxWidthLabel(osLine,fs,true)>w&&fs>10)fs-=.5;
+  const osY=Math.max(M+8,(H-fs)/2-4);
+  s+=pdfCenteredLabelTextCommand(osLine,cx,osY,fs,w,true);
+ }
+
+ renderOsHalf(lx,lw);
+ renderOsHalf(rx,rw);
+
+ return pdfDoc(s);
+}
+function openPrintOsModal(){
+ if(!requirePermission('equipment.print'))return;
+ const input=$('printOsValue');
+ input.value='';
+ openModal('printOsModal');
+ setTimeout(()=>input.focus(),0);
+}
+function printOsLabel(ev){
+ ev.preventDefault();
+ if(!requirePermission('equipment.print'))return;
+ const value=String($('printOsValue').value||'').trim();
+ const length=Array.from(value).length;
+ if(!value){toast('Informe o número da ordem de serviço.');return}
+ if(length>16){toast('A ordem de serviço deve ter no máximo 16 caracteres.');return}
+ try{
+   openPdfBytes(buildOsLabelPdf(value),`OS - ${value}`);
+   closeModal('printOsModal');
+ }catch(err){
+   console.error(err);
+   toast('Não foi possível gerar a etiqueta de O.S.');
  }
 }
 
