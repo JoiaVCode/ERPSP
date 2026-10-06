@@ -63,14 +63,20 @@ button,input,select{font:inherit}button{cursor:pointer}
 .equipment-group-row>td{font-weight:400}
 .equipment-group-row>td:nth-child(3) strong{font-weight:700}
 .equipment-group-row .badge{font-weight:700}
-.equipment-child-row{background:#fff}
-.equipment-child-row td{border-bottom:1px dashed #e3e7ea}
-.equipment-child-key{position:relative;color:var(--muted);white-space:nowrap}
-.equipment-branch{position:relative;display:block;width:32px;height:28px;margin:-4px 0}
+.equipment-child-row{background:transparent}
+.equipment-child-row>td{padding:0;border-bottom:0;background:transparent}
+.equipment-child-inner{margin-left:24px;width:calc(100% - 24px);background:#fff;border-bottom:1px dashed #e3e7ea;display:grid;grid-template-columns:76px 82px minmax(0,calc(100% - 1027px)) 92px 118px 118px 122px 419px;align-items:center}
+.equipment-child-slot{padding:9px 14px;min-width:0}
+.equipment-child-slot-key{display:flex;align-items:center;justify-content:center;padding-left:22px}
+.equipment-child-slot-empty{min-height:1px}
+.equipment-child-slot-actions{min-width:0}
+.equipment-child-slot-actions .table-actions{justify-content:flex-start;flex-wrap:nowrap}
+.equipment-child-slot-actions .equipment-actions-collapsed{max-width:100%}
+.equipment-branch{position:relative;display:block;width:32px;height:28px;margin:-4px 0;transform:translateX(43px)}
 .equipment-branch::before{content:"";position:absolute;left:10px;top:-18px;bottom:-18px;border-left:2px solid #7f8a91}
+.equipment-branch.first::before{top:-10px}
 .equipment-branch::after{content:"";position:absolute;left:10px;top:50%;width:18px;border-top:2px solid #7f8a91}
 .equipment-branch.last::before{bottom:50%}
-.equipment-child-empty{color:#c7cdd1}
 .equipment-group-toggle{display:inline-flex;align-items:center;justify-content:center;gap:7px;white-space:nowrap}
 .equipment-group-toggle .group-arrow{font-size:15px;line-height:1;min-width:12px;text-align:center}
 
@@ -161,8 +167,13 @@ button,input,select{font:inherit}button{cursor:pointer}
  .table td{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;padding:7px 0;border-bottom:1px solid #edf0f2;text-align:right;min-width:0;overflow-wrap:anywhere}
  .table td:last-child{border-bottom:0}
  .table td::before{content:attr(data-label);font-size:11px;font-weight:700;color:var(--muted);text-align:left;flex:0 0 31%}
- .table td[colspan]{display:block;text-align:center}
+ .table td[colspan]{display:block;text-align:center;padding:0;border-bottom:0;background:transparent}
  .table td[colspan]::before{display:none}
+ .equipment-child-inner{margin-left:18px;width:calc(100% - 18px);display:block;background:#fff;border:1px dashed #e3e7ea;border-left:0;border-right:0}
+ .equipment-child-slot{display:flex;justify-content:space-between;align-items:flex-start;padding:8px 10px;border-bottom:1px solid #edf0f2;text-align:right}
+ .equipment-child-slot::before{content:attr(data-label);font-size:11px;font-weight:700;color:var(--muted);text-align:left;flex:0 0 31%}
+ .equipment-child-slot:last-child{border-bottom:0}
+ .equipment-child-slot-empty,.equipment-child-slot-key{display:none}
  .table-actions{justify-content:flex-end;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));width:min(100%,290px);margin-left:auto}
  .table-actions .btn{width:100%;min-width:0}
 }
@@ -3034,15 +3045,19 @@ function renderSerializedEquipmentGroup(group){
     const countText=`${String(count).padStart(2,'0')} ${count===1?'Série':'Séries'}`;
     const unitText=`${String(count).padStart(2,'0')} ${count===1?'Unidade':'Unidades'}`;
 
-    let html=`<tr class="equipment-group-row"><td data-label="Código">${esc(first.code)}</td><td data-label="Local">${esc(first.location)}</td><td data-label="Produto"><strong>${esc(productSiteName(p))}</strong></td><td data-label="Software">-</td><td data-label="Série">${esc(countText)}</td><td data-label="Tipo">${esc(varsText(p))}</td><td data-label="Status"><span class="badge badge-green">${esc(unitText)}</span></td><td data-label="Ações"><button class="btn btn-small equipment-group-toggle" onclick="toggleEquipmentGroup('${key}')"><span>${expanded?'RECOLHER SÉRIES':'EXPANDIR SÉRIES'}</span><span class="group-arrow">${expanded?'▼':'▶'}</span></button></td></tr>`;
+    let html=`<tr class="equipment-group-row"><td data-label="Código">${esc(first.code)}</td><td data-label="Local">${esc(first.location)}</td><td data-label="Produto"><strong>${esc(productSiteName(p))}</strong></td><td data-label="Software">-</td><td data-label="Série">${esc(countText)}</td><td data-label="Tipo">${esc(varsText(p))}</td><td data-label="Status"><span class="badge badge-green">${esc(unitText)}</span></td><td data-label="Ações"><button class="btn btn-small equipment-group-toggle" onclick="toggleEquipmentGroup('${key}')">${expanded?'RECOLHER SÉRIES':'EXPANDIR SÉRIES'} <span class="group-arrow">${expanded?'▼':'▶'}</span></button></td></tr>`;
 
     if(expanded){
         html+=group.items
             .slice()
             .sort((a,b)=>String(a.series||'').localeCompare(String(b.series||''),'pt-BR',{numeric:true}))
             .map((e,index)=>{
+                const firstChild=index===0;
                 const last=index===group.items.length-1;
-                return `<tr class="equipment-child-row"><td data-label="Código" class="equipment-child-key"><span class="equipment-branch${last?' last':''}" aria-hidden="true"></span></td><td data-label="Local" class="equipment-child-empty"></td><td data-label="Produto" class="equipment-child-empty"></td><td data-label="Software">${equipmentMetricHtml(e)}</td><td data-label="Série"><strong>${esc(e.series)}</strong></td><td data-label="Tipo">-</td><td data-label="Status">${isInKit(e.id)?'<span class="badge badge-yellow">Em kit</span>':'<span class="badge badge-green">Disponível</span>'}</td><td data-label="Ações">${equipmentRowActions(e)}</td></tr>`;
+                const statusHtml=isInKit(e.id)
+                    ?'<span class="badge badge-yellow">Em kit</span>'
+                    :'<span class="badge badge-green">Disponível</span>';
+                return `<tr class="equipment-child-row"><td colspan="8"><div class="equipment-child-inner"><div class="equipment-child-slot equipment-child-slot-key"><span class="equipment-branch${firstChild?' first':''}${last?' last':''}" aria-hidden="true"></span></div><div class="equipment-child-slot equipment-child-slot-empty"></div><div class="equipment-child-slot equipment-child-slot-empty"></div><div class="equipment-child-slot" data-label="Software">${equipmentMetricHtml(e)}</div><div class="equipment-child-slot" data-label="Série"><strong>${esc(e.series)}</strong></div><div class="equipment-child-slot" data-label="Tipo">-</div><div class="equipment-child-slot" data-label="Status">${statusHtml}</div><div class="equipment-child-slot equipment-child-slot-actions" data-label="Ações">${equipmentRowActions(e)}</div></div></td></tr>`;
             }).join('');
     }
     return html;
