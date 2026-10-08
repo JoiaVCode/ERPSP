@@ -47,7 +47,7 @@ button,input,select{font:inherit}button{cursor:pointer}
 .table-wrap{overflow:auto}.table{width:100%;border-collapse:collapse;min-width:850px}.table th,.table td{text-align:left;padding:11px 12px;border-bottom:1px solid #edf0f2;vertical-align:middle}.table th{background:var(--surface-2);font-size:12px;color:var(--muted);font-weight:700}.table tr:last-child td{border-bottom:0}
 .equipment-table{table-layout:fixed;min-width:1280px}
 .equipment-table th:nth-child(1),.equipment-table td:nth-child(1){width:76px}
-.equipment-table th:nth-child(2),.equipment-table td:nth-child(2){width:82px}
+.equipment-table th:nth-child(2),.equipment-table td:nth-child(2){width:100px}
 .equipment-table th:nth-child(4),.equipment-table td:nth-child(4){width:92px}
 .equipment-table th:nth-child(5),.equipment-table td:nth-child(5){width:118px}
 .equipment-table th:nth-child(6),.equipment-table td:nth-child(6){width:118px}
@@ -57,26 +57,39 @@ button,input,select{font:inherit}button{cursor:pointer}
 .equipment-actions-collapsed{display:inline-flex;align-items:center;gap:6px;width:max-content;max-width:100%}
 .equipment-actions-collapsed .equipment-action-items{display:flex;align-items:center;gap:6px;flex-wrap:nowrap;visibility:hidden;pointer-events:none}
 .equipment-actions-collapsed.expanded .equipment-action-items{visibility:visible;pointer-events:auto}
-.equipment-action-toggle{min-width:34px;padding-left:9px;padding-right:9px;font-size:15px;line-height:1;flex:0 0 auto}
+.equipment-action-toggle{min-width:30px;padding:5px 7px;font-size:11px;line-height:1;flex:0 0 auto}
+.equipment-table td:nth-child(8) .equipment-actions-collapsed{gap:5px}
+.equipment-table td:nth-child(8) .equipment-actions-collapsed .equipment-action-items{gap:5px}
+.equipment-table td:nth-child(8) .equipment-actions-collapsed .btn-small{padding:5px 7px;font-size:11px}
 
 .equipment-group-row{background:#fafbfc}
 .equipment-group-row>td{font-weight:400}
 .equipment-group-row>td:nth-child(3) strong{font-weight:700}
 .equipment-group-row .badge{font-weight:700}
+.equipment-group-row>td:nth-child(2) .badge{white-space:nowrap;transform:translateX(-15px);}
+.equipment-group-row>td:nth-child(5) .badge{transform:translateX(-18px)}
 .equipment-child-row{background:transparent}
 .equipment-child-row>td{padding:0;border-bottom:0;background:transparent}
-.equipment-child-inner{margin-left:24px;width:calc(100% - 24px);background:#fff;border-bottom:1px dashed #e3e7ea;display:grid;grid-template-columns:76px 82px minmax(0,calc(100% - 1027px)) 92px 118px 118px 122px 419px;align-items:center}
+.equipment-child-inner{margin-left:0;width:100%;background:#f6f7f8;border-bottom:1px dashed #dde2e5;display:grid;grid-template-columns:76px 100px minmax(0,calc(100% - 1069px)) 92px 118px 118px 122px 443px;align-items:center}
 .equipment-child-slot{padding:9px 14px;min-width:0}
 .equipment-child-slot-key{display:flex;align-items:center;justify-content:center;padding-left:22px}
 .equipment-child-slot-empty{min-height:1px}
 .equipment-child-slot-actions{min-width:0}
 .equipment-child-slot-actions .table-actions{justify-content:flex-start;flex-wrap:nowrap}
 .equipment-child-slot-actions .equipment-actions-collapsed{max-width:100%}
-.equipment-branch{position:relative;display:block;width:32px;height:28px;margin:-4px 0;transform:translateX(43px)}
+.equipment-child-slot-actions .equipment-actions-collapsed{gap:5px}
+.equipment-child-slot-actions .equipment-action-items{gap:5px}
+.equipment-child-slot-actions .btn-small{padding:5px 7px;font-size:11px}
+.equipment-child-slot-actions .equipment-action-toggle{min-width:30px;padding-left:7px;padding-right:7px}
+.stock-adjust{display:inline-flex;align-items:center;gap:2px;flex:0 0 auto}
+.stock-adjust-input{width:24px!important;min-width:24px;max-width:24px;padding:4px 2px;text-align:center;font-size:11px;line-height:1;border-radius:5px}
+.stock-adjust-btn{width:24px;min-width:24px;padding:5px 0!important;font-size:13px;line-height:1}
+.equipment-branch{position:relative;display:block;width:32px;height:28px;margin:-4px 0;transform:translateX(-10px)}
 .equipment-branch::before{content:"";position:absolute;left:10px;top:-18px;bottom:-18px;border-left:2px solid #7f8a91}
-.equipment-branch.first::before{top:-10px}
+.equipment-branch.first::before{top:-8px}
 .equipment-branch::after{content:"";position:absolute;left:10px;top:50%;width:18px;border-top:2px solid #7f8a91}
 .equipment-branch.last::before{bottom:50%}
+.equipment-group-row + .equipment-child-row .equipment-child-inner{border-top:1px solid #d9dee2;box-shadow:inset 0 6px 8px -7px rgba(0,0,0,.35);}
 .equipment-group-toggle{display:inline-flex;align-items:center;justify-content:center;gap:7px;white-space:nowrap}
 .equipment-group-toggle .group-arrow{font-size:15px;line-height:1;min-width:12px;text-align:center}
 
@@ -169,13 +182,18 @@ button,input,select{font:inherit}button{cursor:pointer}
  .table td::before{content:attr(data-label);font-size:11px;font-weight:700;color:var(--muted);text-align:left;flex:0 0 31%}
  .table td[colspan]{display:block;text-align:center;padding:0;border-bottom:0;background:transparent}
  .table td[colspan]::before{display:none}
- .equipment-child-inner{margin-left:18px;width:calc(100% - 18px);display:block;background:#fff;border:1px dashed #e3e7ea;border-left:0;border-right:0}
+ .equipment-child-inner{margin-left:0;width:100%;display:block;background:#f6f7f8;border:1px dashed #dde2e5;border-left:0;border-right:0}
  .equipment-child-slot{display:flex;justify-content:space-between;align-items:flex-start;padding:8px 10px;border-bottom:1px solid #edf0f2;text-align:right}
  .equipment-child-slot::before{content:attr(data-label);font-size:11px;font-weight:700;color:var(--muted);text-align:left;flex:0 0 31%}
  .equipment-child-slot:last-child{border-bottom:0}
  .equipment-child-slot-empty,.equipment-child-slot-key{display:none}
  .table-actions{justify-content:flex-end;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));width:min(100%,290px);margin-left:auto}
  .table-actions .btn{width:100%;min-width:0}
+ .equipment-child-slot-actions .table-actions{display:block;width:100%;max-width:none;margin:0}
+ .equipment-child-slot-actions .equipment-actions-collapsed{display:flex;align-items:flex-start;flex-wrap:wrap;width:100%}
+ .equipment-child-slot-actions .equipment-actions-collapsed:not(.expanded) .equipment-action-items{display:none}
+ .equipment-child-slot-actions .equipment-actions-collapsed.expanded .equipment-action-items{display:flex;flex-wrap:wrap;visibility:visible}
+ .stock-adjust-input{min-height:32px;font-size:14px}
 }
 
 @media(max-width:420px){
@@ -616,9 +634,7 @@ body.guest-calculator-mode #mainApp .container{padding-top:24px}
 </footer>
 </div>
 
-<div id="equipmentModal" class="modal-backdrop"><div class="modal"><div class="modal-head"><h3 id="equipmentModalTitle">Cadastrar equipamento</h3><button class="close" onclick="closeModal('equipmentModal')">×</button></div><div class="modal-body"><form id="equipmentForm" onsubmit="saveEquipment(event)"><input type="hidden" id="equipmentId"><div class="form-grid"><div class="field"><label>Código</label><input id="eqCodeInput" autocomplete="off" inputmode="numeric" maxlength="4" pattern="[0-9]{4}" placeholder="Ex.: 7797, 0217..." required><input type="hidden" id="eqCode"><div class="hint">Digite os 4 dígitos do código.</div></div><div class="field"><label>Local</label><input id="eqLocation" required></div><div class="field full"><label>Produto</label><div class="product-combobox"><input id="eqProductInput" autocomplete="off" placeholder="Selecione ou digite o produto..." onclick="openProductDropdown()" oninput="filterProductDropdown()" onfocus="openProductDropdown()" required><input type="hidden" id="eqProduct"><div id="productDropdown" class="product-dropdown"></div></div><div class="hint">Digite para localizar um produto e selecione uma opção da lista.</div><div class="actions" style="margin-top:7px"><button type="button" class="btn btn-small" onclick="openProductModal()">+ CADASTRAR NOVO PRODUTO</button><button type="button" class="btn btn-small" onclick="openProductManager()">GERENCIAR PRODUTOS</button></div></div><div class="field" id="typeField" style="display:none"><label>Tipo</label><select id="eqType"><option value="">Selecione</option><option>TX/RX</option><option>RX</option><option>RX*</option></select></div><div class="field" id="hceField" style="display:none"><label>Plataforma da Coletora</label><div class="checkboxes"><label class="check"><input id="eqLandstar" type="checkbox"> Landstar</label><label class="check"><input id="eqSmartGO" type="checkbox"> SmartGO</label></div><div class="hint">É possível marcar Landstar e SmartGO simultaneamente.</div></div><div class="field" id="seriesField"><label>Série</label><input id="eqSeries" required></div></div></form></div><div class="modal-footer"><button class="btn" onclick="closeModal('equipmentModal')">CANCELAR</button><button class="btn btn-primary" onclick="document.getElementById('equipmentForm').requestSubmit()">SALVAR</button></div></div></div>
-
-<div id="duplicateSeriesModal" class="modal-backdrop"><div class="modal"><div class="modal-head"><h3>Duplicar equipamento</h3><button class="close" onclick="cancelDuplicateEquipment()">×</button></div><div class="modal-body"><form id="duplicateSeriesForm" onsubmit="saveDuplicateEquipment(event)"><div class="form-grid"><div class="field"><label>Série do novo equipamento</label><input id="duplicateSeries" autocomplete="off" required placeholder="Informe a série"></div><div class="field"><label>Software</label><select id="duplicateType" required><option value="">Selecione</option><option value="TX/RX">TX/RX</option><option value="RX">RX</option><option value="RX*">RX*</option></select></div></div></form></div><div class="modal-footer"><button class="btn" onclick="cancelDuplicateEquipment()">CANCELAR</button><button class="btn btn-primary" onclick="document.getElementById('duplicateSeriesForm').requestSubmit()">SALVAR</button></div></div></div>
+<div id="equipmentModal" class="modal-backdrop"><div class="modal"><div class="modal-head"><h3 id="equipmentModalTitle">Cadastrar equipamento</h3><button class="close" onclick="closeModal('equipmentModal')">×</button></div><div class="modal-body"><form id="equipmentForm" onsubmit="saveEquipment(event)"><input type="hidden" id="equipmentId"><div class="form-grid"><div class="field"><label>Código</label><input id="eqCodeInput" autocomplete="off" inputmode="numeric" maxlength="4" pattern="[0-9]{4}" placeholder="Ex.: 7797, 0217..." required><input type="hidden" id="eqCode"><div class="hint">Digite os 4 dígitos do código.</div></div><div class="field"><label>Local</label><input id="eqLocation" required></div><div class="field full"><label>Produto</label><div class="product-combobox"><input id="eqProductInput" autocomplete="off" placeholder="Selecione ou digite o produto..." onclick="openProductDropdown()" onkeydown="handleProductInputKeydown(event)" oninput="handleProductInputChange()" onfocus="openProductDropdown()" required><input type="hidden" id="eqProduct"><div id="productDropdown" class="product-dropdown"></div></div><div class="hint">Digite para localizar um produto e selecione uma opção da lista.</div><div class="actions" style="margin-top:7px"><button type="button" class="btn btn-small" onclick="openProductModal()">+ CADASTRAR NOVO PRODUTO</button><button type="button" class="btn btn-small" onclick="openProductManager()">GERENCIAR PRODUTOS</button></div></div><div class="field" id="typeField" style="display:none"><label>Tipo</label><select id="eqType"><option value="">Selecione</option><option>TX/RX</option><option>RX</option><option>RX*</option></select></div><div class="field" id="hceField" style="display:none"><label>Plataforma da Coletora</label><div class="checkboxes"><label class="check"><input id="eqLandstar" type="checkbox"> Landstar</label><label class="check"><input id="eqSmartGO" type="checkbox"> SmartGO</label></div><div class="hint">É possível marcar Landstar e SmartGO simultaneamente.</div></div><div class="field" id="seriesField"><label>Série</label><input id="eqSeries" required></div></div></form></div><div class="modal-footer"><button class="btn" onclick="closeModal('equipmentModal')">CANCELAR</button><button id="equipmentSubmitButton" class="btn btn-primary" onclick="document.getElementById('equipmentForm').requestSubmit()">SALVAR</button></div></div></div>
 
 <div id="codeModal" class="modal-backdrop"><div class="modal"><div class="modal-head"><h3 id="codeModalTitle">Cadastrar código</h3><button class="close" onclick="closeModal('codeModal')">×</button></div><div class="modal-body"><form id="codeForm" onsubmit="saveCode(event)"><input type="hidden" id="codeId"><div class="form-grid"><div class="field"><label>Código</label><input id="codeValue" required placeholder="Ex.: 7796"></div><div class="field"><label>EAN-13</label><input id="codeEanPreview" disabled placeholder="Gerado automaticamente"></div></div><p class="hint">O EAN-13 é gerado automaticamente a partir do código usando o prefixo interno 12345678.</p></form></div><div class="modal-footer"><button class="btn" onclick="closeModal('codeModal')">CANCELAR</button><button class="btn btn-primary" onclick="document.getElementById('codeForm').requestSubmit()">SALVAR CÓDIGO</button></div></div></div>
 
@@ -1927,7 +1943,7 @@ const PERMISSION_GROUPS=[
     {key:'equipment.create',label:'Cadastrar equipamentos',desc:'Criar novos equipamentos e acessórios.'},
     {key:'equipment.edit',label:'Editar equipamentos',desc:'Alterar código, local, produto, série, tipo e plataforma.'},
     {key:'equipment.delete',label:'Excluir / reduzir saldo',desc:'Excluir equipamento ou reduzir saldo de acessórios.'},
-    {key:'equipment.duplicate',label:'Duplicar equipamento seriado',desc:'Criar uma cópia com nova série.'},
+    {key:'equipment.duplicate',label:'Duplicar equipamento',desc:'Criar uma cópia pré-preenchida para ajustar os dados necessários.'},
     {key:'equipment.add_stock',label:'Adicionar saldo de acessórios',desc:'Aumentar a quantidade de acessórios não seriados.'},
     {key:'equipment.print',label:'Imprimir etiquetas',desc:'Gerar QRCode/EAN ou EAN/EAN de equipamentos.'}
   ]},
@@ -2319,7 +2335,7 @@ function validateState(data){
         if(equipmentIds.has(e.id))throw new Error('ID de equipamento duplicado');
         equipmentIds.add(e.id);
         if(e.productId&&!productIds.has(e.productId))throw new Error('Equipamento vinculado a produto inexistente');
-        if(e.series&&e.series!=='Equipamento não seriado'){
+        if(e.series&&e.series!=='N/S'){
             const serial=String(e.series).trim();
             if(serials.has(serial))throw new Error('Série duplicada: '+serial);
             serials.add(serial);
@@ -2365,7 +2381,7 @@ function normalize(){
         const linkedCode=getCode(e.codeId);e.code=linkedCode?.code||e.code||'';e.location=e.location||'';e.series=e.series||'';e.type=e.type||'';
         e.hce=e.hce&&typeof e.hce==='object'?e.hce:{landstar:false,smartgo:false};
         e.hce.landstar=!!e.hce.landstar;e.hce.smartgo=!!e.hce.smartgo;
-        const p=getProduct(e.productId);if(p?.variables.includes('Acessório')){e.series='Equipamento não seriado';e.type='';e.hce={landstar:false,smartgo:false};e.balance=Math.max(1,Number(e.balance)||1)}else delete e.balance
+        const p=getProduct(e.productId);if(p?.variables.includes('Acessório')){e.series='N/S';e.type='';e.hce={landstar:false,smartgo:false};e.balance=Math.max(1,Number(e.balance)||1)}else delete e.balance
         if(p?.variables.includes('Receptor')&&!e.type)e.type='RX';
         if(!p?.variables.includes('Coletora'))e.hce={landstar:false,smartgo:false};
     });
@@ -2922,6 +2938,27 @@ function selectCode(id){const c=getCode(id);if(!c)return;$('eqCode').value=id;$(
 function renderProductSelect(selected=''){
     const p=getProduct(selected);$('eqProduct').value=selected||'';$('eqProductInput').value=p?productSiteName(p):'';filterProductDropdown();
 }
+function handleProductInputKeydown(ev){
+    if(ev.key!=='Backspace')return;
+    if(!$('eqProduct').value)return;
+    ev.preventDefault();
+    $('eqProduct').value='';
+    $('eqProductInput').value='';
+    updateProductFields();
+    filterProductDropdown();
+}
+function handleProductInputChange(){
+    const selectedId=$('eqProduct').value;
+    if(selectedId){
+        const selected=getProduct(selectedId);
+        const selectedName=selected?productSiteName(selected):'';
+        if($('eqProductInput').value!==selectedName){
+            $('eqProduct').value='';
+            updateProductFields();
+        }
+    }
+    filterProductDropdown();
+}
 function openProductDropdown(){filterProductDropdown();$('productDropdown').classList.add('open')}
 function closeProductDropdown(){$('productDropdown').classList.remove('open')}
 function filterProductDropdown(){
@@ -2930,61 +2967,178 @@ function filterProductDropdown(){
     $('productDropdown').innerHTML=products.length?products.map(p=>`<div class="product-option" onmousedown="selectProduct('${p.id}')">${esc(productSiteName(p))}</div>`).join(''):'<div class="product-option empty">Nenhum produto encontrado.</div>';
 }
 function selectProduct(id){const p=getProduct(id);if(!p)return;$('eqProduct').value=id;$('eqProductInput').value=productSiteName(p);$('productDropdown').classList.remove('open');updateProductFields()}
-function openEquipmentModal(id=''){if(!requirePermission(id?'equipment.edit':'equipment.create'))return;
-    $('equipmentId').value=id;
-    if(id){const e=getEquipment(id);$('equipmentModalTitle').textContent='Editar equipamento';$('eqCode').value=e.codeId||'';$('eqCodeInput').value=e.code||'';$('eqLocation').value=e.location;$('eqType').value=e.type||'';$('eqSeries').value=e.series||'';$('eqLandstar').checked=!!e.hce?.landstar;$('eqSmartGO').checked=!!e.hce?.smartgo;renderProductSelect(e.productId)}
-    else{$('equipmentModalTitle').textContent='Cadastrar equipamento';$('equipmentForm').reset();$('eqCode').value='';$('eqCodeInput').value='';$('eqProduct').value='';$('eqProductInput').value='';$('eqLandstar').checked=false;$('eqSmartGO').checked=false}
-    updateProductFields();filterProductDropdown();openModal('equipmentModal')
+let equipmentModalMode='create';
+let duplicateSourceEquipmentId='';
+
+function fillEquipmentFormFromRecord(e,{clearSerializedSeries=false}={}){
+    $('eqCode').value=e?.codeId||'';
+    $('eqCodeInput').value=e?.code||'';
+    $('eqLocation').value=e?.location||'';
+    $('eqType').value=e?.type||'';
+    $('eqLandstar').checked=!!e?.hce?.landstar;
+    $('eqSmartGO').checked=!!e?.hce?.smartgo;
+    renderProductSelect(e?.productId||'');
+    const accessory=isAccessoryEquipment(e);
+    $('eqSeries').value=accessory?'N/S':(clearSerializedSeries?'':(e?.series||''));
 }
+
+function openEquipmentModal(id=''){
+    if(!requirePermission(id?'equipment.edit':'equipment.create'))return;
+    equipmentModalMode=id?'edit':'create';
+    duplicateSourceEquipmentId='';
+    $('equipmentForm').reset();
+    $('equipmentId').value=id||'';
+    $('eqCode').value='';
+    $('eqProduct').value='';
+    $('eqProductInput').value='';
+    $('eqLandstar').checked=false;
+    $('eqSmartGO').checked=false;
+    $('equipmentSubmitButton').textContent='SALVAR';
+
+    if(id){
+        const e=getEquipment(id);if(!e)return;
+        $('equipmentModalTitle').textContent='Editar equipamento';
+        fillEquipmentFormFromRecord(e);
+    }else{
+        $('equipmentModalTitle').textContent='Cadastrar equipamento';
+    }
+
+    updateProductFields();filterProductDropdown();openModal('equipmentModal');
+}
+
+function openDuplicateEquipment(id){
+    if(!requirePermission('equipment.duplicate'))return;
+    const source=getEquipment(id);if(!source)return;
+    equipmentModalMode='duplicate';
+    duplicateSourceEquipmentId=id;
+    $('equipmentForm').reset();
+    $('equipmentId').value='';
+    $('eqCode').value='';
+    $('eqProduct').value='';
+    $('eqProductInput').value='';
+    $('eqLandstar').checked=false;
+    $('eqSmartGO').checked=false;
+    $('equipmentModalTitle').textContent='Duplicar equipamento';
+    $('equipmentSubmitButton').textContent='DUPLICAR';
+    fillEquipmentFormFromRecord(source,{clearSerializedSeries:true});
+    updateProductFields();filterProductDropdown();openModal('equipmentModal');
+    setTimeout(()=>{
+        if(!isAccessoryEquipment(source))$('eqSeries').focus();
+        else $('eqLocation').focus();
+    },0);
+}
+
 function updateProductFields(){
     const p=getProduct($('eqProduct').value);const accessory=p?.variables.includes('Acessório');const receiver=p?.variables.includes('Receptor');const collector=p?.variables.includes('Coletora');
+    const seriesInput=$('eqSeries');
     $('typeField').style.display=receiver?'flex':'none';$('eqType').required=receiver;
     $('hceField').style.display=collector?'flex':'none';
-    $('seriesField').style.display='flex';$('eqSeries').readOnly=!!accessory;$('eqSeries').required=!accessory;
+    $('seriesField').style.display='flex';
+    seriesInput.disabled=!!accessory;
+    seriesInput.readOnly=!!accessory;
+    seriesInput.required=!accessory;
     if(!collector){$('eqLandstar').checked=false;$('eqSmartGO').checked=false}
-    if(accessory){$('eqSeries').value='Equipamento não seriado';$('eqType').value='';$('eqLandstar').checked=false;$('eqSmartGO').checked=false}
+    if(accessory){
+        seriesInput.value='N/S';
+        $('eqType').value='';
+        $('eqLandstar').checked=false;
+        $('eqSmartGO').checked=false;
+    }else if(seriesInput.value.trim()==='N/S'){
+        seriesInput.value='';
+    }
 }
-function saveEquipment(ev){const permissionKey=$('equipmentId').value?'equipment.edit':'equipment.create';if(!requirePermission(permissionKey)){ev.preventDefault();return}
-    ev.preventDefault();const id=$('equipmentId').value;const rawCode=$('eqCodeInput').value.trim().replace(/\D/g,'');if(!/^\d{4}$/.test(rawCode)){toast('Informe um código com exatamente 4 dígitos.');$('eqCodeInput').focus();return}const c=ensureCodeRecord(rawCode);$('eqCode').value=c.id;const p=getProduct($('eqProduct').value);if(!p){toast('Selecione um produto da lista.');$('eqProductInput').focus();return}
-    const accessory=p.variables.includes('Acessório');const receiver=p.variables.includes('Receptor');const collector=p.variables.includes('Coletora');let series=accessory?'Equipamento não seriado':$('eqSeries').value.trim();let type=receiver?$('eqType').value:'';
+
+function saveEquipment(ev){
+    ev.preventDefault();
+    const id=$('equipmentId').value;
+    const mode=equipmentModalMode;
+    const permissionKey=mode==='duplicate'?'equipment.duplicate':(id?'equipment.edit':'equipment.create');
+    if(!requirePermission(permissionKey))return;
+
+    const rawCode=$('eqCodeInput').value.trim().replace(/\D/g,'');
+    if(!/^\d{4}$/.test(rawCode)){toast('Informe um código com exatamente 4 dígitos.');$('eqCodeInput').focus();return}
+    const c=ensureCodeRecord(rawCode);$('eqCode').value=c.id;
+    const p=getProduct($('eqProduct').value);
+    if(!p){toast('Selecione um produto da lista.');$('eqProductInput').focus();return}
+
+    const accessory=p.variables.includes('Acessório');
+    const receiver=p.variables.includes('Receptor');
+    const collector=p.variables.includes('Coletora');
+    const series=accessory?'N/S':$('eqSeries').value.trim();
+    const type=receiver?$('eqType').value:'';
     const hceData=collector&&!accessory?{landstar:$('eqLandstar').checked,smartgo:$('eqSmartGO').checked}:{landstar:false,smartgo:false};
-    if(!accessory&&!series){toast('Informe a série.');return}if(receiver&&!type){toast('Selecione o tipo do Receptor.');return}
+
+    if(!accessory&&!series){toast('Informe a série.');$('eqSeries').focus();return}
+    if(receiver&&!type){toast('Selecione o tipo do Receptor.');return}
     if(collector&&!accessory&&!hceData.landstar&&!hceData.smartgo){toast('Selecione Landstar, SmartGO ou os dois.');return}
-    const duplicate=state.equipments.find(e=>e.id!==id&&e.series===series&&series!=='Equipamento não seriado');if(duplicate){toast('Essa série já está cadastrada.');return}
-    if(id){const e=getEquipment(id);e.codeId=c.id;e.code=c.code;e.location=$('eqLocation').value.trim();e.productId=p.id;e.series=series;e.type=type;e.hce=hceData;if(accessory)e.balance=Math.max(1,Number(e.balance)||1);else delete e.balance}
-    else state.equipments.push({id:uid('eq'),codeId:c.id,code:c.code,location:$('eqLocation').value.trim(),productId:p.id,series,type,hce:hceData,...(accessory?{balance:1}:{})})
-    save(permissionKey);closeModal('equipmentModal');renderAll();toast(id?'Equipamento atualizado.':'Equipamento cadastrado.')
+
+    const duplicateSeries=state.equipments.find(e=>e.id!==id&&e.series===series&&series!=='N/S');
+    if(duplicateSeries){toast('Essa série já está cadastrada.');return}
+
+    if(id&&mode==='edit'){
+        const e=getEquipment(id);if(!e)return;
+        e.codeId=c.id;e.code=c.code;e.location=$('eqLocation').value.trim();e.productId=p.id;e.series=series;e.type=type;e.hce=hceData;
+        if(accessory)e.balance=Math.max(1,Number(e.balance)||1);else delete e.balance;
+    }else{
+        state.equipments.push({
+            id:uid('eq'),codeId:c.id,code:c.code,location:$('eqLocation').value.trim(),productId:p.id,
+            series,type,hce:hceData,...(accessory?{balance:1}:{})
+        });
+    }
+
+    save(permissionKey);closeModal('equipmentModal');renderAll();
+    if(mode==='duplicate')toast('Equipamento duplicado.');
+    else toast(id?'Equipamento atualizado.':'Equipamento cadastrado.');
+    equipmentModalMode='create';duplicateSourceEquipmentId='';
 }
-function deleteEquipment(id){if(!requirePermission('equipment.delete'))return;
- const e=getEquipment(id);if(!e)return;
- if(isAccessoryEquipment(e)){
-   e.balance=Math.max(1,Number(e.balance)||1)-1;
-   if(e.balance<=0){state.equipments=state.equipments.filter(x=>x.id!==id);save('equipment.delete');renderAll();toast('Última unidade removida. Acessório excluído.')}
-   else{save('equipment.delete');renderAll();toast('Saldo reduzido para '+String(e.balance).padStart(2,'0')+' unidades.')}
-   return;
- }
- if(isInKit(id)){toast('Remova o equipamento do kit antes de excluir.');return}
- confirm('Excluir este equipamento?',()=>{state.equipments=state.equipments.filter(e=>e.id!==id);save('equipment.delete');renderAll();toast('Equipamento excluído.')})
+
+function deleteEquipment(id){
+    if(!requirePermission('equipment.delete'))return;
+    const e=getEquipment(id);if(!e)return;
+    if(isInKit(id)){toast('Remova o equipamento do kit antes de excluir.');return}
+    const accessory=isAccessoryEquipment(e);
+    const balance=Math.max(1,Number(e.balance)||1);
+    const message=accessory&&balance>1
+        ?`Excluir este registro de acessório e todo o saldo de ${balance} unidades?`
+        :'Excluir este equipamento?';
+    confirm(message,()=>{
+        state.equipments=state.equipments.filter(x=>x.id!==id);
+        save('equipment.delete');renderAll();toast(accessory?'Acessório excluído.':'Equipamento excluído.');
+    });
 }
-let pendingDuplicateEquipmentId='';
-function duplicateOrAddEquipment(id){
- const e=getEquipment(id);if(!e)return;
- if(!requirePermission(isAccessoryEquipment(e)?'equipment.add_stock':'equipment.duplicate'))return;
- if(isAccessoryEquipment(e)){
-   e.balance=Math.max(1,Number(e.balance)||1)+1;save('equipment.add_stock');renderAll();
-   toast('Saldo aumentado para '+String(e.balance).padStart(2,'0')+' unidades.');return;
- }
- pendingDuplicateEquipmentId=id;$('duplicateSeriesForm').reset();$('duplicateType').value=e.type||'';openModal('duplicateSeriesModal');setTimeout(()=>$('duplicateSeries').focus(),0);
+
+function sanitizeStockAdjustInput(input){
+    if(!input)return;
+    input.value=String(input.value||'').replace(/\D/g,'').slice(0,2);
 }
-function cancelDuplicateEquipment(){pendingDuplicateEquipmentId='';$('duplicateSeriesForm').reset();closeModal('duplicateSeriesModal')}
-function saveDuplicateEquipment(ev){if(!requirePermission('equipment.duplicate')){ev.preventDefault();return}
- ev.preventDefault();const source=getEquipment(pendingDuplicateEquipmentId);if(!source){cancelDuplicateEquipment();return}
- const series=$('duplicateSeries').value.trim();if(!series){$('duplicateSeries').focus();return}
- const type=$('duplicateType').value;if(!type){$('duplicateType').focus();return}
- if(state.equipments.some(e=>e.series===series&&series!=='Equipamento não seriado')){toast('Essa série já está cadastrada.');return}
- state.equipments.push({id:uid('eq'),codeId:source.codeId,code:source.code,location:source.location,productId:source.productId,series,type,hce:{landstar:!!source.hce?.landstar,smartgo:!!source.hce?.smartgo}});
- pendingDuplicateEquipmentId='';closeModal('duplicateSeriesModal');save('equipment.duplicate');renderAll();toast('Equipamento duplicado com a nova série.');
+
+function readStockAdjustAmount(inputId){
+    const input=$(inputId);if(!input)return null;
+    sanitizeStockAdjustInput(input);
+    const amount=Number(input.value);
+    if(!Number.isInteger(amount)||amount<1||amount>99){
+        toast('Informe uma quantidade entre 1 e 99.');input.focus();return null;
+    }
+    input.value=String(amount);
+    return amount;
 }
+
+function adjustAccessoryBalance(id,direction,inputId){
+    const e=getEquipment(id);if(!e||!isAccessoryEquipment(e))return;
+    const permissionKey=direction>0?'equipment.add_stock':'equipment.delete';
+    if(!requirePermission(permissionKey))return;
+    const amount=readStockAdjustAmount(inputId);if(amount==null)return;
+    const current=Math.max(1,Number(e.balance)||1);
+    const next=current+(direction>0?amount:-amount);
+    if(next<1){
+        toast('O saldo mínimo é 1. Use EXCLUIR para remover o registro.');
+        return;
+    }
+    e.balance=next;
+    save(permissionKey);renderEquipmentTable();
+    toast(`Saldo atualizado para ${String(next).padStart(2,'0')} ${next===1?'unidade':'unidades'}.`);
+}
+
 function normalizeEquipmentSearch(value){
     return String(value??'')
         .normalize('NFD')
@@ -2995,13 +3149,9 @@ function normalizeEquipmentSearch(value){
 
 const expandedEquipmentGroups=new Set();
 
-function equipmentGroupKey(e){
-    const raw=[e?.codeId||e?.code||'',e?.location||'',e?.productId||''].join('\u001f');
+function equipmentCodeGroupKey(e){
+    const raw=String(e?.codeId||e?.code||e?.id||'');
     return encodeURIComponent(raw).replace(/'/g,'%27');
-}
-
-function isSerializedEquipment(e){
-    return String(e?.series||'').trim()!=='Equipamento não seriado';
 }
 
 function toggleEquipmentGroup(key){
@@ -3010,13 +3160,51 @@ function toggleEquipmentGroup(key){
     renderEquipmentTable();
 }
 
+function equipmentPhysicalUnits(e){
+    return isAccessoryEquipment(e)?Math.max(1,Number(e.balance)||1):1;
+}
+
+function equipmentStatusHtml(e){
+    if(isAccessoryEquipment(e)){
+        const units=equipmentPhysicalUnits(e);
+        return `<span class="badge badge-green">${String(units).padStart(2,'0')} ${units===1?'unidade':'unidades'}</span>`;
+    }
+    return isInKit(e.id)?'<span class="badge badge-yellow">Em kit</span>':'<span class="badge badge-green">Disponível</span>';
+}
+
+function equipmentMetricText(e){
+    const p=getProduct(e?.productId);const out=[];
+    if(p?.variables.includes('Receptor')&&e?.type)out.push(e.type);
+    if(p?.variables.includes('Coletora')){
+        if(e?.hce?.landstar)out.push('Landstar');
+        if(e?.hce?.smartgo)out.push('SmartGO');
+    }
+    return out.length?out.join(' / '):'-';
+}
+
+function commonEquipmentGroupValue(items,getter){
+    const values=items.map(item=>String(getter(item)??'').trim()||'-');
+    return values.length&&values.every(value=>value===values[0])?values[0]:'Vários';
+}
+
+function accessoryBalanceActions(e){
+    if(!isAccessoryEquipment(e))return '';
+    const addId=`stock-add-${e.id}`;
+    const removeId=`stock-remove-${e.id}`;
+    const add=hasPermission('equipment.add_stock')
+        ?`<span class="stock-adjust"><input id="${addId}" class="stock-adjust-input" value="1" maxlength="2" inputmode="numeric" aria-label="Quantidade para adicionar" oninput="sanitizeStockAdjustInput(this)"><button type="button" class="btn btn-small stock-adjust-btn" title="Adicionar ao saldo" onclick="adjustAccessoryBalance('${e.id}',1,'${addId}')">+</button></span>`:'';
+    const remove=hasPermission('equipment.delete')
+        ?`<span class="stock-adjust"><input id="${removeId}" class="stock-adjust-input" value="1" maxlength="2" inputmode="numeric" aria-label="Quantidade para diminuir" oninput="sanitizeStockAdjustInput(this)"><button type="button" class="btn btn-small stock-adjust-btn" title="Diminuir do saldo" onclick="adjustAccessoryBalance('${e.id}',-1,'${removeId}')">−</button></span>`:'';
+    return add+remove;
+}
+
 function equipmentRowActions(e){
-    const accessory=isAccessoryEquipment(e);
     const editBtn=hasPermission('equipment.edit')?`<button class="btn btn-small" onclick="openEquipmentModal('${e.id}')">EDITAR</button>`:'';
     const deleteBtn=hasPermission('equipment.delete')?`<button class="btn btn-small btn-danger" onclick="deleteEquipment('${e.id}')">EXCLUIR</button>`:'';
-    const addOrDuplicateBtn=hasPermission(accessory?'equipment.add_stock':'equipment.duplicate')?`<button class="btn btn-small" onclick="duplicateOrAddEquipment('${e.id}')">${accessory?'ADICIONAR':'DUPLICAR'}</button>`:'';
+    const duplicateBtn=hasPermission('equipment.duplicate')?`<button class="btn btn-small" onclick="openDuplicateEquipment('${e.id}')">DUPLICAR</button>`:'';
+    const balanceControls=accessoryBalanceActions(e);
     const printBtn=hasPermission('equipment.print')?`<button class="btn btn-small btn-primary" onclick="printStandaloneEquipmentLabel('${e.id}')">IMPRIMIR</button>`:'';
-    const actions=[editBtn,deleteBtn,addOrDuplicateBtn,printBtn].filter(Boolean).join('');
+    const actions=[editBtn,deleteBtn,duplicateBtn,balanceControls,printBtn].filter(Boolean).join('');
     if(!actions)return '';
     const wrapperId=`equipment-actions-${e.id}`;
     return `<div class="table-actions"><div id="${wrapperId}" class="equipment-actions-collapsed"><button class="btn btn-small equipment-action-toggle" type="button" aria-label="Expandir ações" aria-expanded="false" onclick="toggleEquipmentActions('${wrapperId}',this)">▶</button><div class="equipment-action-items">${actions}</div></div></div>`;
@@ -3033,32 +3221,55 @@ function toggleEquipmentActions(wrapperId,button){
 
 function renderSingleEquipmentRow(e){
     const p=getProduct(e.productId);
-    return `<tr><td data-label="Código">${esc(e.code)}</td><td data-label="Local">${esc(e.location)}</td><td data-label="Produto"><strong>${esc(productSiteName(p))}</strong></td><td data-label="Software">${equipmentMetricHtml(e)}</td><td data-label="Série">${esc(e.series)}</td><td data-label="Tipo">${esc(varsText(p))}</td><td data-label="Status">${isAccessoryEquipment(e)?`<span class="badge badge-green">${String(Math.max(1,Number(e.balance)||1)).padStart(2,'0')} unidades</span>`:(isInKit(e.id)?'<span class="badge badge-yellow">Em kit</span>':'<span class="badge badge-green">Disponível</span>')}</td><td data-label="Ações">${equipmentRowActions(e)}</td></tr>`;
+    const seriesHtml=isAccessoryEquipment(e)?'N/S':`<strong>${esc(e.series)}</strong>`;
+    return `<tr><td data-label="Código">${esc(e.code)}</td><td data-label="Local">${esc(e.location)}</td><td data-label="Produto"><strong>${esc(productSiteName(p))}</strong></td><td data-label="Software">${equipmentMetricHtml(e)}</td><td data-label="Série">${seriesHtml}</td><td data-label="Tipo">${esc(varsText(p))}</td><td data-label="Status">${equipmentStatusHtml(e)}</td><td data-label="Ações">${equipmentRowActions(e)}</td></tr>`;
 }
 
-function renderSerializedEquipmentGroup(group){
+function renderEquipmentCodeGroup(group){
     const first=group.items[0];
-    const p=getProduct(first.productId);
-    const count=group.items.length;
+    const items=group.items;
     const key=group.key;
     const expanded=expandedEquipmentGroups.has(key);
-    const countText=`${String(count).padStart(2,'0')} ${count===1?'Série':'Séries'}`;
-    const unitText=`${String(count).padStart(2,'0')} ${count===1?'Unidade':'Unidades'}`;
+    const allAccessory=items.every(isAccessoryEquipment);
+    const allSerialized=items.every(e=>!isAccessoryEquipment(e));
+    const totalUnits=items.reduce((sum,e)=>sum+equipmentPhysicalUnits(e),0);
+    const unitText=`${String(totalUnits).padStart(2,'0')} ${totalUnits===1?'Unidade':'Unidades'}`;
+    const seriesCount=items.length;
+    const seriesText=`${String(seriesCount).padStart(2,'0')} ${seriesCount===1?'Série':'Séries'}`;
 
-    let html=`<tr class="equipment-group-row"><td data-label="Código">${esc(first.code)}</td><td data-label="Local">${esc(first.location)}</td><td data-label="Produto"><strong>${esc(productSiteName(p))}</strong></td><td data-label="Software">-</td><td data-label="Série">${esc(countText)}</td><td data-label="Tipo">${esc(varsText(p))}</td><td data-label="Status"><span class="badge badge-green">${esc(unitText)}</span></td><td data-label="Ações"><button class="btn btn-small equipment-group-toggle" onclick="toggleEquipmentGroup('${key}')">${expanded?'RECOLHER SÉRIES':'EXPANDIR SÉRIES'} <span class="group-arrow">${expanded?'▼':'▶'}</span></button></td></tr>`;
+    const localValues=[...new Set(items.map(e=>String(e.location??'').trim()||'-'))];
+    const localText=localValues[0]||'-';
+    const localCount=localValues.length;
+    const localCountText=`${String(localCount).padStart(2,'0')} ${localCount===1?'Local':'Locais'}`;
+    const localHtml=localCount>1
+        ?`<span class="badge badge-green">${esc(localCountText)}</span>`
+        :esc(localText);
+
+    const productText=commonEquipmentGroupValue(items,e=>productSiteName(getProduct(e.productId)));
+    const softwareText=commonEquipmentGroupValue(items,e=>equipmentMetricText(e));
+    const typeText=commonEquipmentGroupValue(items,e=>varsText(getProduct(e.productId)));
+    const softwareHtml=softwareText==='Vários'?'Vários':equipmentMetricHtml(first);
+    const seriesHtml=allAccessory?'N/S':(allSerialized?`<span class="badge badge-green">${esc(seriesText)}</span>`:'Vários');
+
+    let html=`<tr class="equipment-group-row"><td data-label="Código">${esc(first.code)}</td><td data-label="Local">${localHtml}</td><td data-label="Produto"><strong>${esc(productText)}</strong></td><td data-label="Software">${softwareHtml}</td><td data-label="Série">${seriesHtml}</td><td data-label="Tipo">${esc(typeText)}</td><td data-label="Status"><span class="badge badge-green">${esc(unitText)}</span></td><td data-label="Ações"><button class="btn btn-small equipment-group-toggle" onclick="toggleEquipmentGroup('${key}')">${expanded?'RECOLHER':'EXPANDIR'} <span class="group-arrow">${expanded?'▼':'▶'}</span></button></td></tr>`;
 
     if(expanded){
-        html+=group.items
-            .slice()
-            .sort((a,b)=>String(a.series||'').localeCompare(String(b.series||''),'pt-BR',{numeric:true}))
-            .map((e,index)=>{
-                const firstChild=index===0;
-                const last=index===group.items.length-1;
-                const statusHtml=isInKit(e.id)
-                    ?'<span class="badge badge-yellow">Em kit</span>'
-                    :'<span class="badge badge-green">Disponível</span>';
-                return `<tr class="equipment-child-row"><td colspan="8"><div class="equipment-child-inner"><div class="equipment-child-slot equipment-child-slot-key"><span class="equipment-branch${firstChild?' first':''}${last?' last':''}" aria-hidden="true"></span></div><div class="equipment-child-slot equipment-child-slot-empty"></div><div class="equipment-child-slot equipment-child-slot-empty"></div><div class="equipment-child-slot" data-label="Software">${equipmentMetricHtml(e)}</div><div class="equipment-child-slot" data-label="Série"><strong>${esc(e.series)}</strong></div><div class="equipment-child-slot" data-label="Tipo">-</div><div class="equipment-child-slot" data-label="Status">${statusHtml}</div><div class="equipment-child-slot equipment-child-slot-actions" data-label="Ações">${equipmentRowActions(e)}</div></div></td></tr>`;
-            }).join('');
+        const rows=items.slice().sort((a,b)=>{
+            const locationCompare=String(a.location||'').localeCompare(String(b.location||''),'pt-BR',{numeric:true});
+            if(locationCompare)return locationCompare;
+            const productCompare=productSiteName(getProduct(a.productId)).localeCompare(productSiteName(getProduct(b.productId)),'pt-BR');
+            if(productCompare)return productCompare;
+            const softwareCompare=equipmentMetricText(a).localeCompare(equipmentMetricText(b),'pt-BR');
+            if(softwareCompare)return softwareCompare;
+            return String(a.series||'').localeCompare(String(b.series||''),'pt-BR',{numeric:true});
+        });
+        html+=rows.map((e,index)=>{
+            const p=getProduct(e.productId);
+            const firstChild=index===0;
+            const last=index===rows.length-1;
+            const seriesChildHtml=isAccessoryEquipment(e)?'-':`<strong>${esc(e.series)}</strong>`;
+            return `<tr class="equipment-child-row"><td colspan="8"><div class="equipment-child-inner"><div class="equipment-child-slot equipment-child-slot-key"><span class="equipment-branch${firstChild?' first':''}${last?' last':''}" aria-hidden="true"></span></div><div class="equipment-child-slot" data-label="Local">${esc(e.location)}</div><div class="equipment-child-slot" data-label="Produto"><strong>${esc(productSiteName(p))}</strong></div><div class="equipment-child-slot" data-label="Software">${equipmentMetricHtml(e)}</div><div class="equipment-child-slot" data-label="Série" style="transform:translateX(-15px)">${seriesChildHtml}</div><div class="equipment-child-slot" data-label="Tipo">-</div><div class="equipment-child-slot" data-label="Status">${equipmentStatusHtml(e)}</div><div class="equipment-child-slot equipment-child-slot-actions" data-label="Ações">${equipmentRowActions(e)}</div></div></td></tr>`;
+        }).join('');
     }
     return html;
 }
@@ -3073,18 +3284,9 @@ function renderEquipmentTable(){
         const p=getProduct(e.productId);
         const inKit=isInKit(e.id);
         const codeRecord=getCode(e.codeId);
-
         const searchable=normalizeEquipmentSearch([
-            e.code,
-            codeRecord?.ean,
-            e.location,
-            e.series,
-            productSiteName(p),
-            p?.name,
-            p?.displayName,
-            e.type,
-            hceText(e),
-            varsText(p)
+            e.code,codeRecord?.ean,e.location,e.series,productSiteName(p),p?.name,p?.displayName,
+            e.type,hceText(e),varsText(p),isAccessoryEquipment(e)?String(e.balance||1):''
         ].filter(Boolean).join(' '));
 
         if(terms.length&&!terms.every(term=>searchable.includes(term)))return false;
@@ -3094,40 +3296,24 @@ function renderEquipmentTable(){
         return true;
     });
 
-    const serializedGroups=new Map();
-    const standalone=[];
-
+    const groups=new Map();
     filtered.forEach(e=>{
-        if(!isSerializedEquipment(e)){
-            standalone.push(e);
-            return;
-        }
-        const key=equipmentGroupKey(e);
-        if(!serializedGroups.has(key))serializedGroups.set(key,{key,items:[]});
-        serializedGroups.get(key).items.push(e);
+        const key=equipmentCodeGroupKey(e);
+        if(!groups.has(key))groups.set(key,{key,items:[]});
+        groups.get(key).items.push(e);
     });
 
-    const displayRows=[];
-
-    serializedGroups.forEach(group=>{
-        if(group.items.length>1)displayRows.push({kind:'group',group,first:group.items[0]});
-        else displayRows.push({kind:'single',equipment:group.items[0],first:group.items[0]});
-    });
-
-    standalone.forEach(e=>displayRows.push({kind:'single',equipment:e,first:e}));
-
-    displayRows.sort((a,b)=>{
-        const ap=productSiteName(getProduct(a.first.productId));
-        const bp=productSiteName(getProduct(b.first.productId));
-        const productCompare=ap.localeCompare(bp,'pt-BR');
-        if(productCompare)return productCompare;
-        const codeCompare=String(a.first.code||'').localeCompare(String(b.first.code||''),'pt-BR',{numeric:true});
+    const displayGroups=[...groups.values()];
+    displayGroups.sort((a,b)=>{
+        const codeCompare=String(a.items[0]?.code||'').localeCompare(String(b.items[0]?.code||''),'pt-BR',{numeric:true});
         if(codeCompare)return codeCompare;
-        return String(a.first.location||'').localeCompare(String(b.first.location||''),'pt-BR',{numeric:true});
+        const ap=productSiteName(getProduct(a.items[0]?.productId));
+        const bp=productSiteName(getProduct(b.items[0]?.productId));
+        return ap.localeCompare(bp,'pt-BR');
     });
 
-    $('equipmentTable').innerHTML=displayRows.length
-        ?displayRows.map(row=>row.kind==='group'?renderSerializedEquipmentGroup(row.group):renderSingleEquipmentRow(row.equipment)).join('')
+    $('equipmentTable').innerHTML=displayGroups.length
+        ?displayGroups.map(group=>group.items.length===1?renderSingleEquipmentRow(group.items[0]):renderEquipmentCodeGroup(group)).join('')
         :'<tr><td colspan="8"><div class="empty">Nenhum equipamento encontrado.</div></td></tr>';
 }
 function clearEquipmentFilters(){$('filterSearch').value='';$('filterStatus').value='';$('filterVariable').value='';renderEquipmentTable()}
@@ -3178,7 +3364,7 @@ function selectSingleProductCategory(selected){
     document.querySelectorAll('.product-category').forEach(input=>{if(input!==selected)input.checked=false});
 }
 function openProductModal(id=''){if(!requirePermission(id?'products.edit':'products.create'))return;$('productForm').reset();$('productId').value=id;if(id){const p=getProduct(id);$('productModalTitle').textContent='Editar produto';$('productName').value=p.name;$('productDisplayName').value=p.displayName||'';$('varReceiver').checked=p.variables.includes('Receptor');$('varCollector').checked=p.variables.includes('Coletora');$('varAccessory').checked=p.variables.includes('Acessório');$('varEcho').checked=p.variables.includes('Ecobatímetro');$('varLaser').checked=p.variables.includes('Laser');$('varDrone').checked=p.variables.includes('Drone');$('varTotalStation').checked=p.variables.includes('Estação Total')}else $('productModalTitle').textContent='Cadastrar produto';openModal('productModal')}
-function saveProduct(ev){const permissionKey=$('productId').value?'products.edit':'products.create';if(!requirePermission(permissionKey)){ev.preventDefault();return}ev.preventDefault();const id=$('productId').value;const name=$('productName').value.trim();const displayName=$('productDisplayName').value.trim();const checkedCategories=[...document.querySelectorAll('.product-category:checked')];if(checkedCategories.length!==1){toast('Selecione exatamente uma categoria para o produto.');return}const variables=[];if($('varReceiver').checked)variables.push('Receptor');if($('varCollector').checked)variables.push('Coletora');if($('varEcho').checked)variables.push('Ecobatímetro');if($('varLaser').checked)variables.push('Laser');if($('varDrone').checked)variables.push('Drone');if($('varTotalStation').checked)variables.push('Estação Total');if($('varAccessory').checked)variables.push('Acessório');if(!name){toast('Informe o nome do produto.');return}const duplicate=state.products.find(p=>p.id!==id&&p.name.toLowerCase()===name.toLowerCase());if(duplicate){toast('Já existe um produto com esse nome.');return}let productId=id;if(id){const p=getProduct(id);p.name=name;p.displayName=displayName;p.variables=variables;state.equipments.filter(e=>e.productId===id).forEach(e=>{if(variables.includes('Acessório')){e.series='Equipamento não seriado';e.type='';e.hce={landstar:false,smartgo:false}}else{if(!variables.includes('Receptor'))e.type='';if(!variables.includes('Coletora'))e.hce={landstar:false,smartgo:false};else if(!e.hce)e.hce={landstar:false,smartgo:false}}})}else{productId=uid('prd');state.products.push({id:productId,name,displayName,variables})}save(permissionKey);closeModal('productModal');renderAll();renderProductManager();if($('equipmentModal').classList.contains('open')){renderProductSelect(productId);updateProductFields();$('eqProductInput').focus();openProductDropdown()}toast(id?'Produto atualizado.':'Produto cadastrado.');
+function saveProduct(ev){const permissionKey=$('productId').value?'products.edit':'products.create';if(!requirePermission(permissionKey)){ev.preventDefault();return}ev.preventDefault();const id=$('productId').value;const name=$('productName').value.trim();const displayName=$('productDisplayName').value.trim();const checkedCategories=[...document.querySelectorAll('.product-category:checked')];if(checkedCategories.length!==1){toast('Selecione exatamente uma categoria para o produto.');return}const variables=[];if($('varReceiver').checked)variables.push('Receptor');if($('varCollector').checked)variables.push('Coletora');if($('varEcho').checked)variables.push('Ecobatímetro');if($('varLaser').checked)variables.push('Laser');if($('varDrone').checked)variables.push('Drone');if($('varTotalStation').checked)variables.push('Estação Total');if($('varAccessory').checked)variables.push('Acessório');if(!name){toast('Informe o nome do produto.');return}const duplicate=state.products.find(p=>p.id!==id&&p.name.toLowerCase()===name.toLowerCase());if(duplicate){toast('Já existe um produto com esse nome.');return}let productId=id;if(id){const p=getProduct(id);p.name=name;p.displayName=displayName;p.variables=variables;state.equipments.filter(e=>e.productId===id).forEach(e=>{if(variables.includes('Acessório')){e.series='N/S';e.type='';e.hce={landstar:false,smartgo:false}}else{if(!variables.includes('Receptor'))e.type='';if(!variables.includes('Coletora'))e.hce={landstar:false,smartgo:false};else if(!e.hce)e.hce={landstar:false,smartgo:false}}})}else{productId=uid('prd');state.products.push({id:productId,name,displayName,variables})}save(permissionKey);closeModal('productModal');renderAll();renderProductManager();if($('equipmentModal').classList.contains('open')){renderProductSelect(productId);updateProductFields();$('eqProductInput').focus();openProductDropdown()}toast(id?'Produto atualizado.':'Produto cadastrado.');
 }
 function openProductManager(){renderProductManager();openModal('productManagerModal')}
 function renderProductPage(){
@@ -3576,7 +3762,7 @@ function printStandaloneEquipmentLabel(id){if(!requirePermission('equipment.prin
  try{
    if(isAccessoryEquipment(e))openPdfBytes(buildAccessoryEanLabelPdf(e),`${e.code} - EAN EAN`);
    else{
-     if(!e.series||e.series==='Equipamento não seriado'){toast('Este equipamento não possui número de série para gerar o QR Code.');return}
+     if(!e.series||e.series==='N/S'){toast('Este equipamento não possui número de série para gerar o QR Code.');return}
      openPdfBytes(buildStandaloneEquipmentLabelPdf(e),`${e.code} - QRCode EAN`);
    }
  }catch(err){console.error(err);toast('Não foi possível gerar a identificação do equipamento.')}
@@ -3590,11 +3776,11 @@ function buildCompleteKitLabelPdf(k,rows){
  rows.forEach(e=>{let p=getProduct(e.productId),metric=e.type||hceText(e)||'',line=[e.code,productLabelName(p),metric,'S/N:',e.series].filter(Boolean).join(' ');let lineFs=fs;while(pdfApproxWidth(line,lineFs,true)>rw&&lineFs>4)lineFs-=.2;s+=pdfTextCommand(line,rx,y,lineFs,rw,true,'center');y-=step});return pdfDoc(s)
 }
 function openPdfBytes(bytes,title){const w=window.open('about:blank','_blank');if(!w){toast('O navegador bloqueou a visualização. Permita pop-ups para este arquivo.');return}const blob=new Blob([bytes],{type:'application/pdf'}),url=URL.createObjectURL(blob);w.location.href=url;w.document.title=title;setTimeout(()=>URL.revokeObjectURL(url),120000)}
-function printCompleteKitFromModal(){const k=state.kits.find(x=>x.id===currentPrintKitId);if(!k){toast('Kit não encontrado.');return}const rows=k.equipmentIds.map(getEquipment).filter(e=>e&&e.series&&e.series!=='Equipamento não seriado');if(!rows.length){toast('Este kit não possui equipamentos seriados.');return}openPdfBytes(buildCompleteKitLabelPdf(k,rows),`${k.name} - Kit completo`)}
+function printCompleteKitFromModal(){const k=state.kits.find(x=>x.id===currentPrintKitId);if(!k){toast('Kit não encontrado.');return}const rows=k.equipmentIds.map(getEquipment).filter(e=>e&&e.series&&e.series!=='N/S');if(!rows.length){toast('Este kit não possui equipamentos seriados.');return}openPdfBytes(buildCompleteKitLabelPdf(k,rows),`${k.name} - Kit completo`)}
 function printKitLabel(id){if(!requirePermission('kits.print'))return;
     const k=state.kits.find(x=>x.id===id);if(!k){toast('Kit não encontrado.');return}
     currentPrintKitId=id;
-    const serialized=k.equipmentIds.map(getEquipment).filter(e=>e&&e.series&&e.series!=='Equipamento não seriado');
+    const serialized=k.equipmentIds.map(getEquipment).filter(e=>e&&e.series&&e.series!=='N/S');
     if(!serialized.length){toast('Este kit não possui equipamentos seriados para imprimir.');return}
 
     $('printLabelTitle').textContent='Imprimir identificação · '+k.name;
@@ -3609,7 +3795,7 @@ function generateEquipmentLabel(kitId,equipmentId){
     const k=state.kits.find(x=>x.id===kitId);
     const selected=getEquipment(equipmentId);
     if(!k||!selected){toast('Kit ou equipamento não encontrado.');return}
-    const serialized=k.equipmentIds.map(getEquipment).filter(e=>e&&e.series&&e.series!=='Equipamento não seriado');
+    const serialized=k.equipmentIds.map(getEquipment).filter(e=>e&&e.series&&e.series!=='N/S');
     if(!serialized.some(e=>e.id===selected.id)){toast('O equipamento não pertence mais a este kit.');return}
     const codeRecord=getCode(selected.codeId);
     if(!codeRecord?.ean||!validEan13(codeRecord.ean)){toast('O código '+(selected.code||'')+' não possui um EAN-13 válido cadastrado.');return}
