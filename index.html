@@ -81,7 +81,7 @@ button,input,select{font:inherit}button{cursor:pointer}
 .equipment-child-slot-actions .equipment-action-items{gap:5px}
 .equipment-child-slot-actions .btn-small{padding:5px 7px;font-size:11px}
 .equipment-child-slot-actions .equipment-action-toggle{min-width:30px;padding-left:7px;padding-right:7px}
-.stock-adjust{display:inline-flex;align-items:center;gap:2px;flex:0 0 auto}
+.stock-adjust{display:inline-flex;align-items:center;gap:2px;flex:0 0 auto;white-space:nowrap}
 .stock-adjust-input{width:24px!important;min-width:24px;max-width:24px;padding:4px 2px;text-align:center;font-size:11px;line-height:1;border-radius:5px}
 .stock-adjust-btn{width:24px;min-width:24px;padding:5px 0!important;font-size:13px;line-height:1}
 .equipment-branch{position:relative;display:block;width:32px;height:28px;margin:-4px 0;transform:translateX(-10px)}
@@ -3148,6 +3148,7 @@ function normalizeEquipmentSearch(value){
 }
 
 const expandedEquipmentGroups=new Set();
+const expandedEquipmentActions=new Set();
 
 function equipmentCodeGroupKey(e){
     const raw=String(e?.codeId||e?.code||e?.id||'');
@@ -3189,13 +3190,14 @@ function commonEquipmentGroupValue(items,getter){
 
 function accessoryBalanceActions(e){
     if(!isAccessoryEquipment(e))return '';
-    const addId=`stock-add-${e.id}`;
-    const removeId=`stock-remove-${e.id}`;
+    const inputId=`stock-adjust-${e.id}`;
+    const input=`<input id="${inputId}" class="stock-adjust-input" value="1" maxlength="2" inputmode="numeric" aria-label="Quantidade para ajustar" oninput="sanitizeStockAdjustInput(this)">`;
     const add=hasPermission('equipment.add_stock')
-        ?`<span class="stock-adjust"><input id="${addId}" class="stock-adjust-input" value="1" maxlength="2" inputmode="numeric" aria-label="Quantidade para adicionar" oninput="sanitizeStockAdjustInput(this)"><button type="button" class="btn btn-small stock-adjust-btn" title="Adicionar ao saldo" onclick="adjustAccessoryBalance('${e.id}',1,'${addId}')">+</button></span>`:'';
+        ?`<button type="button" class="btn btn-small stock-adjust-btn" title="Adicionar ao saldo" onclick="adjustAccessoryBalance('${e.id}',1,'${inputId}')">+</button>`:'';
     const remove=hasPermission('equipment.delete')
-        ?`<span class="stock-adjust"><input id="${removeId}" class="stock-adjust-input" value="1" maxlength="2" inputmode="numeric" aria-label="Quantidade para diminuir" oninput="sanitizeStockAdjustInput(this)"><button type="button" class="btn btn-small stock-adjust-btn" title="Diminuir do saldo" onclick="adjustAccessoryBalance('${e.id}',-1,'${removeId}')">−</button></span>`:'';
-    return add+remove;
+        ?`<button type="button" class="btn btn-small stock-adjust-btn" title="Diminuir do saldo" onclick="adjustAccessoryBalance('${e.id}',-1,'${inputId}')">−</button>`:'';
+    if(!add&&!remove)return '';
+    return `<span class="stock-adjust">${input}${add}${remove}</span>`;
 }
 
 function equipmentRowActions(e){
@@ -3207,13 +3209,16 @@ function equipmentRowActions(e){
     const actions=[editBtn,deleteBtn,duplicateBtn,balanceControls,printBtn].filter(Boolean).join('');
     if(!actions)return '';
     const wrapperId=`equipment-actions-${e.id}`;
-    return `<div class="table-actions"><div id="${wrapperId}" class="equipment-actions-collapsed"><button class="btn btn-small equipment-action-toggle" type="button" aria-label="Expandir ações" aria-expanded="false" onclick="toggleEquipmentActions('${wrapperId}',this)">▶</button><div class="equipment-action-items">${actions}</div></div></div>`;
+    const expanded=expandedEquipmentActions.has(e.id);
+    return `<div class="table-actions"><div id="${wrapperId}" class="equipment-actions-collapsed${expanded?' expanded':''}"><button class="btn btn-small equipment-action-toggle" type="button" aria-label="${expanded?'Recolher ações':'Expandir ações'}" aria-expanded="${expanded?'true':'false'}" onclick="toggleEquipmentActions('${wrapperId}',this,'${e.id}')">${expanded?'◀':'▶'}</button><div class="equipment-action-items">${actions}</div></div></div>`;
 }
 
-function toggleEquipmentActions(wrapperId,button){
+function toggleEquipmentActions(wrapperId,button,equipmentId){
     const wrapper=$(wrapperId);
     if(!wrapper)return;
     const expanded=wrapper.classList.toggle('expanded');
+    if(expanded)expandedEquipmentActions.add(equipmentId);
+    else expandedEquipmentActions.delete(equipmentId);
     button.textContent=expanded?'◀':'▶';
     button.setAttribute('aria-expanded',expanded?'true':'false');
     button.setAttribute('aria-label',expanded?'Recolher ações':'Expandir ações');
