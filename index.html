@@ -5,7 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ERPSP | CPE Tecnologia</title>
-  <!-- v2.9.6 -->
+<!-- v2.10.6 -->
 <style>
 :root{
     --bg:#f1f1f1;
@@ -47,9 +47,26 @@ button,input,select{font:inherit}button{cursor:pointer}
 .toolbar{padding:13px;margin-bottom:14px;display:flex;gap:9px;align-items:end;flex-wrap:wrap}.equipment-print-actions{display:flex;flex-direction:column;gap:5px;align-self:flex-end}.equipment-print-actions .btn{width:100%;padding:7px 10px;font-size:11px}.field{display:flex;flex-direction:column;gap:6px;min-width:150px}.field.grow{flex:1}.field label{font-size:12px;font-weight:700;color:var(--muted)}input,select{width:100%;border:1px solid var(--border);border-radius:7px;background:#fff;color:var(--text);padding:9px 10px;outline:none}input:focus,select:focus{border-color:var(--primary);box-shadow:0 0 0 2px rgba(242,195,0,.18)}
 .table-wrap{overflow:auto}.table{width:100%;border-collapse:collapse;min-width:850px}.table th,.table td{text-align:left;padding:11px 12px;border-bottom:1px solid #edf0f2;vertical-align:middle}.table th{background:var(--surface-2);font-size:12px;color:var(--muted);font-weight:700}.table tr:last-child td{border-bottom:0}
 .equipment-table{table-layout:fixed;min-width:1280px}
-.equipment-table th:nth-child(1),.equipment-table td:nth-child(1){width:76px}
+
+.equipment-table th{position:relative;text-align:center}
+.equipment-th-inner{position:relative;display:flex;align-items:center;justify-content:center;width:100%}
+
+.equipment-table th:nth-child(8) .equipment-th-inner{justify-content:flex-start}
+
+.equipment-th-title-wrap{position:relative;display:inline-flex;align-items:center;justify-content:center}
+.equipment-sort-btn{position:absolute;left:100%;margin-left:5px;top:50%;transform:translateY(-50%);width:20px;min-width:20px;height:20px;padding:0;border:0;border-radius:4px;background:transparent;color:#7b858c;font-size:10px;line-height:20px;text-align:center}
+.equipment-sort-btn:hover{background:#e8ecef;color:#30383d}
+.equipment-sort-menu{position:absolute;top:calc(100% - 2px);left:10px;z-index:1200;display:none;width:168px;padding:5px;background:#fff;border:1px solid #d8dde1;border-radius:7px;box-shadow:0 8px 22px rgba(0,0,0,.14)}
+.equipment-sort-menu.open{display:grid;gap:3px}
+.equipment-sort-menu button{width:100%;padding:7px 8px;border:0;border-radius:5px;background:transparent;color:#303030;font-size:11px;font-weight:700;text-align:left;white-space:nowrap}
+.equipment-sort-menu button:hover,.equipment-sort-menu button.active{background:#eef1f3}
+
+.equipment-sort-menu .equipment-sort-reset{margin-top:3px;padding-top:8px;border-top:1px solid #e3e7ea;border-radius:0 0 5px 5px;color:#59636a}
+
+
+.equipment-table th:nth-child(1),.equipment-table td:nth-child(1){width:96px}
 .equipment-table th:nth-child(2),.equipment-table td:nth-child(2){width:100px}
-.equipment-table th:nth-child(4),.equipment-table td:nth-child(4){width:92px}
+.equipment-table th:nth-child(4),.equipment-table td:nth-child(4){width:104px}
 .equipment-table th:nth-child(5),.equipment-table td:nth-child(5){width:118px}
 .equipment-table th:nth-child(6),.equipment-table td:nth-child(6){width:118px}
 .equipment-table th:nth-child(7),.equipment-table td:nth-child(7){width:122px}
@@ -71,7 +88,7 @@ button,input,select{font:inherit}button{cursor:pointer}
 .equipment-group-row>td:nth-child(5) .badge{transform:translateX(-18px)}
 .equipment-child-row{background:transparent}
 .equipment-child-row>td{padding:0;border-bottom:0;background:transparent}
-.equipment-child-inner{margin-left:0;width:100%;background:#f6f7f8;border-bottom:1px dashed #dde2e5;display:grid;grid-template-columns:76px 100px minmax(0,calc(100% - 1069px)) 92px 118px 118px 122px 443px;align-items:center}
+.equipment-child-inner{margin-left:0;width:100%;background:#f6f7f8;border-bottom:1px dashed #dde2e5;display:grid;grid-template-columns:96px 100px minmax(0,calc(100% - 1101px)) 104px 118px 118px 122px 443px;align-items:center}
 .equipment-child-slot{padding:9px 14px;min-width:0}
 
 .equipment-table th,.equipment-table td,.equipment-child-slot{font-weight:700}
@@ -90,6 +107,7 @@ button,input,select{font:inherit}button{cursor:pointer}
 .equipment-overflow-tooltip.show{opacity:1;transform:translateY(0)}
 
 .equipment-status-chip{background:var(--success-bg);color:var(--success)}
+.equipment-status-chip.equipment-status-warning{background:var(--warning-bg);color:var(--warning)}
 .equipment-status-chip .badge{background:transparent!important;color:inherit!important;padding:0;box-shadow:none}
 .equipment-cell-chip.no-copy{cursor:default}
 .equipment-cell-chip.no-copy:hover{filter:none}
@@ -586,7 +604,7 @@ body.guest-calculator-mode #mainApp .container{padding-top:24px}
 <div class="page-title"><div><h2>Equipamentos</h2><p>Cadastre, pesquise e acompanhe os equipamentos do estoque.</p></div><button class="btn btn-primary" data-permission="equipment.create" onclick="openEquipmentModal()">+ CADASTRAR EQUIPAMENTO</button></div>
 <div class="dashboard"><div class="card metric"><div class="label">Equipamentos</div><div class="value" id="mTotal">0</div></div><div class="card metric"><div class="label">Disponíveis</div><div class="value" id="mAvailable">0</div></div><div class="card metric"><div class="label">Em kits</div><div class="value" id="mInKit">0</div></div><div class="card metric"><div class="label">Kits ativos</div><div class="value" id="mKits">0</div></div></div>
 <div class="card toolbar"><div class="field grow"><label>Pesquisar</label><input id="filterSearch" placeholder="Produto, código, local, série..." oninput="renderEquipmentTable()"></div><div class="field"><label>Disponibilidade</label><select id="filterStatus" onchange="renderEquipmentTable()"><option value="">Todos</option><option value="available">Disponível</option><option value="kit">Em kit</option></select></div><div class="field"><label>Categoria</label><select id="filterVariable" onchange="renderEquipmentTable()"><option value="">Todas</option><option value="Receptor">Receptor</option><option value="Coletora">Coletora</option><option value="Estação Total">Estação Total</option><option value="Laser">Laser</option><option value="Drone">Drone</option><option value="Ecobatímetro">Ecobatímetro</option><option value="Nível">Nível</option><option value="Rádio">Rádio</option><option value="Bateria">Bateria</option><option value="Lidar">Lidar</option><option value="Acessório">Acessório</option></select></div><button class="btn" onclick="clearEquipmentFilters()">LIMPAR</button><div class="equipment-print-actions"><button class="btn btn-primary" data-permission="equipment.print" onclick="openPrintLocalModal()">IMPRIMIR LOCAL</button><button class="btn btn-primary" data-permission="equipment.print" onclick="openPrintOsModal()">IMPRIMIR O.S.</button></div></div>
-<div class="card table-wrap"><table class="table equipment-table"><thead><tr><th>Código</th><th>Local</th><th>Produto</th><th>Software</th><th>Série</th><th>Tipo</th><th>Status</th><th>Ações</th></tr></thead><tbody id="equipmentTable"></tbody></table></div>
+<div class="card table-wrap"><table class="table equipment-table"><thead><tr><th><div class="equipment-th-inner"><span class="equipment-th-title-wrap"><span>Código</span><button type="button" class="equipment-sort-btn" data-sort-field="code" aria-label="Classificar Código" onclick="toggleEquipmentSortMenu(event,'code')">▼</button></span></div><div id="equipment-sort-code" class="equipment-sort-menu"><button type="button" data-direction="asc" onclick="setEquipmentSort('code','asc')">Classificar de A a Z</button><button type="button" data-direction="desc" onclick="setEquipmentSort('code','desc')">Classificar de Z a A</button><button type="button" class="equipment-sort-reset" onclick="restoreDefaultEquipmentSort()">Restaurar padrão</button></div></th><th><div class="equipment-th-inner"><span class="equipment-th-title-wrap"><span>Local</span><button type="button" class="equipment-sort-btn" data-sort-field="location" aria-label="Classificar Local" onclick="toggleEquipmentSortMenu(event,'location')">▼</button></span></div><div id="equipment-sort-location" class="equipment-sort-menu"><button type="button" data-direction="asc" onclick="setEquipmentSort('location','asc')">Classificar de A a Z</button><button type="button" data-direction="desc" onclick="setEquipmentSort('location','desc')">Classificar de Z a A</button><button type="button" class="equipment-sort-reset" onclick="restoreDefaultEquipmentSort()">Restaurar padrão</button></div></th><th><div class="equipment-th-inner"><span class="equipment-th-title-wrap"><span>Produto</span><button type="button" class="equipment-sort-btn" data-sort-field="product" aria-label="Classificar Produto" onclick="toggleEquipmentSortMenu(event,'product')">▼</button></span></div><div id="equipment-sort-product" class="equipment-sort-menu"><button type="button" data-direction="asc" onclick="setEquipmentSort('product','asc')">Classificar de A a Z</button><button type="button" data-direction="desc" onclick="setEquipmentSort('product','desc')">Classificar de Z a A</button><button type="button" class="equipment-sort-reset" onclick="restoreDefaultEquipmentSort()">Restaurar padrão</button></div></th><th><div class="equipment-th-inner"><span class="equipment-th-title-wrap"><span>Software</span><button type="button" class="equipment-sort-btn" data-sort-field="software" aria-label="Classificar Software" onclick="toggleEquipmentSortMenu(event,'software')">▼</button></span></div><div id="equipment-sort-software" class="equipment-sort-menu"><button type="button" data-direction="asc" onclick="setEquipmentSort('software','asc')">Classificar de A a Z</button><button type="button" data-direction="desc" onclick="setEquipmentSort('software','desc')">Classificar de Z a A</button><button type="button" class="equipment-sort-reset" onclick="restoreDefaultEquipmentSort()">Restaurar padrão</button></div></th><th><div class="equipment-th-inner"><span class="equipment-th-title-wrap"><span>Série</span><button type="button" class="equipment-sort-btn" data-sort-field="series" aria-label="Classificar Série" onclick="toggleEquipmentSortMenu(event,'series')">▼</button></span></div><div id="equipment-sort-series" class="equipment-sort-menu"><button type="button" data-direction="asc" onclick="setEquipmentSort('series','asc')">Classificar de A a Z</button><button type="button" data-direction="desc" onclick="setEquipmentSort('series','desc')">Classificar de Z a A</button><button type="button" class="equipment-sort-reset" onclick="restoreDefaultEquipmentSort()">Restaurar padrão</button></div></th><th><div class="equipment-th-inner"><span class="equipment-th-title-wrap"><span>Tipo</span><button type="button" class="equipment-sort-btn" data-sort-field="type" aria-label="Classificar Tipo" onclick="toggleEquipmentSortMenu(event,'type')">▼</button></span></div><div id="equipment-sort-type" class="equipment-sort-menu"><button type="button" data-direction="asc" onclick="setEquipmentSort('type','asc')">Classificar de A a Z</button><button type="button" data-direction="desc" onclick="setEquipmentSort('type','desc')">Classificar de Z a A</button><button type="button" class="equipment-sort-reset" onclick="restoreDefaultEquipmentSort()">Restaurar padrão</button></div></th><th><div class="equipment-th-inner"><span class="equipment-th-title-wrap"><span>Status</span><button type="button" class="equipment-sort-btn" data-sort-field="status" aria-label="Classificar Status" onclick="toggleEquipmentSortMenu(event,'status')">▼</button></span></div><div id="equipment-sort-status" class="equipment-sort-menu"><button type="button" data-direction="asc" onclick="setEquipmentSort('status','asc')">Classificar de A a Z</button><button type="button" data-direction="desc" onclick="setEquipmentSort('status','desc')">Classificar de Z a A</button><button type="button" class="equipment-sort-reset" onclick="restoreDefaultEquipmentSort()">Restaurar padrão</button></div></th><th><div class="equipment-th-inner"><span>Ações</span></div></th></tr></thead><tbody id="equipmentTable"></tbody></table></div>
 </section>
 <section id="produtos" class="page">
 <div class="page-title"><div><h2>Produtos</h2><p>Cadastre e gerencie os produtos usados nos equipamentos.</p></div><button class="btn btn-primary" data-permission="products.create" onclick="openProductModal()">+ CADASTRAR PRODUTO</button></div>
@@ -3269,7 +3287,7 @@ function equipmentCellCopyText(content){
 
 function equipmentCellChipHtml(content,status=false,mode='copy'){
     const copyText=encodeURIComponent(equipmentCellCopyText(content));
-    const statusClass=status?' equipment-status-chip':'';
+    const statusClass=status?(String(content).includes('badge-yellow')?' equipment-status-chip equipment-status-warning':' equipment-status-chip'):'';
     const wrapped=`<span class="equipment-cell-chip-text">${content}</span>`;
     if(mode==='disabled'){
         return `<div class="equipment-cell-chip no-copy${statusClass}" onmouseenter="showEquipmentOverflowTooltip(this)" onmouseleave="hideEquipmentOverflowTooltip()">${wrapped}</div>`;
@@ -3409,13 +3427,13 @@ function renderEquipmentCodeGroup(group){
 
     if(expanded){
         const rows=items.slice().sort((a,b)=>{
-            const locationCompare=String(a.location||'').localeCompare(String(b.location||''),'pt-BR',{numeric:true});
-            if(locationCompare)return locationCompare;
-            const productCompare=productSiteName(getProduct(a.productId)).localeCompare(productSiteName(getProduct(b.productId)),'pt-BR');
-            if(productCompare)return productCompare;
-            const softwareCompare=equipmentMetricText(a).localeCompare(equipmentMetricText(b),'pt-BR');
-            if(softwareCompare)return softwareCompare;
-            return String(a.series||'').localeCompare(String(b.series||''),'pt-BR',{numeric:true});
+            const primary=compareEquipmentSortValues(
+                equipmentSortValueFromItem(a,equipmentSortState.field),
+                equipmentSortValueFromItem(b,equipmentSortState.field),
+                equipmentSortState.field
+            );
+            if(primary)return primary;
+            return String(a.series||'').localeCompare(String(b.series||''),'pt-BR',{numeric:true,sensitivity:'base'});
         });
         html+=rows.map((e,index)=>{
             const p=getProduct(e.productId);
@@ -3427,6 +3445,109 @@ function renderEquipmentCodeGroup(group){
     }
     return html;
 }
+
+const equipmentSortState={field:'type',direction:'desc'};
+const EQUIPMENT_TYPE_SORT_ORDER=['Receptor','Coletora','Estação Total','Laser','Drone','Ecobatímetro','Nível','Rádio','Bateria','Lidar','Acessório'];
+
+
+function closeEquipmentSortMenus(){
+    document.querySelectorAll('.equipment-sort-menu.open').forEach(menu=>menu.classList.remove('open'));
+}
+
+function updateEquipmentSortIndicators(){
+    document.querySelectorAll('.equipment-sort-btn').forEach(btn=>{
+        btn.classList.toggle('active',btn.dataset.sortField===equipmentSortState.field);
+    });
+    document.querySelectorAll('.equipment-sort-menu button').forEach(btn=>{
+        const menu=btn.closest('.equipment-sort-menu');
+        const field=menu?.id?.replace('equipment-sort-','')||'';
+        btn.classList.toggle('active',field===equipmentSortState.field&&btn.dataset.direction===equipmentSortState.direction);
+    });
+}
+
+function toggleEquipmentSortMenu(event,field){
+    event.stopPropagation();
+    const target=$(`equipment-sort-${field}`);
+    if(!target)return;
+    const willOpen=!target.classList.contains('open');
+    closeEquipmentSortMenus();
+    if(willOpen)target.classList.add('open');
+    updateEquipmentSortIndicators();
+}
+
+function setEquipmentSort(field,direction){
+    equipmentSortState.field=field;
+    equipmentSortState.direction=direction;
+    closeEquipmentSortMenus();
+    renderEquipmentTable();
+}
+
+function restoreDefaultEquipmentSort(){
+    equipmentSortState.field='type';
+    equipmentSortState.direction='desc';
+    closeEquipmentSortMenus();
+    renderEquipmentTable();
+}
+
+function equipmentSortValueFromItem(e,field){
+    const p=getProduct(e?.productId);
+    if(field==='code')return String(e?.code||'');
+    if(field==='location')return String(e?.location||'');
+    if(field==='product')return productSiteName(p);
+    if(field==='software')return equipmentMetricText(e);
+    if(field==='series')return isAccessoryEquipment(e)?'N/S':String(e?.series||'');
+    if(field==='type')return varsText(p);
+    if(field==='status')return isAccessoryEquipment(e)?`${equipmentPhysicalUnits(e)} unidades`:(isInKit(e?.id)?'Em kit':'Disponível');
+    return '';
+}
+
+function equipmentSortValueFromGroup(group,field){
+    const items=group?.items||[];
+    if(!items.length)return '';
+    if(field==='code')return String(items[0]?.code||'');
+    if(field==='location'){
+        const values=[...new Set(items.map(e=>String(e.location??'').trim()||'-'))];
+        return values.length>1?`${String(values.length).padStart(2,'0')} Locais`:(values[0]||'-');
+    }
+    if(field==='product')return commonEquipmentGroupValue(items,e=>productSiteName(getProduct(e.productId)));
+    if(field==='software')return commonEquipmentGroupValue(items,e=>equipmentMetricText(e));
+    if(field==='series'){
+        const allAccessory=items.every(isAccessoryEquipment);
+        const allSerialized=items.every(e=>!isAccessoryEquipment(e));
+        if(allAccessory)return 'N/S';
+        if(allSerialized)return `${String(items.length).padStart(2,'0')} Séries`;
+        return 'Vários';
+    }
+    if(field==='type')return commonEquipmentGroupValue(items,e=>varsText(getProduct(e.productId)));
+    if(field==='status'){
+        const total=items.reduce((sum,e)=>sum+equipmentPhysicalUnits(e),0);
+        return `${String(total).padStart(2,'0')} Unidades`;
+    }
+    return '';
+}
+
+function compareEquipmentSortValues(a,b,field=''){
+    if(field==='type'){
+        const normalize=value=>String(value??'').trim().toLowerCase();
+        const rankOf=value=>{
+            const idx=EQUIPMENT_TYPE_SORT_ORDER.findIndex(type=>normalize(type)===normalize(value));
+            return idx===-1?Number.MAX_SAFE_INTEGER:idx;
+        };
+        const rankA=rankOf(a);
+        const rankB=rankOf(b);
+        const direction=equipmentSortState.direction==='desc'?1:-1;
+        if(rankA!==rankB)return (rankA-rankB)*direction;
+        return String(a??'').localeCompare(String(b??''),'pt-BR',{numeric:true,sensitivity:'base'})*direction;
+    }
+    const direction=equipmentSortState.direction==='desc'?-1:1;
+    return String(a??'').localeCompare(String(b??''),'pt-BR',{numeric:true,sensitivity:'base'})*direction;
+}
+
+document.addEventListener('click',event=>{
+    if(!event.target.closest('.equipment-sort-menu')&&!event.target.closest('.equipment-sort-btn')){
+        closeEquipmentSortMenus();
+    }
+});
 
 function renderEquipmentTable(){
     const search=normalizeEquipmentSearch($('filterSearch').value);
@@ -3459,16 +3580,19 @@ function renderEquipmentTable(){
 
     const displayGroups=[...groups.values()];
     displayGroups.sort((a,b)=>{
-        const codeCompare=String(a.items[0]?.code||'').localeCompare(String(b.items[0]?.code||''),'pt-BR',{numeric:true});
-        if(codeCompare)return codeCompare;
-        const ap=productSiteName(getProduct(a.items[0]?.productId));
-        const bp=productSiteName(getProduct(b.items[0]?.productId));
-        return ap.localeCompare(bp,'pt-BR');
+        const primary=compareEquipmentSortValues(
+            equipmentSortValueFromGroup(a,equipmentSortState.field),
+            equipmentSortValueFromGroup(b,equipmentSortState.field),
+            equipmentSortState.field
+        );
+        if(primary)return primary;
+        return String(a.items[0]?.code||'').localeCompare(String(b.items[0]?.code||''),'pt-BR',{numeric:true,sensitivity:'base'});
     });
 
     $('equipmentTable').innerHTML=displayGroups.length
         ?displayGroups.map(group=>group.items.length===1?renderSingleEquipmentRow(group.items[0]):renderEquipmentCodeGroup(group)).join('')
         :'<tr><td colspan="8"><div class="empty">Nenhum equipamento encontrado.</div></td></tr>';
+    updateEquipmentSortIndicators();
 }
 function clearEquipmentFilters(){$('filterSearch').value='';$('filterStatus').value='';$('filterVariable').value='';renderEquipmentTable()}
 
