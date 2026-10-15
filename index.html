@@ -5,6 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ERPSP | CPE Tecnologia</title>
+  <!-- v2.9.6 -->
 <style>
 :root{
     --bg:#f1f1f1;
@@ -72,6 +73,29 @@ button,input,select{font:inherit}button{cursor:pointer}
 .equipment-child-row>td{padding:0;border-bottom:0;background:transparent}
 .equipment-child-inner{margin-left:0;width:100%;background:#f6f7f8;border-bottom:1px dashed #dde2e5;display:grid;grid-template-columns:76px 100px minmax(0,calc(100% - 1069px)) 92px 118px 118px 122px 443px;align-items:center}
 .equipment-child-slot{padding:9px 14px;min-width:0}
+
+.equipment-table th,.equipment-table td,.equipment-child-slot{font-weight:700}
+.equipment-table .btn{font-weight:700}
+.equipment-cell-chip{display:flex;align-items:center;justify-content:center;width:100%;min-height:30px;box-sizing:border-box;padding:4px 8px;border:0;border-radius:8px;background:#eef1f3;color:#27323a;font:inherit;font-size:12px;font-weight:700;line-height:1.15;text-align:center;white-space:nowrap;overflow:hidden;cursor:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%3E%0A%3Crect%20x%3D%228%22%20y%3D%225%22%20width%3D%229%22%20height%3D%2211%22%20rx%3D%221.5%22%20fill%3D%22white%22%20stroke%3D%22%2327323a%22%20stroke-width%3D%221.8%22%2F%3E%0A%3Crect%20x%3D%225%22%20y%3D%228%22%20width%3D%229%22%20height%3D%2211%22%20rx%3D%221.5%22%20fill%3D%22white%22%20stroke%3D%22%2327323a%22%20stroke-width%3D%221.8%22%2F%3E%0A%3C%2Fsvg%3E") 6 6,copy}
+.equipment-cell-chip *{font-size:12px;font-weight:700}
+.equipment-cell-chip-text{display:block;min-width:0;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:12px}
+.equipment-cell-chip .badge{background:transparent!important;color:inherit!important;padding:0;box-shadow:none;font-size:12px}
+.equipment-cell-chip:hover{filter:brightness(.98)}
+.equipment-cell-chip:focus-visible{outline:2px solid rgba(39,50,58,.28);outline-offset:1px}
+.equipment-cell-chip:active{cursor:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2218%22%20height%3D%2218%22%20viewBox%3D%220%200%2018%2018%22%3E%0A%3Crect%20x%3D%226%22%20y%3D%224%22%20width%3D%227%22%20height%3D%228.5%22%20rx%3D%221.2%22%20fill%3D%22white%22%20stroke%3D%22%2327323a%22%20stroke-width%3D%221.5%22%2F%3E%0A%3Crect%20x%3D%224%22%20y%3D%226%22%20width%3D%227%22%20height%3D%228.5%22%20rx%3D%221.2%22%20fill%3D%22white%22%20stroke%3D%22%2327323a%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E") 5 5,copy}
+.copy-toast{position:fixed;right:18px;bottom:18px;z-index:99999;display:flex;align-items:center;gap:6px;padding:7px 10px;border-radius:7px;background:rgba(39,50,58,.92);color:#fff;font-size:12px;font-weight:700;line-height:1;box-shadow:0 4px 14px rgba(0,0,0,.16);opacity:0;transform:translateY(6px);pointer-events:none;transition:opacity .14s ease,transform .14s ease}
+.copy-toast.show{opacity:1;transform:translateY(0)}
+
+.equipment-overflow-tooltip{position:fixed;z-index:100000;max-width:min(520px,calc(100vw - 24px));padding:7px 10px;border-radius:7px;background:rgba(39,50,58,.96);color:#fff;font-size:12px;font-weight:700;line-height:1.25;white-space:normal;overflow-wrap:anywhere;box-shadow:0 5px 16px rgba(0,0,0,.18);pointer-events:none;opacity:0;transform:translateY(3px);transition:opacity .1s ease,transform .1s ease}
+.equipment-overflow-tooltip.show{opacity:1;transform:translateY(0)}
+
+.equipment-status-chip{background:var(--success-bg);color:var(--success)}
+.equipment-status-chip .badge{background:transparent!important;color:inherit!important;padding:0;box-shadow:none}
+.equipment-cell-chip.no-copy{cursor:default}
+.equipment-cell-chip.no-copy:hover{filter:none}
+
+.equipment-group-row>td:nth-child(2) .badge,.equipment-group-row>td:nth-child(5) .badge{transform:none}
+
 .equipment-child-slot-key{display:flex;align-items:center;justify-content:center;padding-left:22px}
 .equipment-child-slot-empty{min-height:1px}
 .equipment-child-slot-actions{min-width:0}
@@ -3237,10 +3261,120 @@ function toggleEquipmentActions(wrapperId,button,equipmentId){
     button.setAttribute('aria-label',expanded?'Recolher ações':'Expandir ações');
 }
 
+function equipmentCellCopyText(content){
+    const box=document.createElement('div');
+    box.innerHTML=String(content??'');
+    return (box.textContent||'').trim();
+}
+
+function equipmentCellChipHtml(content,status=false,mode='copy'){
+    const copyText=encodeURIComponent(equipmentCellCopyText(content));
+    const statusClass=status?' equipment-status-chip':'';
+    const wrapped=`<span class="equipment-cell-chip-text">${content}</span>`;
+    if(mode==='disabled'){
+        return `<div class="equipment-cell-chip no-copy${statusClass}" onmouseenter="showEquipmentOverflowTooltip(this)" onmouseleave="hideEquipmentOverflowTooltip()">${wrapped}</div>`;
+    }
+    const noSeries=mode==='no-series';
+    const noInfo=mode==='no-info';
+    const copyMode=noSeries?'no-series':(noInfo?'no-info':'copy');
+    const ariaLabel=noSeries?'Sem série para copiar':(noInfo?'Sem informação para copiar':`Copiar ${copyText}`);
+    return `<button type="button" class="equipment-cell-chip${statusClass}" data-copy="${copyText}" data-copy-mode="${copyMode}" aria-label="${ariaLabel}" onmouseenter="showEquipmentOverflowTooltip(this)" onmouseleave="hideEquipmentOverflowTooltip()" onclick="copyEquipmentCell(this)">${wrapped}</button>`;
+}
+
+let equipmentOverflowTooltip=null;
+
+function hideEquipmentOverflowTooltip(){
+    if(equipmentOverflowTooltip)equipmentOverflowTooltip.classList.remove('show');
+}
+
+function showEquipmentOverflowTooltip(chip){
+    const textEl=chip?.querySelector?.('.equipment-cell-chip-text');
+    if(!textEl)return;
+    if(textEl.scrollWidth<=textEl.clientWidth+1){
+        hideEquipmentOverflowTooltip();
+        return;
+    }
+
+    if(!equipmentOverflowTooltip){
+        equipmentOverflowTooltip=document.createElement('div');
+        equipmentOverflowTooltip.className='equipment-overflow-tooltip';
+        document.body.appendChild(equipmentOverflowTooltip);
+    }
+
+    equipmentOverflowTooltip.textContent=(textEl.textContent||'').trim();
+    const rect=chip.getBoundingClientRect();
+    const gap=7;
+
+    equipmentOverflowTooltip.style.left='0px';
+    equipmentOverflowTooltip.style.top='0px';
+    equipmentOverflowTooltip.classList.add('show');
+
+    const tipRect=equipmentOverflowTooltip.getBoundingClientRect();
+    let left=rect.left+(rect.width-tipRect.width)/2;
+    left=Math.max(12,Math.min(left,window.innerWidth-tipRect.width-12));
+
+    let top=rect.top-tipRect.height-gap;
+    if(top<12)top=rect.bottom+gap;
+
+    equipmentOverflowTooltip.style.left=`${Math.round(left)}px`;
+    equipmentOverflowTooltip.style.top=`${Math.round(top)}px`;
+}
+
+let copyToastTimer=null;
+
+function showCopyToast(message='Copiado',warning=false){
+    let el=$('copyToast');
+    if(!el){
+        el=document.createElement('div');
+        el.id='copyToast';
+        el.className='copy-toast';
+        document.body.appendChild(el);
+    }
+    el.innerHTML=`<span aria-hidden="true">${warning?'⚠':'✓'}</span><span>${esc(message)}</span>`;
+    clearTimeout(copyToastTimer);
+    el.classList.remove('show');
+    void el.offsetWidth;
+    el.classList.add('show');
+    copyToastTimer=setTimeout(()=>el.classList.remove('show'),900);
+}
+
+async function copyEquipmentCell(button){
+    if(button?.dataset?.copyMode==='no-series'){
+        showCopyToast('Não há série a ser copiada',true);
+        return;
+    }
+    if(button?.dataset?.copyMode==='no-info'){
+        showCopyToast('Não há informações para copiar',true);
+        return;
+    }
+    const text=decodeURIComponent(button?.dataset?.copy||'');
+    if(!text)return;
+    try{
+        if(navigator.clipboard?.writeText){
+            await navigator.clipboard.writeText(text);
+        }else{
+            const area=document.createElement('textarea');
+            area.value=text;
+            area.style.position='fixed';
+            area.style.opacity='0';
+            document.body.appendChild(area);
+            area.select();
+            document.execCommand('copy');
+            area.remove();
+        }
+        showCopyToast();
+    }catch(err){
+        toast('Não foi possível copiar.');
+    }
+}
+
 function renderSingleEquipmentRow(e){
     const p=getProduct(e.productId);
-    const seriesHtml=isAccessoryEquipment(e)?'N/S':`<strong>${esc(e.series)}</strong>`;
-    return `<tr><td data-label="Código">${esc(e.code)}</td><td data-label="Local">${esc(e.location)}</td><td data-label="Produto"><strong>${esc(productSiteName(p))}</strong></td><td data-label="Software">${equipmentMetricHtml(e)}</td><td data-label="Série">${seriesHtml}</td><td data-label="Tipo">${esc(varsText(p))}</td><td data-label="Status">${equipmentStatusHtml(e)}</td><td data-label="Ações">${equipmentRowActions(e)}</td></tr>`;
+    const nonSerialized=isAccessoryEquipment(e);
+    const seriesHtml=nonSerialized
+        ?'N/S'
+        :`<strong>${esc(e.series)}</strong>`;
+    return `<tr><td data-label="Código">${equipmentCellChipHtml(esc(e.code))}</td><td data-label="Local">${equipmentCellChipHtml(esc(e.location))}</td><td data-label="Produto">${equipmentCellChipHtml(`<strong>${esc(productSiteName(p))}</strong>`)}</td><td data-label="Software">${equipmentCellChipHtml(equipmentMetricHtml(e),false,'disabled')}</td><td data-label="Série">${equipmentCellChipHtml(seriesHtml,false,nonSerialized?'no-series':'copy')}</td><td data-label="Tipo">${equipmentCellChipHtml(esc(varsText(p)),false,'disabled')}</td><td data-label="Status">${equipmentCellChipHtml(equipmentStatusHtml(e),true,'disabled')}</td><td data-label="Ações">${equipmentRowActions(e)}</td></tr>`;
 }
 
 function renderEquipmentCodeGroup(group){
@@ -3262,14 +3396,16 @@ function renderEquipmentCodeGroup(group){
     const localHtml=localCount>1
         ?`<span class="badge badge-green">${esc(localCountText)}</span>`
         :esc(localText);
+    const localCopyMode=localCount>1?'no-info':'copy';
 
     const productText=commonEquipmentGroupValue(items,e=>productSiteName(getProduct(e.productId)));
     const softwareText=commonEquipmentGroupValue(items,e=>equipmentMetricText(e));
     const typeText=commonEquipmentGroupValue(items,e=>varsText(getProduct(e.productId)));
     const softwareHtml=softwareText==='Vários'?'Vários':equipmentMetricHtml(first);
     const seriesHtml=allAccessory?'N/S':(allSerialized?`<span class="badge badge-green">${esc(seriesText)}</span>`:'Vários');
+    const seriesCopyMode=allAccessory?'no-series':(allSerialized?'no-info':'copy');
 
-    let html=`<tr class="equipment-group-row"><td data-label="Código">${esc(first.code)}</td><td data-label="Local">${localHtml}</td><td data-label="Produto"><strong>${esc(productText)}</strong></td><td data-label="Software">${softwareHtml}</td><td data-label="Série">${seriesHtml}</td><td data-label="Tipo">${esc(typeText)}</td><td data-label="Status"><span class="badge badge-green">${esc(unitText)}</span></td><td data-label="Ações"><button class="btn btn-small equipment-group-toggle" onclick="toggleEquipmentGroup('${key}')">${expanded?'RECOLHER':'EXPANDIR'} <span class="group-arrow">${expanded?'▼':'▶'}</span></button></td></tr>`;
+    let html=`<tr class="equipment-group-row"><td data-label="Código">${equipmentCellChipHtml(esc(first.code))}</td><td data-label="Local">${equipmentCellChipHtml(localHtml,false,localCopyMode)}</td><td data-label="Produto">${equipmentCellChipHtml(`<strong>${esc(productText)}</strong>`)}</td><td data-label="Software">${equipmentCellChipHtml(softwareHtml,false,'disabled')}</td><td data-label="Série">${equipmentCellChipHtml(seriesHtml,false,seriesCopyMode)}</td><td data-label="Tipo">${equipmentCellChipHtml(esc(typeText),false,'disabled')}</td><td data-label="Status">${equipmentCellChipHtml(`<span class="badge badge-green">${esc(unitText)}</span>`,true,'disabled')}</td><td data-label="Ações"><button class="btn btn-small equipment-group-toggle" onclick="toggleEquipmentGroup('${key}')">${expanded?'RECOLHER':'EXPANDIR'} <span class="group-arrow">${expanded?'▼':'▶'}</span></button></td></tr>`;
 
     if(expanded){
         const rows=items.slice().sort((a,b)=>{
@@ -3286,7 +3422,7 @@ function renderEquipmentCodeGroup(group){
             const firstChild=index===0;
             const last=index===rows.length-1;
             const seriesChildHtml=isAccessoryEquipment(e)?'-':`<strong>${esc(e.series)}</strong>`;
-            return `<tr class="equipment-child-row"><td colspan="8"><div class="equipment-child-inner"><div class="equipment-child-slot equipment-child-slot-key"><span class="equipment-branch${firstChild?' first':''}${last?' last':''}" aria-hidden="true"></span></div><div class="equipment-child-slot" data-label="Local">${esc(e.location)}</div><div class="equipment-child-slot" data-label="Produto"><strong>${esc(productSiteName(p))}</strong></div><div class="equipment-child-slot" data-label="Software">${equipmentMetricHtml(e)}</div><div class="equipment-child-slot" data-label="Série" style="transform:translateX(-15px)">${seriesChildHtml}</div><div class="equipment-child-slot" data-label="Tipo">-</div><div class="equipment-child-slot" data-label="Status">${equipmentStatusHtml(e)}</div><div class="equipment-child-slot equipment-child-slot-actions" data-label="Ações">${equipmentRowActions(e)}</div></div></td></tr>`;
+            return `<tr class="equipment-child-row"><td colspan="8"><div class="equipment-child-inner"><div class="equipment-child-slot equipment-child-slot-key"><span class="equipment-branch${firstChild?' first':''}${last?' last':''}" aria-hidden="true"></span></div><div class="equipment-child-slot" data-label="Local">${equipmentCellChipHtml(esc(e.location))}</div><div class="equipment-child-slot" data-label="Produto">${equipmentCellChipHtml(`<strong>${esc(productSiteName(p))}</strong>`)}</div><div class="equipment-child-slot" data-label="Software">${equipmentCellChipHtml(equipmentMetricHtml(e),false,'disabled')}</div><div class="equipment-child-slot" data-label="Série">${equipmentCellChipHtml(seriesChildHtml,false,isAccessoryEquipment(e)?'no-series':'copy')}</div><div class="equipment-child-slot" data-label="Tipo">${equipmentCellChipHtml('-',false,'disabled')}</div><div class="equipment-child-slot" data-label="Status">${equipmentCellChipHtml(equipmentStatusHtml(e),true,'disabled')}</div><div class="equipment-child-slot equipment-child-slot-actions" data-label="Ações">${equipmentRowActions(e)}</div></div></td></tr>`;
         }).join('');
     }
     return html;
