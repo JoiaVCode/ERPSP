@@ -5,7 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ERPSP | CPE Tecnologia</title>
-<!-- v2.10.6 -->
+<!-- v2.10.7 -->
 <style>
 :root{
     --bg:#f1f1f1;
@@ -4065,7 +4065,7 @@ function printKitLabel(id){if(!requirePermission('kits.print'))return;
     $('printLabelEquipmentList').innerHTML=serialized.map(e=>{
         const p=getProduct(e.productId);
         const metric=e.type||hceText(e)||'';
-        return `<div class="selected-item"><div><strong>${esc(e.code)} · ${esc(e.location)} · ${esc(productSiteName(p))}${metric?' · '+esc(metric):''}</strong><div class="hint">S/N: ${esc(e.series)}</div></div><button class="btn btn-small btn-primary" onclick="generateEquipmentLabel('${k.id}','${e.id}')">IMPRIMIR IDENTIFICAÇÃO</button></div>`;
+        return `<div class="selected-item"><div><strong>${esc(e.code)} · ${esc(e.location)} · ${esc(productSiteName(p))}${metric?' · '+esc(metric):''}</strong><div class="hint">S/N: ${esc(e.series)}</div></div><div class="table-actions"><button class="btn btn-small btn-primary" onclick="generateEquipmentLabel('${k.id}','${e.id}')">IMPRIMIR IDENTIFICAÇÃO</button><button class="btn btn-small btn-primary" onclick="generateKitEquipmentLocalLabel('${k.id}','${e.id}')">IMPRIMIR LOCAL</button></div></div>`;
     }).join('');
     openModal('printLabelModal');
 }
@@ -4080,6 +4080,25 @@ function generateEquipmentLabel(kitId,equipmentId){
 
     try{openPdfBytes(buildKitLabelPdf(k,serialized,selected),`${k.name} - ${selected.code} - Identificação`)}
     catch(err){console.error(err);toast('Não foi possível gerar o QR Code/PDF da identificação.')}
+}
+
+function generateKitEquipmentLocalLabel(kitId,equipmentId){
+    if(!requirePermission('kits.print'))return;
+    const k=state.kits.find(x=>x.id===kitId);
+    const selected=getEquipment(equipmentId);
+    if(!k||!selected){toast('Kit ou equipamento não encontrado.');return}
+    if(!k.equipmentIds.includes(selected.id)){toast('O equipamento não pertence mais a este kit.');return}
+
+    const local=String(selected.location||'').trim();
+    if(!local){toast('Este equipamento não possui local cadastrado.');return}
+    if(Array.from(local).length>16){toast('O local deve ter no máximo 16 caracteres.');return}
+
+    try{
+        openPdfBytes(buildLocalLabelPdf(local),`Local - ${local}`);
+    }catch(err){
+        console.error(err);
+        toast('Não foi possível gerar a etiqueta de local.');
+    }
 }
 function clearKitFilters(){['kitFilterName','kitFilterCreatedFrom','kitFilterCreatedTo','kitFilterUpdatedFrom','kitFilterUpdatedTo'].forEach(id=>$(id).value='');$('kitFilterNtrip').value='';renderKits()}
 
