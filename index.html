@@ -4,8 +4,8 @@
 <link rel="icon" href="favicon.ico" type="image/x-icon">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ERPSP | CPE Tecnologia</title>
-<!-- v2.10.7 -->
+<title>ERP | Giocapo</title>
+<!-- v3.11.3 -->
 <style>
 :root{
     --bg:#f1f1f1;
@@ -443,11 +443,11 @@ body.role-admin .admin-only.grid{display:grid!important}
 }
 .boot-spinner{
  width:22px;height:22px;border:3px solid #ddd;border-top-color:var(--primary);
- border-radius:50%;animation:erpsp-spin .75s linear infinite;flex:0 0 auto
+ border-radius:50%;animation:giocapo-spin .75s linear infinite;flex:0 0 auto
 }
 .boot-text strong{display:block;font-size:13px}
 .boot-text span{display:block;margin-top:3px;color:var(--muted);font-size:11px}
-@keyframes erpsp-spin{to{transform:rotate(360deg)}}
+@keyframes giocapo-spin{to{transform:rotate(360deg)}}
 
 .auth-quick-tools{margin-top:12px;text-align:center}
 .auth-quick-button{
@@ -492,6 +492,50 @@ body.guest-calculator-mode #mainApp .container{padding-top:24px}
     }
 }
 
+
+/* ===== v3.10.7 · Identidade, perfil e aprovações de usuários ===== */
+.header-actions button.user-name-button{border:0;background:transparent;padding:0;margin:0;color:#fff;font:inherit;font-weight:800;text-align:right;cursor:pointer;max-width:210px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;box-shadow:none;outline:none;appearance:none;-webkit-appearance:none;border-radius:0;min-height:0}
+.header-actions button.user-name-button:hover{background:transparent;border:0;box-shadow:none;text-decoration:underline}
+.header-actions button.user-name-button:focus,.header-actions button.user-name-button:focus-visible,.header-actions button.user-name-button:active{border:0;box-shadow:none;outline:none;background:transparent}
+.account-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.account-card{padding:18px}
+.account-card h3{margin:0 0 15px;font-size:16px}
+.account-info{display:grid;grid-template-columns:170px 1fr;gap:10px 14px;align-items:center}
+.account-info dt{font-size:11px;font-weight:800;color:var(--muted)}
+.account-info dd{margin:0;font-size:13px;font-weight:600;min-width:0;overflow-wrap:anywhere}
+.account-name-change{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;margin-top:8px}
+.account-name-change input{min-height:42px}
+.users-toolbar{display:flex;gap:8px;align-items:flex-end;margin-bottom:14px}
+.users-toolbar .field{flex:1}
+.users-title-actions{display:flex;gap:8px;flex-wrap:wrap}
+.approval-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.approval-tabs .btn.active{background:var(--primary-soft);border-color:var(--primary)}
+.approval-list{display:grid;gap:10px}
+.approval-card{padding:14px;border:1px solid var(--border);border-radius:9px;background:#fff}
+.approval-card-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:11px}
+.approval-kind{font-size:10px;font-weight:900;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+.approval-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.approval-fields .full{grid-column:1/-1}
+.approval-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:12px}
+.password-strength{display:grid;gap:5px;margin-top:5px}
+.password-strength-track{height:6px;border-radius:999px;background:#e3e6e8;overflow:hidden}
+.password-strength-fill{height:100%;width:0;background:#8b9297;transition:width .18s ease}
+.password-strength[data-level="2"] .password-strength-fill{background:#b48614}
+.password-strength[data-level="3"] .password-strength-fill,.password-strength[data-level="4"] .password-strength-fill{background:#4f8f4f}
+.password-strength-label{font-size:10px;font-weight:700;color:var(--muted)}
+.auth-recovery-link{margin-top:12px;text-align:center}
+@media(max-width:760px){
+ .account-grid{grid-template-columns:1fr}
+ .account-info{grid-template-columns:1fr;gap:4px}
+ .account-info dd{margin-bottom:8px}
+ .account-name-change{grid-template-columns:1fr}
+ .users-toolbar{flex-direction:column;align-items:stretch}
+ .users-title-actions{width:100%;display:grid;grid-template-columns:1fr 1fr}
+ .approval-fields{grid-template-columns:1fr}
+ .approval-actions{display:grid;grid-template-columns:1fr 1fr}
+ .user-name-button{text-align:left}
+}
+
 </style>
 </head>
 <body>
@@ -501,7 +545,7 @@ body.guest-calculator-mode #mainApp .container{padding-top:24px}
   <div class="boot-card">
     <div class="boot-spinner" aria-hidden="true"></div>
     <div class="boot-text">
-      <strong>ERPSP</strong>
+      <strong>Giocapo</strong>
       <span>Verificando sessão...</span>
     </div>
   </div>
@@ -514,7 +558,7 @@ body.guest-calculator-mode #mainApp .container{padding-top:24px}
 
       <section id="loginView" class="auth-view active">
         <div class="auth-brand">
-          <h1>Entrar no ERPSP</h1>
+          <h1>Entrar no Giocapo</h1>
           <p>Acesse o controle de equipamentos, kits e ferramentas.</p>
         </div>
 
@@ -538,6 +582,7 @@ body.guest-calculator-mode #mainApp .container{padding-top:24px}
         </form>
 
         <div id="authMessage" class="auth-message"></div>
+        <div class="auth-recovery-link"><button class="auth-link" type="button" onclick="openForgotPasswordModal()">Esqueci minha senha</button></div>
 
         <div class="auth-switch">
           Ainda não tem acesso?
@@ -553,7 +598,7 @@ body.guest-calculator-mode #mainApp .container{padding-top:24px}
 
         <div class="auth-brand">
           <h1>Criar acesso</h1>
-          <p>Preencha seus dados para solicitar acesso ao ERPSP.</p>
+          <p>Preencha seus dados para solicitar acesso ao Giocapo.</p>
         </div>
 
         <form class="auth-form" onsubmit="signupWithEmail(event)">
@@ -571,15 +616,16 @@ body.guest-calculator-mode #mainApp .container{padding-top:24px}
           <div class="auth-field">
             <label for="signupPassword">Senha</label>
             <div class="auth-input-wrap">
-              <input id="signupPassword" class="auth-password-input" type="password" autocomplete="new-password" minlength="6" required placeholder="Mínimo de 6 caracteres">
+              <input id="signupPassword" class="auth-password-input" type="password" autocomplete="new-password" minlength="8" required placeholder="Mínimo de 8 caracteres" oninput="updatePasswordStrength('signupPassword','signupPasswordStrength')">
               <button class="auth-eye" type="button" onclick="togglePasswordVisibility('signupPassword',this)" aria-label="Mostrar ou ocultar senha">◉</button>
             </div>
+            <div id="signupPasswordStrength" class="password-strength" data-level="0"><div class="password-strength-track"><div class="password-strength-fill"></div></div><div class="password-strength-label">Use 8+ caracteres, maiúscula, minúscula e número.</div></div>
           </div>
 
           <div class="auth-field">
             <label for="signupPasswordConfirm">Confirmar senha</label>
             <div class="auth-input-wrap">
-              <input id="signupPasswordConfirm" class="auth-password-input" type="password" autocomplete="new-password" minlength="6" required placeholder="Digite a senha novamente">
+              <input id="signupPasswordConfirm" class="auth-password-input" type="password" autocomplete="new-password" minlength="8" required placeholder="Digite a senha novamente">
               <button class="auth-eye" type="button" onclick="togglePasswordVisibility('signupPasswordConfirm',this)" aria-label="Mostrar ou ocultar senha">◉</button>
             </div>
           </div>
@@ -591,12 +637,40 @@ body.guest-calculator-mode #mainApp .container{padding-top:24px}
         <div class="auth-note">Novos acessos ficam pendentes até liberação por um administrador.</div>
       </section>
 
+      <section id="recoveryPasswordView" class="auth-view">
+        <div class="auth-brand">
+          <h1>Definir nova senha</h1>
+          <p>Crie uma nova senha para sua conta do Giocapo.</p>
+        </div>
+        <form class="auth-form" onsubmit="finishPasswordRecovery(event)">
+          <div class="auth-field">
+            <label for="recoveryNewPassword">Nova senha</label>
+            <div class="auth-input-wrap">
+              <input id="recoveryNewPassword" class="auth-password-input" type="password" autocomplete="new-password" minlength="8" required placeholder="Mínimo de 8 caracteres" oninput="updatePasswordStrength('recoveryNewPassword','recoveryPasswordStrength')">
+              <button class="auth-eye" type="button" onclick="togglePasswordVisibility('recoveryNewPassword',this)" aria-label="Mostrar ou ocultar senha">◉</button>
+            </div>
+            <div id="recoveryPasswordStrength" class="password-strength" data-level="0"><div class="password-strength-track"><div class="password-strength-fill"></div></div><div class="password-strength-label">Use 8+ caracteres, maiúscula, minúscula e número.</div></div>
+          </div>
+          <div class="auth-field">
+            <label for="recoveryConfirmPassword">Confirmar nova senha</label>
+            <div class="auth-input-wrap">
+              <input id="recoveryConfirmPassword" class="auth-password-input" type="password" autocomplete="new-password" minlength="8" required placeholder="Digite a senha novamente">
+              <button class="auth-eye" type="button" onclick="togglePasswordVisibility('recoveryConfirmPassword',this)" aria-label="Mostrar ou ocultar senha">◉</button>
+            </div>
+          </div>
+          <button id="recoveryPasswordButton" class="btn btn-primary auth-submit" type="submit">SALVAR NOVA SENHA</button>
+        </form>
+        <div id="recoveryPasswordMessage" class="auth-message"></div>
+      </section>
+
     </div>
   </div>
 </div>
 
+<div id="forgotPasswordModal" class="modal-backdrop"><div class="modal"><div class="modal-head"><h3>Recuperar senha</h3><button class="close" onclick="closeModal('forgotPasswordModal')">×</button></div><div class="modal-body"><form id="forgotPasswordForm" onsubmit="sendPasswordRecovery(event)"><div class="field"><label>E-mail</label><input id="forgotPasswordEmail" type="email" autocomplete="email" required placeholder="voce@empresa.com"><div class="hint">Enviaremos um link para definir uma nova senha.</div></div></form><div id="forgotPasswordMessage" class="auth-message"></div></div><div class="modal-footer"><button class="btn" onclick="closeModal('forgotPasswordModal')">CANCELAR</button><button id="forgotPasswordButton" class="btn btn-primary" onclick="document.getElementById('forgotPasswordForm').requestSubmit()">ENVIAR LINK</button></div></div></div>
+
 <div id="mainApp" class="app auth-locked">
-<header class="header"><div class="header-inner"><div class="brand"><img class="brand-logo" src="assets/logo.png" alt="CPE Tecnologia"><div class="brand-text"><h1>ERPSP</h1><p>Organização e controle de equipamentos de estoque</p></div></div><div class="header-actions"><button class="btn" data-permission="data.export" onclick="exportData()">EXPORTAR</button><button class="btn" data-permission="data.import" onclick="document.getElementById('importFile').click()">IMPORTAR</button><input id="importFile" type="file" accept="application/json" hidden onchange="importData(event)"><div class="user-area"><div class="user-chip"><strong id="currentUserName">Usuário</strong><span id="currentUserRole">-</span></div><div id="syncStatus" class="sync-status" data-state="local"><span class="sync-dot"></span><span id="syncStatusText">Local</span></div><button class="btn" onclick="logoutUser()">SAIR</button></div></div></div></header>
+<header class="header"><div class="header-inner"><div class="brand"><img class="brand-logo" src="assets/logo.png" alt="CPE Tecnologia"><div class="brand-text"><h1>Giocapo</h1><p>Organização e controle de equipamentos de estoque</p></div></div><div class="header-actions"><button class="btn" data-permission="data.export" onclick="exportData()">EXPORTAR</button><button class="btn" data-permission="data.import" onclick="document.getElementById('importFile').click()">IMPORTAR</button><input id="importFile" type="file" accept="application/json" hidden onchange="importData(event)"><div class="user-area"><div class="user-chip"><button id="currentUserName" class="user-name-button" type="button" onclick="openAccountPage()">Usuário</button><span id="currentUserRole">-</span></div><div id="syncStatus" class="sync-status" data-state="local"><span class="sync-dot"></span><span id="syncStatusText">Local</span></div><button class="btn" onclick="logoutUser()">SAIR</button></div></div></div></header>
 <main class="container">
 <nav class="nav"><button class="active" data-page="equipamentos">Equipamentos</button><button data-page="produtos">Produtos</button><button data-page="montar">Montar Kit</button><button data-page="kits">Kits Ativos</button><button data-page="calculadora">Calculadora de Diárias</button><button id="usersNavButton" class="admin-only" data-page="usuarios">Usuários</button><button id="permissionsNavButton" class="admin-only" data-page="permissoes">Permissões</button><button data-page="dados">Dados</button></nav>
 <div id="readonlyBanner" class="readonly-banner permission-note">Seu perfil é de <strong>Consulta</strong>. Você pode visualizar dados, imprimir etiquetas, exportar backups e usar a calculadora, mas alterações de estoque estão bloqueadas.</div>
@@ -639,9 +713,10 @@ body.guest-calculator-mode #mainApp .container{padding-top:24px}
 </section>
 <section id="usuarios" class="page">
 <div class="page-title">
-  <div><h2>Usuários</h2><p>Libere acessos, altere perfis e desative contas do ERPSP.</p></div>
-  <button class="btn" onclick="renderUsersPage()">ATUALIZAR</button>
+  <div><h2>Usuários</h2><p>Libere acessos, altere perfis e desative contas do Giocapo.</p></div>
+  <div class="users-title-actions"><button id="pendingApprovalsButton" class="btn" onclick="openPendingApprovals()">APROVAÇÕES PENDENTES</button><button class="btn" onclick="renderUsersPage()">ATUALIZAR</button></div>
 </div>
+<div class="users-toolbar"><div class="field"><label>Pesquisar usuários</label><input id="usersSearch" placeholder="Nome, e-mail, cargo ou status..." oninput="filterUsersPage()"></div></div>
 <div class="permission-note" style="margin-bottom:14px">
   <strong>Administrador</strong>: acesso completo e gestão de usuários. &nbsp;
   <strong>Operador</strong>: altera estoque, produtos e kits. &nbsp;
@@ -653,7 +728,7 @@ body.guest-calculator-mode #mainApp .container{padding-top:24px}
 <div class="page-title">
   <div>
     <h2>Permissões</h2>
-    <p>Configure o que cada cargo pode visualizar e executar no ERPSP.</p>
+    <p>Configure o que cada cargo pode visualizar e executar no Giocapo.</p>
   </div>
   <button class="btn" onclick="renderPermissionsPage()">RECARREGAR</button>
 </div>
@@ -663,6 +738,33 @@ body.guest-calculator-mode #mainApp .container{padding-top:24px}
 <div id="permissionsPageContent" class="permissions-grid"></div>
 <div class="permissions-actions">
   <button class="btn btn-primary" onclick="saveRolePermissions()">SALVAR PERMISSÕES</button>
+</div>
+</section>
+
+<section id="conta" class="page">
+<div class="page-title">
+  <div><h2>Minha conta</h2><p>Consulte seus dados e gerencie sua senha e nome de exibição.</p></div>
+  <button class="btn" type="button" onclick="closeAccountPage()">VOLTAR</button>
+</div>
+<div class="account-grid">
+  <div class="card account-card">
+    <h3>Perfil</h3>
+    <dl class="account-info">
+      <dt>Nome de exibição</dt><dd id="accountDisplayName">-</dd>
+      <dt>E-mail</dt><dd id="accountEmail">-</dd>
+      <dt>Cargo</dt><dd id="accountRole">-</dd>
+      <dt>Conta criada em</dt><dd id="accountCreatedAt">-</dd>
+    </dl>
+  </div>
+  <div class="card account-card">
+    <h3>Alterar nome de exibição</h3>
+    <div class="field"><label for="accountRequestedName">Novo nome</label><div class="account-name-change"><input id="accountRequestedName" minlength="3" maxlength="40" placeholder="EX.: João Silva" oninput="sanitizeProfileDisplayNameInput(this)"><button id="accountNameRequestButton" class="btn btn-primary" type="button" onclick="requestDisplayNameChange()">PEDIR APROVAÇÃO</button></div><div class="hint">Use apenas letras e espaços. A alteração precisa ser aprovada por um administrador.</div></div>
+  </div>
+  <div class="card account-card">
+    <h3>Segurança</h3>
+    <p class="hint" style="margin-top:0">A troca de senha exige a confirmação da senha atual.</p>
+    <button class="btn btn-primary" type="button" onclick="openChangePasswordModal()">TROCAR SENHA</button>
+  </div>
 </div>
 </section>
 <section id="dados" class="page">
@@ -694,6 +796,10 @@ body.guest-calculator-mode #mainApp .container{padding-top:24px}
 
 <div id="printLabelModal" class="modal-backdrop"><div class="modal wide"><div class="modal-head"><h3 id="printLabelTitle">Imprimir identificação</h3><button class="close" onclick="closeModal('printLabelModal')">×</button></div><div class="modal-body"><p class="hint" style="margin-top:0">Selecione o equipamento que será destacado na etiqueta. A identificação completa do kit ficará na etiqueta esquerda.</p><div id="printLabelEquipmentList" class="selected-list"></div></div><div class="modal-footer"><button class="btn btn-primary" onclick="printCompleteKitFromModal()">IMPRIMIR KIT COMPLETO</button><button class="btn" onclick="closeModal('printLabelModal')">FECHAR</button></div></div></div>
 
+
+<div id="changePasswordModal" class="modal-backdrop"><div class="modal"><div class="modal-head"><h3>Trocar senha</h3><button class="close" onclick="closeModal('changePasswordModal')">×</button></div><div class="modal-body"><form id="changePasswordForm" onsubmit="changeOwnPassword(event)"><div class="form-grid"><div class="field full"><label>Senha atual</label><div class="auth-input-wrap"><input id="currentPasswordValue" class="auth-password-input" type="password" autocomplete="current-password" required><button class="auth-eye" type="button" onclick="togglePasswordVisibility('currentPasswordValue',this)" aria-label="Mostrar ou ocultar senha">◉</button></div></div><div class="field full"><label>Nova senha</label><div class="auth-input-wrap"><input id="newPasswordValue" class="auth-password-input" type="password" autocomplete="new-password" minlength="8" required oninput="updatePasswordStrength('newPasswordValue','changePasswordStrength')"><button class="auth-eye" type="button" onclick="togglePasswordVisibility('newPasswordValue',this)" aria-label="Mostrar ou ocultar senha">◉</button></div><div id="changePasswordStrength" class="password-strength" data-level="0"><div class="password-strength-track"><div class="password-strength-fill"></div></div><div class="password-strength-label">Use 8+ caracteres, maiúscula, minúscula e número.</div></div></div><div class="field full"><label>Confirmar nova senha</label><div class="auth-input-wrap"><input id="confirmNewPasswordValue" class="auth-password-input" type="password" autocomplete="new-password" minlength="8" required><button class="auth-eye" type="button" onclick="togglePasswordVisibility('confirmNewPasswordValue',this)" aria-label="Mostrar ou ocultar senha">◉</button></div></div></div></form><div id="changePasswordMessage" class="auth-message"></div></div><div class="modal-footer"><button class="btn" onclick="closeModal('changePasswordModal')">CANCELAR</button><button id="changePasswordButton" class="btn btn-primary" onclick="document.getElementById('changePasswordForm').requestSubmit()">ALTERAR SENHA</button></div></div></div>
+
+<div id="pendingApprovalsModal" class="modal-backdrop"><div class="modal wide"><div class="modal-head"><h3>Aprovações pendentes</h3><button class="close" onclick="closeModal('pendingApprovalsModal')">×</button></div><div class="modal-body"><div class="approval-tabs"><button class="btn active" data-approval-tab="all" onclick="setApprovalTab('all',this)">TODOS</button><button class="btn" data-approval-tab="activation" onclick="setApprovalTab('activation',this)">NOVOS USUÁRIOS</button><button class="btn" data-approval-tab="display_name" onclick="setApprovalTab('display_name',this)">ALTERAÇÃO DE NOME</button></div><div id="pendingApprovalsList" class="approval-list"></div></div><div class="modal-footer"><button class="btn" onclick="closeModal('pendingApprovalsModal')">FECHAR</button></div></div></div>
 <div id="confirmModal" class="modal-backdrop"><div class="modal"><div class="modal-head"><h3>Confirmar ação</h3><button class="close" onclick="closeModal('confirmModal')">×</button></div><div class="modal-body"><p id="confirmText"></p></div><div class="modal-footer"><button class="btn" onclick="closeModal('confirmModal')">CANCELAR</button><button id="confirmAction" class="btn btn-danger">CONFIRMAR</button></div></div></div>
 <div id="modalHora" class="calc-time-modal"><div class="calc-time-dialog"><h3>Informe a hora</h3><div class="calc-time-body"><input type="text" id="horaManual" maxlength="4" inputmode="numeric" placeholder="HHMM" oninput="atualizarPreviewHora()" onkeydown="if(event.key==='Enter') confirmarHora()"><div class="calc-time-preview" id="previewHora">--:--</div><div class="calc-time-actions"><button type="button" class="btn" onclick="cancelarHora()">CANCELAR</button><button type="button" class="btn btn-primary" onclick="confirmarHora()">CONFIRMAR</button></div></div></div></div>\n<div id="toast" class="toast"></div>
 <script>
@@ -2020,7 +2126,7 @@ const PERMISSION_GROUPS=[
 const ALL_PERMISSION_KEYS=PERMISSION_GROUPS.flatMap(g=>g.items.map(i=>i.key));
 let currentPermissions={};
 let rolePermissionsCache={admin:{},operator:{},viewer:{}};
-let pendingCloudAction='state.write';
+let pendingCloudAction='';
 let currentSession=null;
 let currentAccess=null;
 let cloudRevision=0;
@@ -2068,7 +2174,7 @@ function dateOnly(value){if(!value)return '';return new Date(value).toISOString(
 function esc(value){return String(value??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
 function varsText(p){return p?.variables?.length?p.variables.join(' · '):'Sem variável'}
 function hceText(e){const h=e?.hce||{};if(h.landstar&&h.smartgo)return 'LS/SMG';if(h.landstar)return 'LS';if(h.smartgo)return 'SMG';return ''}
-function equipmentMetricHtml(e){const p=getProduct(e?.productId);const out=[];if(p?.variables.includes('Receptor')&&e?.type)out.push(`<span class="badge badge-blue">${esc(e.type)}</span>`);if(p?.variables.includes('Coletora')){if(e?.hce?.landstar)out.push('<span class="badge badge-blue">Landstar</span>');if(e?.hce?.smartgo)out.push('<span class="badge badge-blue">SmartGO</span>')}return out.length?out.join(' '):'-'}
+function equipmentMetricHtml(e){const p=getProduct(e?.productId);const out=[];if(p?.variables.includes('Receptor')&&e?.type)out.push(`<span class="badge badge-blue">${esc(e.type)}</span>`);if(p?.variables.includes('Coletora')){if(e?.hce?.landstar&&e?.hce?.smartgo)out.push('<span class="badge badge-blue" data-tooltip-full="Landstar SmartGO">LS/SGO</span>');else if(e?.hce?.landstar)out.push('<span class="badge badge-blue">Landstar</span>');else if(e?.hce?.smartgo)out.push('<span class="badge badge-blue">SmartGO</span>')}return out.length?out.join(' '):'-'}
 function getProduct(id){return state.products.find(p=>p.id===id)}
 function productSiteName(p){return String(p?.displayName||p?.name||'Produto').trim()||'Produto'}
 function productLabelName(p){return String(p?.name||'Produto').trim()||'Produto'}
@@ -2083,14 +2189,14 @@ function ensureCodeRecord(code){
 }
 function getEquipment(id){return state.equipments.find(e=>e.id===id)}
 function isInKit(id){return state.kits.some(k=>k.equipmentIds.includes(id))}
-function save(actionKey='state.write'){
+function save(actionKey=''){
   localStorage.setItem(CONFIG.STORAGE_KEY,JSON.stringify(state));
   updateDashboard();updateCharts();
-  scheduleCloudSave(actionKey);
+  if(actionKey)scheduleCloudSave(actionKey);
 }
-function scheduleCloudSave(actionKey='state.write'){
-  if(!currentSession||!cloudReady||!currentAccess?.active)return;
-  pendingCloudAction=actionKey||'state.write';
+function scheduleCloudSave(actionKey=''){
+  if(!actionKey||!currentSession||!cloudReady||!currentAccess?.active)return;
+  pendingCloudAction=actionKey;
   pendingCloudSave=true;
   setSyncStatus(navigator.onLine?'syncing':'offline',navigator.onLine?'Sincronizando':'Offline');
   clearTimeout(syncTimer);
@@ -2200,7 +2306,7 @@ function startRealtimeSync(){
   if(!currentSession||!cloudReady||!currentAccess?.active)return;
 
   realtimeStateChannel=supabaseClient
-    .channel('erpsp-app-state-'+currentSession.user.id)
+    .channel('giocapo-app-state-'+currentSession.user.id)
     .on(
       'postgres_changes',
       {
@@ -2243,10 +2349,11 @@ async function flushCloudSave(){
   if(syncInFlight||!pendingCloudSave||!currentSession||!cloudReady)return;
   if(!navigator.onLine){setSyncStatus('offline','Offline');return}
   syncInFlight=true;pendingCloudSave=false;
-  const actionKey=pendingCloudAction||'state.write';
+  const actionKey=pendingCloudAction;
+  if(!actionKey){syncInFlight=false;return}
   try{
     const payload=cloneStateForCloud();
-    const {data,error}=await supabaseClient.rpc('save_erpsp_state',{
+    const {data,error}=await supabaseClient.rpc('save_giocapo_state',{
       action_key:actionKey,
       expected_revision:cloudRevision,
       new_data:payload,
@@ -2283,7 +2390,8 @@ function openModal(id){
     closeProductDropdown();
     const modal=$(id);
     if(!modal)return;
-    modalStackLevel+=10;
+    const minimumLevel=id==='forgotPasswordModal'?510:100;
+    modalStackLevel=Math.max(modalStackLevel,minimumLevel)+10;
     modal.style.zIndex=String(modalStackLevel);
     modal.classList.add('open');
 }
@@ -2577,28 +2685,26 @@ async function saveRolePermissions(){
   await renderPermissionsPage();
 }
 
-async function renderUsersPage(){
+let usersPageCache=[];
+let pendingApprovalCache={activations:[],changes:[]};
+let currentApprovalTab='all';
+
+function roleLabel(role){return role==='admin'?'Administrador':role==='operator'?'Operador':'Consulta'}
+function userStatusLabel(u){
+  if(u.approval_status==='pending')return 'Pendente';
+  if(u.approval_status==='rejected')return 'Recusado';
+  return u.active?'Ativo':'Desativado';
+}
+function renderUsersPageRows(list){
   const el=$('usersPageList');if(!el)return;
-  if(!canAdmin()){
-    el.innerHTML='<div class="card empty">Acesso restrito a administradores.</div>';
-    return;
-  }
-  el.innerHTML='<div class="card empty">Carregando usuários...</div>';
-  const {data,error}=await supabaseClient.from('app_users')
-    .select('user_id,email,display_name,role,active,created_at')
-    .order('created_at',{ascending:true});
-  if(error){
-    console.error('Falha ao listar usuários:',error);
-    el.innerHTML='<div class="card empty">Não foi possível carregar os usuários.</div>';
-    return;
-  }
-  el.innerHTML=data.length?data.map(u=>{
+  el.innerHTML=list.length?list.map(u=>{
     const self=currentSession?.user?.id===u.user_id;
-    const roleText=u.role==='admin'?'Administrador':u.role==='operator'?'Operador':'Consulta';
+    const status=userStatusLabel(u);
+    const statusClass=u.active?'user-status-active':'user-status-inactive';
     return `<div class="user-row">
       <div class="user-main user-name-editor">
         <div class="user-role-label">Nome de exibição</div>
-        <input id="userDisplayName_${u.user_id}" type="text" minlength="3" maxlength="40" value="${esc(u.display_name||'')}" placeholder="Nome de exibição">
+        <input id="userDisplayName_${u.user_id}" type="text" minlength="3" maxlength="40" value="${esc(u.display_name||'')}" placeholder="Nome de exibição" oninput="sanitizeProfileDisplayNameInput(this)">
         <small>${esc(u.email||'E-mail indisponível')}${self?' · você':''}</small>
       </div>
       <div>
@@ -2611,7 +2717,7 @@ async function renderUsersPage(){
       </div>
       <div>
         <div class="user-role-label">Status</div>
-        <div class="${u.active?'user-status-active':'user-status-inactive'}">${u.active?'Ativo':'Pendente / desativado'}</div>
+        <div class="${statusClass}">${esc(status)}</div>
       </div>
       <div>
         <label class="check" style="justify-content:center">
@@ -2623,51 +2729,132 @@ async function renderUsersPage(){
     </div>`;
   }).join(''):'<div class="card empty">Nenhum usuário encontrado.</div>';
 }
+function filterUsersPage(){
+  const q=normalizeEquipmentSearch($('usersSearch')?.value||'');
+  if(!q){renderUsersPageRows(usersPageCache);return}
+  const filtered=usersPageCache.filter(u=>normalizeEquipmentSearch([
+    u.display_name,u.email,roleLabel(u.role),userStatusLabel(u)
+  ].join(' ')).includes(q));
+  renderUsersPageRows(filtered);
+}
+async function renderUsersPage(){
+  const el=$('usersPageList');if(!el)return;
+  if(!canAdmin()){
+    el.innerHTML='<div class="card empty">Acesso restrito a administradores.</div>';
+    return;
+  }
+  el.innerHTML='<div class="card empty">Carregando usuários...</div>';
+  const {data,error}=await supabaseClient.from('app_users')
+    .select('user_id,email,display_name,role,active,created_at,approval_status')
+    .order('created_at',{ascending:true});
+  if(error){
+    console.error('Falha ao listar usuários:',error);
+    el.innerHTML='<div class="card empty">Não foi possível carregar os usuários.</div>';
+    return;
+  }
+  usersPageCache=data||[];
+  filterUsersPage();
+  await refreshPendingApprovalCount();
+}
 async function saveUserAccess(userId){
   if(!requireAdmin())return;
-
+  const original=usersPageCache.find(u=>u.user_id===userId);
   const displayName=normalizeDisplayName($('userDisplayName_'+userId)?.value);
   const role=$('userRole_'+userId)?.value;
   const active=!!$('userActive_'+userId)?.checked;
 
-  if(displayName.length<3||displayName.length>40){
-    toast('O nome de exibição deve ter entre 3 e 40 caracteres.');
+  if(!isValidDisplayNameCharacters(displayName)||displayName.length<3||displayName.length>40){
+    toast('O nome de exibição deve conter apenas letras e espaços e ter entre 3 e 40 caracteres.');
     return;
   }
   if(!['admin','operator','viewer'].includes(role))return;
 
-  const {error}=await supabaseClient.from('app_users')
-    .update({display_name:displayName,role,active})
-    .eq('user_id',userId);
+  const update={display_name:displayName,role,active};
+  if(active&&original?.approval_status!=='approved')update.approval_status='approved';
 
+  const {error}=await supabaseClient.from('app_users').update(update).eq('user_id',userId);
   if(error){
     console.error('Falha ao atualizar usuário:',error);
     const msg=String(error.message||'');
-    if(msg.includes('último administrador')){
-      toast('Não é possível remover o último administrador ativo.');
-    }else if(/duplicate|unique|app_users_display_name_unique_ci/i.test(msg)){
-      toast('Este nome de exibição já está em uso.');
-    }else{
-      toast('Não foi possível atualizar o usuário.');
-    }
+    if(msg.includes('último administrador'))toast('Não é possível remover o último administrador ativo.');
+    else if(/duplicate|unique|app_users_display_name_unique_ci/i.test(msg))toast('Este nome de exibição já está em uso.');
+    else toast('Não foi possível atualizar o usuário.');
     await renderUsersPage();
     return;
   }
 
   if(currentSession?.user?.id===userId){
-    currentAccess.display_name=displayName;
-    currentAccess.role=role;
-    currentAccess.active=active;
+    currentAccess={...currentAccess,display_name:displayName,role,active,approval_status:update.approval_status||currentAccess.approval_status};
     $('currentUserName').textContent=displayName;
-    $('currentUserRole').textContent=role==='admin'?'Administrador':role==='operator'?'Operador':'Consulta';
+    $('currentUserRole').textContent=roleLabel(role);
     applyRoleToInterface();
   }
-
   toast('Usuário atualizado.');
   await renderUsersPage();
 }
+async function refreshPendingApprovalCount(){
+  if(!canAdmin())return;
+  const [{count:c1},{count:c2}]=await Promise.all([
+    supabaseClient.from('app_users').select('user_id',{count:'exact',head:true}).eq('approval_status','pending'),
+    supabaseClient.from('user_change_requests').select('id',{count:'exact',head:true}).eq('status','pending')
+  ]);
+  const total=(c1||0)+(c2||0);
+  const b=$('pendingApprovalsButton');if(b)b.textContent=total?`APROVAÇÕES PENDENTES (${total})`:'APROVAÇÕES PENDENTES';
+}
+async function openPendingApprovals(){
+  if(!requireAdmin())return;
+  openModal('pendingApprovalsModal');
+  $('pendingApprovalsList').innerHTML='<div class="card empty">Carregando aprovações...</div>';
+  const [usersRes,changesRes]=await Promise.all([
+    supabaseClient.from('app_users').select('user_id,email,display_name,role,active,created_at,approval_status').eq('approval_status','pending').order('created_at',{ascending:true}),
+    supabaseClient.from('user_change_requests').select('id,user_id,request_type,requested_value,status,requested_at,review_note').eq('status','pending').order('requested_at',{ascending:true})
+  ]);
+  if(usersRes.error||changesRes.error){console.error(usersRes.error||changesRes.error);$('pendingApprovalsList').innerHTML='<div class="card empty">Não foi possível carregar as aprovações.</div>';return}
+  const allUsers=usersPageCache.length?usersPageCache:(await supabaseClient.from('app_users').select('user_id,email,display_name,role,active,created_at,approval_status')).data||[];
+  pendingApprovalCache={activations:usersRes.data||[],changes:(changesRes.data||[]).map(r=>({...r,user:allUsers.find(u=>u.user_id===r.user_id)||null}))};
+  renderPendingApprovals();
+}
+function setApprovalTab(tab,button){
+  currentApprovalTab=tab;
+  document.querySelectorAll('[data-approval-tab]').forEach(b=>b.classList.toggle('active',b===button));
+  renderPendingApprovals();
+}
+function formatDateTime(value){
+  if(!value)return '-';
+  try{return new Intl.DateTimeFormat('pt-BR',{dateStyle:'short',timeStyle:'short'}).format(new Date(value))}catch{return '-'}
+}
+function renderPendingApprovals(){
+  const el=$('pendingApprovalsList');if(!el)return;
+  const blocks=[];
+  if(currentApprovalTab==='all'||currentApprovalTab==='activation'){
+    pendingApprovalCache.activations.forEach(u=>blocks.push(`<div class="approval-card"><div class="approval-card-head"><strong>${esc(u.display_name||'Novo usuário')}</strong><span class="approval-kind">Novo usuário</span></div><div class="approval-fields"><div class="field"><label>E-mail</label><input value="${esc(u.email||'')}" disabled></div><div class="field"><label>Solicitado em</label><input value="${esc(formatDateTime(u.created_at))}" disabled></div><div class="field"><label>Cargo inicial</label><select id="approvalRole_${u.user_id}"><option value="viewer">Consulta</option><option value="operator">Operador</option><option value="admin">Administrador</option></select></div><div class="field"><label>Observação <span style="font-weight:400">(opcional)</span></label><input id="approvalActivationNote_${u.user_id}" maxlength="250"></div></div><div class="approval-actions"><button class="btn btn-danger" onclick="reviewUserActivation('${u.user_id}','rejected')">REJEITAR</button><button class="btn btn-primary" onclick="reviewUserActivation('${u.user_id}','approved')">APROVAR</button></div></div>`));
+  }
+  if(currentApprovalTab==='all'||currentApprovalTab==='display_name'){
+    pendingApprovalCache.changes.forEach(r=>blocks.push(`<div class="approval-card"><div class="approval-card-head"><strong>${esc(r.user?.email||'Conta')}</strong><span class="approval-kind">Alteração de nome</span></div><div class="approval-fields"><div class="field"><label>E-mail</label><input value="${esc(r.user?.email||'')}" disabled></div><div class="field"><label>Nome atual</label><input value="${esc(r.user?.display_name||'')}" disabled></div><div class="field full"><label>Nome solicitado</label><input id="approvalName_${r.id}" minlength="3" maxlength="40" value="${esc(r.requested_value||'')}" oninput="sanitizeProfileDisplayNameInput(this)"></div><div class="field full"><label>Observação <span style="font-weight:400">(opcional)</span></label><input id="approvalNameNote_${r.id}" maxlength="250"></div></div><div class="approval-actions"><button class="btn btn-danger" onclick="reviewDisplayNameRequest('${r.id}','rejected')">REJEITAR</button><button class="btn btn-primary" onclick="reviewDisplayNameRequest('${r.id}','approved')">APROVAR</button></div></div>`));
+  }
+  el.innerHTML=blocks.length?blocks.join(''):'<div class="card empty">Nenhuma aprovação pendente nesta categoria.</div>';
+}
+async function reviewUserActivation(userId,decision){
+  if(!requireAdmin())return;
+  const role=$('approvalRole_'+userId)?.value||'viewer';
+  const review_note=$('approvalActivationNote_'+userId)?.value.trim()||null;
+  const {error}=await supabaseClient.rpc('review_user_activation',{user_id:userId,decision,role,review_note});
+  if(error){console.error(error);toast(error.message||'Não foi possível analisar o cadastro.');return}
+  toast(decision==='approved'?'Cadastro aprovado.':'Cadastro rejeitado.');
+  await renderUsersPage();await openPendingApprovals();
+}
+async function reviewDisplayNameRequest(requestId,decision){
+  if(!requireAdmin())return;
+  const approved_value=normalizeDisplayName($('approvalName_'+requestId)?.value||'');
+  const review_note=$('approvalNameNote_'+requestId)?.value.trim()||null;
+  if(decision==='approved'&&(!isValidDisplayNameCharacters(approved_value)||approved_value.length<3||approved_value.length>40)){toast('O nome aprovado deve conter apenas letras e espaços e ter entre 3 e 40 caracteres.');return}
+  const {error}=await supabaseClient.rpc('review_user_change_request',{request_id:requestId,decision,approved_value:decision==='approved'?approved_value:null,review_note});
+  if(error){console.error(error);toast(error.message||'Não foi possível analisar a solicitação.');return}
+  toast(decision==='approved'?'Alteração de nome aprovada.':'Alteração de nome rejeitada.');
+  await renderUsersPage();await openPendingApprovals();
+}
 async function getOwnAccess(){
-  const {data,error}=await supabaseClient.from('app_users').select('user_id,display_name,role,active').eq('user_id',currentSession.user.id).maybeSingle();
+  const {data,error}=await supabaseClient.from('app_users').select('user_id,email,display_name,role,active,created_at,approval_status').eq('user_id',currentSession.user.id).maybeSingle();
   if(error)throw error;
   return data;
 }
@@ -2678,12 +2865,12 @@ async function loadCloudState(){
     cloudReady=false;
     $('mainApp').classList.add('auth-locked');
     $('authGate').classList.remove('hidden');
-    setAuthMessage('Acesso criado, mas ainda não liberado pelo administrador.');
+    setAuthMessage(access?.approval_status==='rejected'?'Seu acesso foi recusado pelo administrador.':access?.approval_status==='approved'?'Seu acesso está desativado.':'Acesso criado, mas ainda não liberado pelo administrador.');
     return false;
   }
   await loadCurrentRolePermissions();
   $('currentUserName').textContent=access.display_name||currentSession.user.email||'Usuário';
-  $('currentUserRole').textContent=access.role==='admin'?'Administrador':access.role==='operator'?'Operador':'Consulta';
+  $('currentUserRole').textContent=roleLabel(access.role);
   applyRoleToInterface();
 
   const localSnapshot=cloneStateForCloud();
@@ -2716,6 +2903,7 @@ async function loadCloudState(){
   $('authGate').classList.add('hidden');
   $('mainApp').classList.remove('auth-locked');
   startRealtimeSync();
+  handleAppRoute();
   return true;
 }
 
@@ -2775,11 +2963,175 @@ async function activateAuthenticatedSession(session){
   }
 }
 
+let lastMainPage='equipamentos';
+let passwordRecoveryMode=false;
+
+function sanitizeProfileDisplayNameInput(input){
+  const cleaned=String(input.value||'').replace(/[^\p{L} ]/gu,'');
+  if(input.value!==cleaned)input.value=cleaned;
+}
+function passwordPolicyError(password){
+  if(String(password).length<8)return 'A senha deve ter pelo menos 8 caracteres.';
+  if(!/[A-ZÁÀÂÃÉÈÊÍÏÓÔÕÖÚÇÑ]/.test(password))return 'Inclua pelo menos uma letra maiúscula.';
+  if(!/[a-záàâãéèêíïóôõöúçñ]/.test(password))return 'Inclua pelo menos uma letra minúscula.';
+  if(!/[0-9]/.test(password))return 'Inclua pelo menos um número.';
+  return '';
+}
+function updatePasswordStrength(inputId,meterId){
+  const value=$(inputId)?.value||'';
+  const meter=$(meterId);if(!meter)return;
+  let score=0;
+  if(value.length>=8)score++;
+  if(/[A-ZÁÀÂÃÉÈÊÍÏÓÔÕÖÚÇÑ]/.test(value)&&/[a-záàâãéèêíïóôõöúçñ]/.test(value))score++;
+  if(/[0-9]/.test(value))score++;
+  if(value.length>=12||/[^\p{L}\p{N}]/u.test(value))score++;
+  const labels=['Digite uma senha.','Fraca','Razoável','Boa','Forte'];
+  meter.dataset.level=String(score);
+  meter.querySelector('.password-strength-fill').style.width=(score*25)+'%';
+  meter.querySelector('.password-strength-label').textContent=score?labels[score]:'Use 8+ caracteres, maiúscula, minúscula e número.';
+}
+function openForgotPasswordModal(){
+  $('forgotPasswordEmail').value=$('authEmail')?.value.trim()||'';
+  $('forgotPasswordMessage').textContent='';
+  openModal('forgotPasswordModal');
+  setTimeout(()=>$('forgotPasswordEmail').focus(),0);
+}
+async function sendPasswordRecovery(ev){
+  ev?.preventDefault();
+  const email=$('forgotPasswordEmail').value.trim();
+  const button=$('forgotPasswordButton');button.disabled=true;
+  $('forgotPasswordMessage').textContent='Enviando...';
+  const {error}=await supabaseClient.auth.resetPasswordForEmail(email,{redirectTo:'https://erp.giocapo.com.br/'});
+  button.disabled=false;
+  if(error){console.error(error);$('forgotPasswordMessage').textContent='Não foi possível enviar o link agora.';return}
+  $('forgotPasswordMessage').style.color='var(--success)';
+  $('forgotPasswordMessage').textContent='Se o e-mail estiver cadastrado, você receberá um link para redefinir a senha.';
+}
+function showRecoveryPasswordView(session){
+  passwordRecoveryMode=true;
+  currentSession=session||currentSession;
+  hideBootGate();
+  $('mainApp').classList.add('auth-locked');
+  $('authGate').classList.remove('hidden');
+  $('loginView').classList.remove('active');
+  $('signupView').classList.remove('active');
+  $('recoveryPasswordView').classList.add('active');
+  $('recoveryNewPassword').value='';$('recoveryConfirmPassword').value='';
+  $('recoveryPasswordMessage').textContent='';
+  updatePasswordStrength('recoveryNewPassword','recoveryPasswordStrength');
+}
+async function finishPasswordRecovery(ev){
+  ev?.preventDefault();
+  const password=$('recoveryNewPassword').value;
+  const confirmPassword=$('recoveryConfirmPassword').value;
+  const policy=passwordPolicyError(password);
+  if(policy){setAuthMessage(policy,false,'recoveryPasswordMessage');return}
+  if(password!==confirmPassword){setAuthMessage('As senhas não coincidem.',false,'recoveryPasswordMessage');return}
+  const button=$('recoveryPasswordButton');button.disabled=true;
+  const {error}=await supabaseClient.auth.updateUser({password});
+  button.disabled=false;
+  if(error){setAuthMessage(error.message||'Não foi possível alterar a senha.',false,'recoveryPasswordMessage');return}
+  passwordRecoveryMode=false;
+  $('recoveryPasswordView').classList.remove('active');
+  toast('Senha redefinida com sucesso.');
+  const {data:{session}}=await supabaseClient.auth.getSession();
+  await activateAuthenticatedSession(session);
+}
+function openChangePasswordModal(){
+  $('changePasswordForm').reset();$('changePasswordMessage').textContent='';
+  updatePasswordStrength('newPasswordValue','changePasswordStrength');
+  openModal('changePasswordModal');
+  setTimeout(()=>$('currentPasswordValue').focus(),0);
+}
+async function changeOwnPassword(ev){
+  ev?.preventDefault();
+  if(!currentSession?.user?.email)return;
+  const current=$('currentPasswordValue').value;
+  const next=$('newPasswordValue').value;
+  const confirmNext=$('confirmNewPasswordValue').value;
+  const policy=passwordPolicyError(next);
+  if(policy){$('changePasswordMessage').textContent=policy;return}
+  if(next!==confirmNext){$('changePasswordMessage').textContent='As novas senhas não coincidem.';return}
+  if(current===next){$('changePasswordMessage').textContent='A nova senha deve ser diferente da senha atual.';return}
+  const button=$('changePasswordButton');button.disabled=true;$('changePasswordMessage').textContent='Validando senha atual...';
+  const login=await supabaseClient.auth.signInWithPassword({email:currentSession.user.email,password:current});
+  if(login.error){button.disabled=false;$('changePasswordMessage').textContent='A senha atual está incorreta.';return}
+  currentSession=login.data.session||currentSession;
+  $('changePasswordMessage').textContent='Alterando senha...';
+  const {error}=await supabaseClient.auth.updateUser({password:next});
+  button.disabled=false;
+  if(error){$('changePasswordMessage').textContent=error.message||'Não foi possível alterar a senha.';return}
+  closeModal('changePasswordModal');
+  toast('Senha alterada com sucesso.');
+}
+async function openAccountPage(){
+  if(!currentSession||!currentAccess?.active)return;
+  if(location.hash!=='#/user/me')history.pushState(null,'','#/user/me');
+  await showAccountPage();
+}
+async function showAccountPage(){
+  if(!currentSession||!currentAccess?.active)return;
+  const activeNav=document.querySelector('.nav button.active[data-page]');
+  if(activeNav)lastMainPage=activeNav.dataset.page||lastMainPage;
+  document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('#mainApp .page').forEach(p=>p.classList.remove('active'));
+  $('conta').classList.add('active');
+  await renderAccountPage();
+}
+function closeAccountPage(){
+  history.pushState(null,'',location.pathname+location.search);
+  showMainPage(lastMainPage||'equipamentos');
+}
+function showMainPage(page){
+  const btn=document.querySelector(`.nav button[data-page="${page}"]`);
+  if(btn&&!btn.classList.contains('permission-hidden'))btn.click();
+  else document.querySelector('.nav button[data-page]:not(.permission-hidden)')?.click();
+}
+async function renderAccountPage(){
+  if(!currentSession)return;
+  const [{data:profile,error:profileError},{data:pending,error:pendingError}]=await Promise.all([
+    supabaseClient.from('app_users').select('user_id,email,display_name,role,active,created_at,approval_status').eq('user_id',currentSession.user.id).single(),
+    supabaseClient.from('user_change_requests').select('id,requested_value').eq('user_id',currentSession.user.id).eq('request_type','display_name').eq('status','pending').maybeSingle()
+  ]);
+  if(profileError||pendingError){console.error(profileError||pendingError);toast('Não foi possível carregar sua conta.');return}
+  currentAccess={...currentAccess,...profile};
+  $('accountDisplayName').textContent=profile.display_name||'-';
+  $('accountEmail').textContent=profile.email||currentSession.user.email||'-';
+  $('accountRole').textContent=roleLabel(profile.role);
+  $('accountCreatedAt').textContent=formatDateTime(profile.created_at);
+  $('accountRequestedName').value='';
+  const button=$('accountNameRequestButton');
+  button.disabled=!!pending;
+  button.textContent=pending?'SOLICITAÇÃO PENDENTE':'PEDIR APROVAÇÃO';
+}
+async function requestDisplayNameChange(){
+  const name=normalizeDisplayName($('accountRequestedName').value);
+  if(!isValidDisplayNameCharacters(name)||name.length<3||name.length>40){toast('Use apenas letras e espaços, entre 3 e 40 caracteres.');return}
+  const button=$('accountNameRequestButton');button.disabled=true;
+  const {error}=await supabaseClient.rpc('request_display_name_change',{candidate:name});
+  if(error){button.disabled=false;toast(error.message||'Não foi possível enviar a solicitação.');return}
+  toast('Solicitação enviada para aprovação.');
+  await renderAccountPage();
+}
+async function refreshOwnProfileHeader(){
+  if(!currentSession||!currentAccess?.active)return;
+  const {data}=await supabaseClient.from('app_users').select('display_name,role,active,approval_status').eq('user_id',currentSession.user.id).maybeSingle();
+  if(!data)return;
+  currentAccess={...currentAccess,...data};
+  $('currentUserName').textContent=data.display_name||currentSession.user.email||'Usuário';
+  $('currentUserRole').textContent=roleLabel(data.role);
+}
+function handleAppRoute(){
+  if(location.hash==='#/user/me'&&currentSession&&currentAccess?.active)showAccountPage();
+}
+window.addEventListener('hashchange',handleAppRoute);
+
 let displayNameCheckTimer=null;
 let displayNameAvailable=false;
 let lastCheckedDisplayName='';
 
 function showSignupView(){
+  $('recoveryPasswordView').classList.remove('active');
   $('loginView').classList.remove('active');
   $('signupView').classList.add('active');
   setAuthMessage('');
@@ -2787,6 +3139,7 @@ function showSignupView(){
   setTimeout(()=>$('signupDisplayName').focus(),0);
 }
 function showLoginView(){
+  $('recoveryPasswordView').classList.remove('active');
   $('signupView').classList.remove('active');
   $('loginView').classList.add('active');
   setAuthMessage('',false,'signupMessage');
@@ -2882,8 +3235,9 @@ async function signupWithEmail(ev){
     setAuthMessage('Informe um e-mail válido.',false,'signupMessage');
     return;
   }
-  if(password.length<6){
-    setAuthMessage('A senha deve ter pelo menos 6 caracteres.',false,'signupMessage');
+  const passwordError=passwordPolicyError(password);
+  if(passwordError){
+    setAuthMessage(passwordError,false,'signupMessage');
     return;
   }
   if(password!==confirmation){
@@ -2907,7 +3261,7 @@ async function signupWithEmail(ev){
     const {data,error}=await supabaseClient.auth.signUp({
       email,
       password,
-      options:{data:{display_name}}
+      options:{data:{display_name},emailRedirectTo:'https://erp.giocapo.com.br/'}
     });
     if(error){
       const msg=String(error.message||'');
@@ -2932,6 +3286,7 @@ async function signupWithEmail(ev){
   }
 }
 async function logoutUser(){
+  if(location.hash==='#/user/me')history.replaceState(null,'',location.pathname+location.search);
   await flushCloudSave();
   stopRealtimeSync();
   await supabaseClient.auth.signOut();
@@ -2951,6 +3306,7 @@ async function bootApp(){
     showLoginGate('Não foi possível verificar a sessão. Tente entrar novamente.');
   }
   supabaseClient.auth.onAuthStateChange((event,session)=>{
+    if(event==='PASSWORD_RECOVERY'){setTimeout(()=>showRecoveryPasswordView(session),0);return}
     if(event==='SIGNED_OUT')activateAuthenticatedSession(null);
   });
 }
@@ -2968,7 +3324,7 @@ document.addEventListener('visibilitychange',()=>{
   }
 });
 window.addEventListener('focus',()=>{
-  if(currentSession&&cloudReady)checkCloudRevisionAndSync();
+  if(currentSession&&cloudReady){checkCloudRevisionAndSync();refreshOwnProfileHeader();}
 });
 
 function calcNtrip(ids){
@@ -3308,7 +3664,8 @@ function hideEquipmentOverflowTooltip(){
 function showEquipmentOverflowTooltip(chip){
     const textEl=chip?.querySelector?.('.equipment-cell-chip-text');
     if(!textEl)return;
-    if(textEl.scrollWidth<=textEl.clientWidth+1){
+    const forcedTooltip=chip?.querySelector?.('[data-tooltip-full]')?.getAttribute('data-tooltip-full')||'';
+    if(!forcedTooltip&&textEl.scrollWidth<=textEl.clientWidth+1){
         hideEquipmentOverflowTooltip();
         return;
     }
@@ -3319,7 +3676,7 @@ function showEquipmentOverflowTooltip(chip){
         document.body.appendChild(equipmentOverflowTooltip);
     }
 
-    equipmentOverflowTooltip.textContent=(textEl.textContent||'').trim();
+    equipmentOverflowTooltip.textContent=forcedTooltip||(textEl.textContent||'').trim();
     const rect=chip.getBoundingClientRect();
     const gap=7;
 
@@ -3619,7 +3976,10 @@ function updateCodeEanPreview(){
 }
 function saveCode(ev){
  ev.preventDefault();
- const id=$('codeId').value,code=$('codeValue').value.trim().replace(/\D/g,'');
+ const id=$('codeId').value;
+ const permissionKey=id?'equipment.edit':'equipment.create';
+ if(!requirePermission(permissionKey))return;
+ const code=$('codeValue').value.trim().replace(/\D/g,'');
  if(!/^\d{4}$/.test(code)){toast('Informe um código com exatamente 4 dígitos.');return}
  const ean=generateEanFromCode(code);
  if(!ean||!validEan13(ean)){toast('Não foi possível gerar um EAN-13 válido.');return}
@@ -3631,11 +3991,11 @@ function saveCode(ev){
  }else{
    const c={id:uid('code'),code,ean};state.codes.push(c);setCodeSelection(c);
  }
- closeModal('codeModal');save();renderAll();toast('Código salvo. EAN-13 gerado automaticamente.');
+ closeModal('codeModal');save(permissionKey);renderAll();toast('Código salvo. EAN-13 gerado automaticamente.');
 }
 function openCodeManager(){renderCodeManager();openModal('codeManagerModal')}
 function renderCodeManager(){$('codeManager').innerHTML=state.codes.length?state.codes.slice().sort((a,b)=>String(a.code).localeCompare(String(b.code),'pt-BR',{numeric:true})).map(c=>`<div class="product-row"><div><strong>${esc(c.code)}</strong><div class="hint">EAN-13: ${esc(c.ean||'Não informado')}</div></div><div class="table-actions"><button class="btn btn-small" onclick="openCodeModal('${c.id}')">EDITAR</button><button class="btn btn-small btn-danger" onclick="deleteCode('${c.id}')">EXCLUIR</button></div></div>`).join(''):'<div class="empty">Nenhum código cadastrado.</div>'}
-function deleteCode(id){if(state.equipments.some(e=>e.codeId===id)){toast('Não é possível excluir um código que possui equipamentos cadastrados.');return}confirm('Excluir este código?',()=>{state.codes=state.codes.filter(c=>c.id!==id);save();renderAll();renderCodeManager();toast('Código excluído.')})}
+function deleteCode(id){if(!requirePermission('equipment.delete'))return;if(state.equipments.some(e=>e.codeId===id)){toast('Não é possível excluir um código que possui equipamentos cadastrados.');return}confirm('Excluir este código?',()=>{state.codes=state.codes.filter(c=>c.id!==id);save('equipment.delete');renderAll();renderCodeManager();toast('Código excluído.')})}
 
 function selectSingleProductCategory(selected){
     if(!selected.checked)return;
@@ -4469,7 +4829,7 @@ function applyResponsiveTableLabels(){
 }
 function renderAll(){updateDashboard();renderEquipmentTable();renderProductPage();renderBuilderProductFilter();renderBuilder();renderKits();updateCharts();renderProductManager();renderCodeManager();applyPermissionVisibility();if(canAdmin()){renderUsersPage();renderPermissionsPage()}}
 
-document.querySelectorAll('.nav button').forEach(btn=>btn.addEventListener('click',()=>{document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));btn.classList.add('active');$(btn.dataset.page).classList.add('active');if(btn.dataset.page==='dados')updateCharts();if(btn.dataset.page==='produtos')renderProductPage();if(btn.dataset.page==='usuarios')renderUsersPage();if(btn.dataset.page==='permissoes')renderPermissionsPage()}));
+document.querySelectorAll('.nav button').forEach(btn=>btn.addEventListener('click',()=>{lastMainPage=btn.dataset.page||lastMainPage;if(location.hash==='#/user/me')history.replaceState(null,'',location.pathname+location.search);document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));btn.classList.add('active');$(btn.dataset.page).classList.add('active');if(btn.dataset.page==='dados')updateCharts();if(btn.dataset.page==='produtos')renderProductPage();if(btn.dataset.page==='usuarios')renderUsersPage();if(btn.dataset.page==='permissoes')renderPermissionsPage()}));
 bootApp();
 
 const responsiveTableObserver=new MutationObserver(()=>applyResponsiveTableLabels());
