@@ -5,7 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ERP | Giocapo</title>
-<!-- v3.11.4 -->
+<!-- v4.11.4 -->
 <style>
 :root{
     --bg:#f1f1f1;
@@ -388,6 +388,13 @@ body.role-admin .admin-only.grid{display:grid!important}
 .user-role-label{font-size:11px;font-weight:700;color:var(--muted)}
 .user-status-active{color:var(--success);font-weight:700}
 .user-status-inactive{color:var(--danger);font-weight:700}
+.user-presence{display:flex;align-items:center;gap:6px;margin-top:6px;font-size:10.5px;font-weight:700;color:var(--muted)}
+.user-presence-dot{width:8px;height:8px;border-radius:50%;background:#b9bec2;flex:0 0 auto}
+.user-presence.online{color:var(--success)}
+.user-presence.online .user-presence-dot{background:var(--success);box-shadow:0 0 0 3px rgba(95,143,61,.12)}
+.user-presence.offline .user-presence-dot{background:#b9bec2}
+.users-online-summary{display:inline-flex;align-items:center;gap:7px;min-height:34px;padding:7px 10px;border:1px solid var(--border);border-radius:7px;background:#fff;color:var(--text);font-size:11px;font-weight:800;white-space:nowrap}
+.users-online-summary::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--success);box-shadow:0 0 0 3px rgba(95,143,61,.12)}
 .user-row .btn{min-width:92px}
 .readonly-banner{display:none;margin-bottom:14px}
 
@@ -531,6 +538,7 @@ body.guest-calculator-mode #mainApp .container{padding-top:24px}
  .account-name-change{grid-template-columns:1fr}
  .users-toolbar{flex-direction:column;align-items:stretch}
  .users-title-actions{width:100%;display:grid;grid-template-columns:1fr 1fr}
+ .users-online-summary{grid-column:1/-1;justify-content:center}
  .approval-fields{grid-template-columns:1fr}
  .approval-actions{display:grid;grid-template-columns:1fr 1fr}
  .user-name-button{text-align:left}
@@ -714,7 +722,7 @@ body.guest-calculator-mode #mainApp .container{padding-top:24px}
 <section id="usuarios" class="page">
 <div class="page-title">
   <div><h2>Usuários</h2><p>Libere acessos, altere perfis e desative contas do Giocapo.</p></div>
-  <div class="users-title-actions"><button id="pendingApprovalsButton" class="btn" onclick="openPendingApprovals()">APROVAÇÕES PENDENTES</button><button class="btn" onclick="renderUsersPage()">ATUALIZAR</button></div>
+  <div class="users-title-actions"><span id="onlineUsersSummary" class="users-online-summary">0 online</span><button id="pendingApprovalsButton" class="btn" onclick="openPendingApprovals()">APROVAÇÕES PENDENTES</button><button class="btn" onclick="renderUsersPage()">ATUALIZAR</button></div>
 </div>
 <div class="users-toolbar"><div class="field"><label>Pesquisar usuários</label><input id="usersSearch" placeholder="Nome, e-mail, cargo ou status..." oninput="filterUsersPage()"></div></div>
 <div class="permission-note" style="margin-bottom:14px">
@@ -2143,6 +2151,13 @@ let remoteSyncInFlight=false;
 let remoteSyncDeferred=false;
 let remoteSyncToastShown=false;
 
+// v4.11.4 · Presença de usuários e visto por último.
+let userPresenceChannel=null;
+let userPresenceConnectionId='';
+let onlineUserConnections=new Map();
+let lastSeenHeartbeatTimer=null;
+const LAST_SEEN_HEARTBEAT_MS=60000;
+
 function setAuthMessage(message='',ok=false,target='authMessage'){
   const el=$(target);if(!el)return;
   el.textContent=message;el.style.color=ok?'var(--success)':'var(--danger)';
@@ -2686,6 +2701,95 @@ async function saveRolePermissions(){
   await renderPermissionsPage();
 }
 
+function formatLastSeen(value){
+  if(!value)return 'Nunca visto';
+  try{return 'Visto por último '+new Intl.DateTimeFormat('pt-BR',{dateStyle:'short',timeStyle:'short'}).format(new Date(value))}
+  catch{return 'Visto por último -'}
+}
+function getOnlineConnectionCount(userId){return Number(onlineUserConnections.get(userId)||0)}
+function updateOnlineUsersSummary(){
+  const el=$('onlineUsersSummary');if(!el)return;
+  const total=[...onlineUserConnections.values()].filter(v=>Number(v)>0).length;
+  el.textContent=total===1?'1 online':`${total} online`;
+}
+async function refreshLastSeenForUsers(userIds=[]){
+  if(!canAdmin()||!userIds.length)return;
+  const ids=[...new Set(userIds.filter(Boolean))];
+  if(!ids.length)return;
+  const {data,error}=await supabaseClient.from('app_users').select('user_id,last_seen_at').in('user_id',ids);
+  if(error){console.error('Falha ao atualizar visto por último:',error);return}
+  const byId=new Map((data||[]).map(row=>[row.user_id,row.last_seen_at]));
+  usersPageCache=usersPageCache.map(u=>byId.has(u.user_id)?{...u,last_seen_at:byId.get(u.user_id)}:u);
+  filterUsersPage();
+}
+function syncOnlineUsersFromPresence(){
+  if(!userPresenceChannel){onlineUserConnections.clear();updateOnlineUsersSummary();return}
+  const previous=new Set([...onlineUserConnections.entries()].filter(([,count])=>count>0).map(([id])=>id));
+  const next=new Map();
+  const state=userPresenceChannel.presenceState()||{};
+  Object.values(state).flat().forEach(p=>{
+    const userId=String(p?.user_id||'');
+    if(userId)next.set(userId,(next.get(userId)||0)+1);
+  });
+  onlineUserConnections=next;
+  updateOnlineUsersSummary();
+  if(canAdmin()&&usersPageCache.length)filterUsersPage();
+  const nowOnline=new Set([...next.keys()]);
+  const wentOffline=[...previous].filter(id=>!nowOnline.has(id));
+  if(wentOffline.length)refreshLastSeenForUsers(wentOffline);
+}
+async function touchOwnLastSeen(silent=true){
+  if(!currentSession||!currentAccess?.active)return null;
+  try{
+    const {data,error}=await supabaseClient.rpc('touch_user_last_seen');
+    if(error)throw error;
+    if(data){
+      currentAccess={...currentAccess,last_seen_at:data};
+      usersPageCache=usersPageCache.map(u=>u.user_id===currentSession.user.id?{...u,last_seen_at:data}:u);
+    }
+    return data||null;
+  }catch(err){
+    console.error('Falha ao atualizar visto por último:',err);
+    if(!silent)toast('Não foi possível atualizar o visto por último.');
+    return null;
+  }
+}
+function stopUserPresence(){
+  if(lastSeenHeartbeatTimer){clearInterval(lastSeenHeartbeatTimer);lastSeenHeartbeatTimer=null}
+  if(userPresenceChannel){
+    try{userPresenceChannel.untrack()}catch(_){}
+    try{supabaseClient.removeChannel(userPresenceChannel)}catch(_){}
+    userPresenceChannel=null;
+  }
+  onlineUserConnections.clear();
+  updateOnlineUsersSummary();
+}
+async function startUserPresence(){
+  stopUserPresence();
+  if(!currentSession||!currentAccess?.active||!navigator.onLine)return;
+  try{
+    await supabaseClient.realtime.setAuth();
+    userPresenceConnectionId=(crypto?.randomUUID?.()||uid('presence'));
+    userPresenceChannel=supabaseClient.channel('giocapo-online-users',{config:{private:true,presence:{key:userPresenceConnectionId}}});
+    userPresenceChannel
+      .on('presence',{event:'sync'},syncOnlineUsersFromPresence)
+      .on('presence',{event:'join'},syncOnlineUsersFromPresence)
+      .on('presence',{event:'leave'},syncOnlineUsersFromPresence)
+      .subscribe(async(status,err)=>{
+        if(status==='SUBSCRIBED'){
+          await userPresenceChannel.track({user_id:currentSession.user.id});
+          await touchOwnLastSeen(true);
+        }else if(status==='CHANNEL_ERROR'||status==='TIMED_OUT'){
+          console.error('Falha no canal de presença:',err||status);
+        }
+      });
+    lastSeenHeartbeatTimer=setInterval(()=>touchOwnLastSeen(true),LAST_SEEN_HEARTBEAT_MS);
+  }catch(err){
+    console.error('Falha ao iniciar presença de usuários:',err);
+    stopUserPresence();
+  }
+}
+
 let usersPageCache=[];
 let pendingApprovalCache={activations:[],changes:[]};
 let currentApprovalTab='all';
@@ -2719,6 +2823,7 @@ function renderUsersPageRows(list){
       <div>
         <div class="user-role-label">Status</div>
         <div class="${statusClass}">${esc(status)}</div>
+        ${(()=>{const connections=getOnlineConnectionCount(u.user_id);return connections?`<div class="user-presence online"><span class="user-presence-dot"></span><span>Online agora${connections>1?` · ${connections} conexões`:''}</span></div>`:`<div class="user-presence offline"><span class="user-presence-dot"></span><span>${esc(formatLastSeen(u.last_seen_at))}</span></div>`})()}
       </div>
       <div>
         <label class="check" style="justify-content:center">
@@ -2734,7 +2839,7 @@ function filterUsersPage(){
   const q=normalizeEquipmentSearch($('usersSearch')?.value||'');
   if(!q){renderUsersPageRows(usersPageCache);return}
   const filtered=usersPageCache.filter(u=>normalizeEquipmentSearch([
-    u.display_name,u.email,roleLabel(u.role),userStatusLabel(u)
+    u.display_name,u.email,roleLabel(u.role),userStatusLabel(u),getOnlineConnectionCount(u.user_id)?'online':'offline',formatLastSeen(u.last_seen_at)
   ].join(' ')).includes(q));
   renderUsersPageRows(filtered);
 }
@@ -2746,7 +2851,7 @@ async function renderUsersPage(){
   }
   el.innerHTML='<div class="card empty">Carregando usuários...</div>';
   const {data,error}=await supabaseClient.from('app_users')
-    .select('user_id,email,display_name,role,active,created_at,approval_status')
+    .select('user_id,email,display_name,role,active,created_at,approval_status,last_seen_at')
     .order('created_at',{ascending:true});
   if(error){
     console.error('Falha ao listar usuários:',error);
@@ -2807,11 +2912,11 @@ async function openPendingApprovals(){
   openModal('pendingApprovalsModal');
   $('pendingApprovalsList').innerHTML='<div class="card empty">Carregando aprovações...</div>';
   const [usersRes,changesRes]=await Promise.all([
-    supabaseClient.from('app_users').select('user_id,email,display_name,role,active,created_at,approval_status').eq('approval_status','pending').order('created_at',{ascending:true}),
+    supabaseClient.from('app_users').select('user_id,email,display_name,role,active,created_at,approval_status,last_seen_at').eq('approval_status','pending').order('created_at',{ascending:true}),
     supabaseClient.from('user_change_requests').select('id,user_id,request_type,requested_value,status,requested_at,review_note').eq('status','pending').order('requested_at',{ascending:true})
   ]);
   if(usersRes.error||changesRes.error){console.error(usersRes.error||changesRes.error);$('pendingApprovalsList').innerHTML='<div class="card empty">Não foi possível carregar as aprovações.</div>';return}
-  const allUsers=usersPageCache.length?usersPageCache:(await supabaseClient.from('app_users').select('user_id,email,display_name,role,active,created_at,approval_status')).data||[];
+  const allUsers=usersPageCache.length?usersPageCache:(await supabaseClient.from('app_users').select('user_id,email,display_name,role,active,created_at,approval_status,last_seen_at')).data||[];
   pendingApprovalCache={activations:usersRes.data||[],changes:(changesRes.data||[]).map(r=>({...r,user:allUsers.find(u=>u.user_id===r.user_id)||null}))};
   renderPendingApprovals();
 }
@@ -2855,7 +2960,7 @@ async function reviewDisplayNameRequest(requestId,decision){
   await renderUsersPage();await openPendingApprovals();
 }
 async function getOwnAccess(){
-  const {data,error}=await supabaseClient.from('app_users').select('user_id,email,display_name,role,active,created_at,approval_status').eq('user_id',currentSession.user.id).maybeSingle();
+  const {data,error}=await supabaseClient.from('app_users').select('user_id,email,display_name,role,active,created_at,approval_status,last_seen_at').eq('user_id',currentSession.user.id).maybeSingle();
   if(error)throw error;
   return data;
 }
@@ -2904,6 +3009,7 @@ async function loadCloudState(){
   $('authGate').classList.add('hidden');
   $('mainApp').classList.remove('auth-locked');
   startRealtimeSync();
+  await startUserPresence();
   handleAppRoute();
   return true;
 }
@@ -2944,6 +3050,7 @@ async function activateAuthenticatedSession(session){
   currentSession=session;
   if(!session){
     stopRealtimeSync();
+    stopUserPresence();
     cloudReady=false;currentAccess=null;applyRoleToInterface();
     setSyncStatus('local','Local');
     showLoginGate();
@@ -3091,7 +3198,7 @@ function showMainPage(page){
 async function renderAccountPage(){
   if(!currentSession)return;
   const [{data:profile,error:profileError},{data:pending,error:pendingError}]=await Promise.all([
-    supabaseClient.from('app_users').select('user_id,email,display_name,role,active,created_at,approval_status').eq('user_id',currentSession.user.id).single(),
+    supabaseClient.from('app_users').select('user_id,email,display_name,role,active,created_at,approval_status,last_seen_at').eq('user_id',currentSession.user.id).single(),
     supabaseClient.from('user_change_requests').select('id,requested_value').eq('user_id',currentSession.user.id).eq('request_type','display_name').eq('status','pending').maybeSingle()
   ]);
   if(profileError||pendingError){console.error(profileError||pendingError);toast('Não foi possível carregar sua conta.');return}
@@ -3289,6 +3396,8 @@ async function signupWithEmail(ev){
 async function logoutUser(){
   if(location.hash==='#/user/me')history.replaceState(null,'',location.pathname+location.search);
   await flushCloudSave();
+  await touchOwnLastSeen(true);
+  stopUserPresence();
   stopRealtimeSync();
   await supabaseClient.auth.signOut();
   currentSession=null;currentAccess=null;cloudReady=false;applyRoleToInterface();
@@ -3315,17 +3424,26 @@ window.addEventListener('online',async()=>{
   if(pendingCloudSave)await flushCloudSave();
   if(currentSession&&cloudReady){
     if(!realtimeStateChannel)startRealtimeSync();
+    if(!userPresenceChannel)await startUserPresence();
     await checkCloudRevisionAndSync();
   }
 });
-window.addEventListener('offline',()=>setSyncStatus('offline','Offline'));
+window.addEventListener('offline',()=>{
+  stopUserPresence();
+  setSyncStatus('offline','Offline');
+});
 document.addEventListener('visibilitychange',()=>{
-  if(document.visibilityState==='visible'&&currentSession&&cloudReady){
+  if(!currentSession||!cloudReady)return;
+  if(document.visibilityState==='visible'){
+    if(!userPresenceChannel&&navigator.onLine)startUserPresence();
+    touchOwnLastSeen(true);
     checkCloudRevisionAndSync();
+  }else{
+    touchOwnLastSeen(true);
   }
 });
 window.addEventListener('focus',()=>{
-  if(currentSession&&cloudReady){checkCloudRevisionAndSync();refreshOwnProfileHeader();}
+  if(currentSession&&cloudReady){touchOwnLastSeen(true);checkCloudRevisionAndSync();refreshOwnProfileHeader();}
 });
 
 function calcNtrip(ids){
