@@ -5,7 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ERP | Giocapo</title>
-<!-- v3.11.3 -->
+<!-- v3.11.4 -->
 <style>
 :root{
     --bg:#f1f1f1;
@@ -801,7 +801,8 @@ body.guest-calculator-mode #mainApp .container{padding-top:24px}
 
 <div id="pendingApprovalsModal" class="modal-backdrop"><div class="modal wide"><div class="modal-head"><h3>Aprovações pendentes</h3><button class="close" onclick="closeModal('pendingApprovalsModal')">×</button></div><div class="modal-body"><div class="approval-tabs"><button class="btn active" data-approval-tab="all" onclick="setApprovalTab('all',this)">TODOS</button><button class="btn" data-approval-tab="activation" onclick="setApprovalTab('activation',this)">NOVOS USUÁRIOS</button><button class="btn" data-approval-tab="display_name" onclick="setApprovalTab('display_name',this)">ALTERAÇÃO DE NOME</button></div><div id="pendingApprovalsList" class="approval-list"></div></div><div class="modal-footer"><button class="btn" onclick="closeModal('pendingApprovalsModal')">FECHAR</button></div></div></div>
 <div id="confirmModal" class="modal-backdrop"><div class="modal"><div class="modal-head"><h3>Confirmar ação</h3><button class="close" onclick="closeModal('confirmModal')">×</button></div><div class="modal-body"><p id="confirmText"></p></div><div class="modal-footer"><button class="btn" onclick="closeModal('confirmModal')">CANCELAR</button><button id="confirmAction" class="btn btn-danger">CONFIRMAR</button></div></div></div>
-<div id="modalHora" class="calc-time-modal"><div class="calc-time-dialog"><h3>Informe a hora</h3><div class="calc-time-body"><input type="text" id="horaManual" maxlength="4" inputmode="numeric" placeholder="HHMM" oninput="atualizarPreviewHora()" onkeydown="if(event.key==='Enter') confirmarHora()"><div class="calc-time-preview" id="previewHora">--:--</div><div class="calc-time-actions"><button type="button" class="btn" onclick="cancelarHora()">CANCELAR</button><button type="button" class="btn btn-primary" onclick="confirmarHora()">CONFIRMAR</button></div></div></div></div>\n<div id="toast" class="toast"></div>
+<div id="modalHora" class="calc-time-modal"><div class="calc-time-dialog"><h3>Informe a hora</h3><div class="calc-time-body"><input type="text" id="horaManual" maxlength="4" inputmode="numeric" placeholder="HHMM" oninput="atualizarPreviewHora()" onkeydown="if(event.key==='Enter') confirmarHora()"><div class="calc-time-preview" id="previewHora">--:--</div><div class="calc-time-actions"><button type="button" class="btn" onclick="cancelarHora()">CANCELAR</button><button type="button" class="btn btn-primary" onclick="confirmarHora()">CONFIRMAR</button></div></div></div></div>
+<div id="toast" class="toast"></div>
 <script>
 /* QR Code Generator for JavaScript, Kazuhiko Arase.
    Implementação vendorizada localmente. Licença MIT.
